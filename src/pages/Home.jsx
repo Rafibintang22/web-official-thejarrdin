@@ -2,7 +2,7 @@ import { multiRoleAkses, bagiArrayAkses } from "../models/menuRoleAkses";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Home() {
-  const rolesUser = ["Pengurus", "Pengelola"];
+  const rolesUser = ["Pengurus", "Pengelola", "PemilikUnit"];
   const arr = multiRoleAkses(rolesUser);
   const arr2 = bagiArrayAkses(arr);
 

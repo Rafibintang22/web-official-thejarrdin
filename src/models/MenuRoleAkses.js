@@ -28,7 +28,7 @@ export const PengelolaAkses = [
     icon: faWallet,
   },
   {
-    label: "Pengumuman",
+    label: "Pengumuman Pengelola",
     icon: faBullhorn,
   },
   {
@@ -43,7 +43,7 @@ export const PengelolaAkses = [
 
 export const PemilikUnitAkses = [
   {
-    label: "Masukan & Aspirasi",
+    label: "Kirim Masukan & Aspirasi",
     icon: faHandHoldingHeart,
   },
   {
@@ -124,17 +124,8 @@ export const bagiArrayAkses = (listAkses) => {
   const panjang = listAkses.length;
   const tengah = Math.ceil(panjang / 2);
 
-  let bagianPertama = [];
-  let bagianKedua = [];
-
-  // JIKA PANJANG arr GENAP maka
-  if (panjang % 2 === 0) {
-    bagianPertama = listAkses.slice(0, tengah + 1);
-    bagianKedua = listAkses.slice(tengah + 1);
-  } else {
-    bagianPertama = listAkses.slice(0, tengah);
-    bagianKedua = listAkses.slice(tengah);
-  }
+  const bagianPertama = listAkses.slice(0, tengah);
+  const bagianKedua = listAkses.slice(tengah);
 
   return [bagianPertama, bagianKedua];
 };
