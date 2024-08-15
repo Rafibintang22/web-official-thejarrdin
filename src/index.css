@@ -32,6 +32,10 @@ body {
 .container .hexagonArea.last {
   transform: translateY(-30px);
 }
+
+.container .hexagonArea.last.genap {
+  transform: translateY(-30px) translateX(-25%);
+}
 .hexagon {
   position: relative;
   width: 120px;

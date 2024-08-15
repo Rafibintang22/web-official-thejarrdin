@@ -1,32 +1,28 @@
+import { multiRoleAkses, bagiArrayAkses } from "../models/menuRoleAkses";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFileLines } from "@fortawesome/free-regular-svg-icons";
-import { faHandHoldingHeart } from "@fortawesome/free-solid-svg-icons";
 
 function Home() {
-  const menu = [1, 2, 3, 4, 5, 6, 7];
-  const menu2 = [1, 2, 3, 4, 5, 6];
+  const rolesUser = ["Pengurus", "Pengelola"];
+  const arr = multiRoleAkses(rolesUser);
+  const arr2 = bagiArrayAkses(arr);
+
   return (
     <div className="container d-flex justify-content-center align-items-center flex-column flex-wrap">
-      <div className="hexagonArea d-flex first">
-        {menu.map((img, i) => (
-          <>
-            <div key={i} className="hexagon">
-              <FontAwesomeIcon icon={faHandHoldingHeart} size="2xl" />
-              <p>TEST</p>
+      {arr2.map((arrAkses, i) => (
+        <div
+          key={i}
+          className={`hexagonArea d-flex ${i === 0 ? "first" : "last"} ${
+            arrAkses.length % 2 === 0 && i !== 0 ? "genap" : ""
+          }`}
+        >
+          {arrAkses.map((akses, j) => (
+            <div key={j} className="hexagon p-2">
+              <FontAwesomeIcon icon={akses.icon} size="2xl" />
+              <p className="text-center">{akses.label}</p>
             </div>
-          </>
-        ))}
-      </div>
-      <div className="hexagonArea d-flex last">
-        {menu2.map((img, i) => (
-          <>
-            <div key={i} className="hexagon">
-              <FontAwesomeIcon icon={faFileLines} size="2xl" />
-              <p>TEST</p>
-            </div>
-          </>
-        ))}
-      </div>
+          ))}
+        </div>
+      ))}
     </div>
   );
 }
