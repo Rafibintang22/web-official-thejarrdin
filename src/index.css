@@ -9,6 +9,7 @@
   --theme: #0a7e66;
   --theme2: #fa873d;
   --theme2b: #de5433;
+  --gradient-orange: linear-gradient(var(--theme2b), var(--theme2));
   --header: #0f0d1d;
   --text: #445375;
   --border: #d4dcff;
@@ -54,6 +55,6 @@ body {
 }
 
 .hexagon:hover {
-  background-color: var(--theme2b);
+  background-image: var(--gradient-orange);
   transform: scale(0.95);
 }
