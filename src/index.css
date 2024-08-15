@@ -1,0 +1,55 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  --body: #fff;
+  --black: #000;
+  --white: #fff;
+  --theme: #0a7e66;
+  --theme2: #fa873d;
+  --theme2b: #de5433;
+  --header: #0f0d1d;
+  --text: #445375;
+  --border: #d4dcff;
+  --border-2: #d4dced;
+  --bg: #f3f7fb;
+  --box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.06);
+}
+
+p {
+  margin: 0;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--theme);
+}
+
+.container .hexagonArea.last {
+  transform: translateY(-30px);
+}
+.hexagon {
+  position: relative;
+  width: 120px;
+  height: 150px;
+  margin: 0 8px;
+  clip-path: polygon(0 25%, 50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%);
+  background-color: var(--theme2);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.hexagon:hover {
+  background-color: var(--theme2b);
+  transform: scale(0.95);
+}
