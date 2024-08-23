@@ -1,97 +1,88 @@
-import {
-  faBriefcase,
-  faBullhorn,
-  faHandHoldingHeart,
-  faTruckRampBox,
-  faWallet,
-} from "@fortawesome/free-solid-svg-icons";
-import { faFileLines } from "@fortawesome/free-regular-svg-icons";
-
 export const PengurusAkses = [
   {
     label: "Masukan & Aspirasi",
-    icon: faHandHoldingHeart,
+    icon: "https://img.icons8.com/color/100/mailbox-opened-flag-down.png",
   },
   {
     label: "Pengumuman",
-    icon: faBullhorn,
+    icon: "https://img.icons8.com/color/96/commercial.png",
   },
   {
     label: "Laporan",
-    icon: faFileLines,
+    icon: "https://img.icons8.com/fluency/100/ratings.png",
   },
 ];
 
 export const PengelolaAkses = [
   {
     label: "Tagihan Bulanan",
-    icon: faWallet,
+    icon: "https://img.icons8.com/fluency/100/bill.png",
   },
   {
     label: "Pengumuman Pengelola",
-    icon: faBullhorn,
+    icon: "https://img.icons8.com/fluency/100/megaphone.png",
   },
   {
     label: "Informasi Paket",
-    icon: faTruckRampBox,
+    icon: "https://img.icons8.com/ultraviolet/100/new-product.png",
   },
   {
     label: "Buletin Kegiatan",
-    icon: faBriefcase,
+    icon: "https://img.icons8.com/isometric/100/overtime.png",
   },
 ];
 
 export const PemilikUnitAkses = [
   {
-    label: "Kirim Masukan & Aspirasi",
-    icon: faHandHoldingHeart,
+    label: "Masukan & Aspirasi",
+    icon: "https://img.icons8.com/color/100/mailbox-opened-flag-down.png",
   },
   {
     label: "Laporan",
-    icon: faFileLines,
+    icon: "https://img.icons8.com/fluency/100/ratings.png",
   },
   {
     label: "Tagihan Bulanan",
-    icon: faWallet,
+    icon: "https://img.icons8.com/fluency/100/bill.png",
   },
   {
     label: "Pengumuman",
-    icon: faBullhorn,
+    icon: "https://img.icons8.com/color/96/commercial.png",
   },
   {
     label: "Informasi Paket",
-    icon: faTruckRampBox,
+    icon: "https://img.icons8.com/ultraviolet/100/new-product.png",
   },
   {
     label: "Buletin Kegiatan",
-    icon: faBriefcase,
+    icon: "https://img.icons8.com/isometric/100/overtime.png",
   },
 ];
 
 export const PelakuKomersilAkses = [
   {
     label: "Masukan & Aspirasi",
-    icon: faHandHoldingHeart,
+    icon: "https://img.icons8.com/color/96/mailbox-opened-flag-down.png",
   },
   {
     label: "Laporan",
-    icon: faFileLines,
+    icon: "https://img.icons8.com/fluency/100/ratings.png",
   },
   {
     label: "Tagihan Bulanan",
-    icon: faWallet,
+    icon: "https://img.icons8.com/fluency/100/bill.png",
   },
   {
     label: "Pengumuman",
-    icon: faBullhorn,
+    icon: "https://img.icons8.com/color/96/commercial.png",
   },
   {
     label: "Informasi Paket",
-    icon: faTruckRampBox,
+    icon: "https://img.icons8.com/ultraviolet/100/new-product.png",
   },
   {
     label: "Buletin Kegiatan",
-    icon: faBriefcase,
+    icon: "https://img.icons8.com/isometric/100/overtime.png",
   },
 ];
 

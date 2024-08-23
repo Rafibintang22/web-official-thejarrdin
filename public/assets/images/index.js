@@ -5,5 +5,6 @@ import img4 from "./4.png";
 import img5 from "./5.png";
 import img6 from "./6.png";
 import img7 from "./7.png";
+import threelogo from "./3 Logo.png";
 
-export { img1, img2, img3, img4, img5, img6, img7 };
+export { img1, img2, img3, img4, img5, img6, img7, threelogo };
