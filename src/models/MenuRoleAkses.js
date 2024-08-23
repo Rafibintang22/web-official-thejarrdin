@@ -1,88 +1,138 @@
 export const PengurusAkses = [
   {
+    label: "Laporan",
+    key: "Laporan",
+    icon: "https://img.icons8.com/wired/64/ratings.png",
+    iconColor: "https://img.icons8.com/fluency/100/ratings.png",
+  },
+  {
     label: "Masukan & Aspirasi",
-    icon: "https://img.icons8.com/color/100/mailbox-opened-flag-down.png",
+    key: "Masukan & Aspirasi",
+    icon: "https://img.icons8.com/ios/100/mailbox-closed-flag-down--v1.png",
+    iconColor: "https://img.icons8.com/color/100/mailbox-opened-flag-down.png",
   },
   {
     label: "Pengumuman",
-    icon: "https://img.icons8.com/color/96/commercial.png",
-  },
-  {
-    label: "Laporan",
-    icon: "https://img.icons8.com/fluency/100/ratings.png",
+    key: "Pengumuman",
+    icon: "https://img.icons8.com/ios/100/commercial.png",
+    iconColor: "https://img.icons8.com/color/96/commercial.png",
   },
 ];
 
 export const PengelolaAkses = [
   {
     label: "Tagihan Bulanan",
-    icon: "https://img.icons8.com/fluency/100/bill.png",
+    key: "Tagihan Bulanan",
+    icon: "https://img.icons8.com/parakeet-line/96/bill.png",
+    iconColor: "https://img.icons8.com/fluency/100/bill.png",
   },
   {
     label: "Pengumuman Pengelola",
-    icon: "https://img.icons8.com/fluency/100/megaphone.png",
+    key: "Pengumuman Pengelola",
+    icon: "https://img.icons8.com/ios/100/megaphone.png",
+    iconColor: "https://img.icons8.com/fluency/100/megaphone.png",
   },
   {
     label: "Informasi Paket",
-    icon: "https://img.icons8.com/ultraviolet/100/new-product.png",
+    key: "Informasi Paket",
+    icon: "https://img.icons8.com/ios/100/new-product.png",
+    iconColor: "https://img.icons8.com/ultraviolet/100/new-product.png",
   },
   {
     label: "Buletin Kegiatan",
-    icon: "https://img.icons8.com/isometric/100/overtime.png",
+    key: "Buletin Kegiatan",
+    icon: "https://img.icons8.com/ios/100/overtime--v1.png",
+    iconColor: "https://img.icons8.com/isometric/100/overtime.png",
   },
 ];
 
 export const PemilikUnitAkses = [
   {
-    label: "Masukan & Aspirasi",
-    icon: "https://img.icons8.com/color/100/mailbox-opened-flag-down.png",
-  },
-  {
     label: "Laporan",
-    icon: "https://img.icons8.com/fluency/100/ratings.png",
+    key: "Laporan",
+    icon: "https://img.icons8.com/wired/64/ratings.png",
+    iconColor: "https://img.icons8.com/fluency/100/ratings.png",
   },
   {
     label: "Tagihan Bulanan",
-    icon: "https://img.icons8.com/fluency/100/bill.png",
+    key: "Tagihan Bulanan",
+    icon: "https://img.icons8.com/parakeet-line/96/bill.png",
+    iconColor: "https://img.icons8.com/fluency/100/bill.png",
+  },
+  {
+    label: "Masukan & Aspirasi",
+    key: "Masukan & Aspirasi",
+    icon: "https://img.icons8.com/ios/100/mailbox-closed-flag-down--v1.png",
+    iconColor: "https://img.icons8.com/color/100/mailbox-opened-flag-down.png",
   },
   {
     label: "Pengumuman",
-    icon: "https://img.icons8.com/color/96/commercial.png",
+    key: "Pengumuman",
+    icon: "https://img.icons8.com/ios/100/commercial.png",
+    iconColor: "https://img.icons8.com/color/96/commercial.png",
   },
   {
-    label: "Informasi Paket",
-    icon: "https://img.icons8.com/ultraviolet/100/new-product.png",
+    label: "Pengumuman Pengelola",
+    key: "Pengumuman Pengelola",
+    icon: "https://img.icons8.com/ios/100/megaphone.png",
+    iconColor: "https://img.icons8.com/fluency/100/megaphone.png",
   },
   {
     label: "Buletin Kegiatan",
-    icon: "https://img.icons8.com/isometric/100/overtime.png",
+    key: "Buletin Kegiatan",
+    icon: "https://img.icons8.com/ios/100/overtime--v1.png",
+    iconColor: "https://img.icons8.com/isometric/100/overtime.png",
+  },
+  {
+    label: "Informasi Paket",
+    key: "Informasi Paket",
+    icon: "https://img.icons8.com/ios/100/new-product.png",
+    iconColor: "https://img.icons8.com/ultraviolet/100/new-product.png",
   },
 ];
 
 export const PelakuKomersilAkses = [
   {
-    label: "Masukan & Aspirasi",
-    icon: "https://img.icons8.com/color/96/mailbox-opened-flag-down.png",
-  },
-  {
     label: "Laporan",
-    icon: "https://img.icons8.com/fluency/100/ratings.png",
+    key: "Laporan",
+    icon: "https://img.icons8.com/wired/64/ratings.png",
+    iconColor: "https://img.icons8.com/fluency/100/ratings.png",
   },
   {
     label: "Tagihan Bulanan",
-    icon: "https://img.icons8.com/fluency/100/bill.png",
+    key: "Tagihan Bulanan",
+    icon: "https://img.icons8.com/parakeet-line/96/bill.png",
+    iconColor: "https://img.icons8.com/fluency/100/bill.png",
+  },
+  {
+    label: "Masukan & Aspirasi",
+    key: "Masukan & Aspirasi",
+    icon: "https://img.icons8.com/ios/100/mailbox-closed-flag-down--v1.png",
+    iconColor: "https://img.icons8.com/color/100/mailbox-opened-flag-down.png",
   },
   {
     label: "Pengumuman",
-    icon: "https://img.icons8.com/color/96/commercial.png",
+    key: "Pengumuman",
+    icon: "https://img.icons8.com/ios/100/commercial.png",
+    iconColor: "https://img.icons8.com/color/96/commercial.png",
   },
   {
-    label: "Informasi Paket",
-    icon: "https://img.icons8.com/ultraviolet/100/new-product.png",
+    label: "Pengumuman Pengelola",
+    key: "Pengumuman Pengelola",
+    icon: "https://img.icons8.com/ios/100/megaphone.png",
+    iconColor: "https://img.icons8.com/fluency/100/megaphone.png",
   },
   {
     label: "Buletin Kegiatan",
-    icon: "https://img.icons8.com/isometric/100/overtime.png",
+    key: "Buletin Kegiatan",
+    icon: "https://img.icons8.com/ios/100/overtime--v1.png",
+    iconColor: "https://img.icons8.com/isometric/100/overtime.png",
+  },
+  {
+    label: "Informasi Paket",
+    key: "Informasi Paket",
+    icon: "https://img.icons8.com/ios/100/new-product.png",
+    iconColor: "https://img.icons8.com/ultraviolet/100/new-product.png",
   },
 ];
 

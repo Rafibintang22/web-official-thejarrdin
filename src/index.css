@@ -34,6 +34,9 @@ body {
   justify-content: space-between;
   width: 100vw;
   height: 100vh;
+}
+
+.container-home {
   background-image: var(--gradient-theme);
 }
 
@@ -51,7 +54,7 @@ body {
 }
 
 .container .hexagonArea.last.genap {
-  transform: translateY(-30px) translateX(12.5%);
+  transform: translateY(-30px) translateX(25%);
 }
 .hexagon {
   position: relative;

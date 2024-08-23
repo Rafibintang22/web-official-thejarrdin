@@ -11,9 +11,9 @@ function Home() {
 
   return (
     <>
-      <div className="d-flex w-100 h-100 flex-column p-4">
+      <div className="container-home d-flex w-100 h-100 flex-column p-4">
         <div className="header container d-flex w-100 justify-content-between">
-          <h5 className="text-light fw-semibold">Selamat Datang, Rafi</h5>
+          <h5 className="text-light fw-medium">Selamat Datang, Rafi</h5>
           <div
             className="d-flex justify-content-center align-items-center rounded-circle bg-theme2"
             style={{ height: "45px", width: "45px", cursor: "pointer" }}
@@ -33,7 +33,7 @@ function Home() {
               {arrAkses.map((akses, j) => (
                 <div key={j} className="hexagon p-2 shadow-lg">
                   {/* <FontAwesomeIcon icon={akses.icon} size="2xl" /> */}
-                  <img width={48} height={48} src={akses.icon} alt={`img-icon-${j}`} />
+                  <img width={35} height={35} src={akses.icon} alt={`img-icon-${j}`} />
                   <p className="text-center fw-medium">{akses.label}</p>
                 </div>
               ))}
