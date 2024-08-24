@@ -10,6 +10,13 @@ function App() {
         theme={{
           token: {
             colorPrimary: "#399051",
+            colorBorder: "#E0E0E0",
+          },
+
+          components: {
+            Select: {
+              colorText: "#000000",
+            },
           },
         }}
       >
