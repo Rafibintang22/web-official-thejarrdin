@@ -3,11 +3,13 @@ import { multiRoleAkses, bagiArrayAkses } from "../models/menuRoleAkses";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons/faArrowRightFromBracket";
 import { threelogo } from "../../public/assets/images/index";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
   const rolesUser = ["Pengurus", "Pengelola", "PemilikUnit"];
   const arr = multiRoleAkses(rolesUser);
   const arr2 = bagiArrayAkses(arr);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -31,7 +33,13 @@ function Home() {
               }`}
             >
               {arrAkses.map((akses, j) => (
-                <div key={j} className="hexagon p-2 shadow-lg">
+                <div
+                  key={j}
+                  className="hexagon p-2 shadow-lg"
+                  onClick={() => {
+                    navigate(akses.key);
+                  }}
+                >
                   {/* <FontAwesomeIcon icon={akses.icon} size="2xl" /> */}
                   <img width={35} height={35} src={akses.icon} alt={`img-icon-${j}`} />
                   <p className="text-center fw-medium">{akses.label}</p>

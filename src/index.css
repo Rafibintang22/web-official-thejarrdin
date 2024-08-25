@@ -92,3 +92,7 @@ body {
   background-color: var(--theme2b);
   transition: 0.5s;
 }
+
+.input-dateRangePicker:focus {
+  border: 1px solid var(--theme) !important;
+}

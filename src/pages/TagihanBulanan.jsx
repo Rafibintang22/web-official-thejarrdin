@@ -5,12 +5,16 @@ import Sidebar from "../components/Sidebar";
 import { Table } from "antd";
 import FilterTable from "../components/Filter/FilterTable";
 
-function Laporan() {
+function TagihanBulanan() {
   return (
     <div className="container-main w-100 d-flex">
       <Sidebar />
       <div className="container-content w-100 h-100 d-flex flex-column bg-light">
-        <HeaderKonten judul={"Data Laporan"} isInsert={true} nameInsert={"Tambah Data Laporan"} />
+        <HeaderKonten
+          judul={"Data Tagihan Bulanan"}
+          isInsert={true}
+          nameInsert={"Tambah Tagihan Bulanan"}
+        />
         <FilterTable />
         <div className="tipeData-content w-100 d-flex justify-content-start ps-4 p-3 gap-4">
           <div className="d-flex flex-column" style={{ cursor: "pointer" }}>
@@ -36,4 +40,4 @@ function Laporan() {
   );
 }
 
-export default Laporan;
+export default TagihanBulanan;

@@ -2,9 +2,11 @@ import { Button, ConfigProvider, Menu } from "antd";
 import { multiRoleAkses } from "../models/menuRoleAkses";
 import { useState } from "react";
 import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { threelogo } from "../../public/assets/images";
+import { useNavigate } from "react-router-dom";
+useNavigate;
 
 function Sidebar() {
+  const navigate = useNavigate();
   const rolesUser = ["Pengurus", "Pengelola", "PemilikUnit"];
   const arr = multiRoleAkses(rolesUser);
   const itemsMenu = arr.map((item) => ({
@@ -12,6 +14,17 @@ function Sidebar() {
     key: item.key,
     icon: <img src={item.icon} width={25} height={25} />,
   }));
+  const newItem = {
+    label: "Home",
+    key: "/",
+    icon: "https://img.icons8.com/ios/100/home--v1.png",
+  };
+  // Menambahkan item baru pada index awal
+  itemsMenu.unshift({
+    label: newItem.label,
+    key: newItem.key,
+    icon: <img src={newItem.icon} width={25} height={25} />,
+  });
 
   const [collapsed, setCollapsed] = useState(false);
   const toggleCollapsed = () => {
@@ -32,9 +45,6 @@ function Sidebar() {
         }}
       >
         <div className="head-sidebar ps-4 pe-3 d-flex flex-column gap-4">
-          {/* <div className="w-100 d-flex justify-content-center">
-            <img src={threelogo} alt="threelogo" className="w-75" />
-          </div> */}
           <div className="d-flex justify-content-between">
             {!collapsed && (
               <div className="d-flex flex-column">
@@ -50,11 +60,14 @@ function Sidebar() {
 
         <Menu
           className="h-100 d-flex flex-column gap-3"
-          defaultSelectedKeys={["laporan"]}
           mode="inline"
           theme="light"
           inlineCollapsed={collapsed}
           items={itemsMenu}
+          defaultSelectedKeys={[window.location.pathname]}
+          onClick={({ key }) => {
+            navigate(key);
+          }}
         />
 
         <Button className="ms-4 me-3" type="primary" danger ghost>
