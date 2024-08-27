@@ -1,13 +1,16 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ConfigProvider } from "antd";
-import Home from "./pages/Home";
-import Laporan from "./pages/Laporan";
-import MasukanAspirasi from "./pages/MasukanAspirasi";
-import Pengumuman from "./pages/Pengumuman";
-import TagihanBulanan from "./pages/TagihanBulanan";
-import PengumumanPengelola from "./pages/PengumumanPengelola";
-import InformasiPaket from "./pages/InformasiPaket";
-import BuletinKegiatan from "./pages/BuletinKegiatan";
+import {
+  Home,
+  Laporan,
+  MasukanAspirasi,
+  Pengumuman,
+  TagihanBulanan,
+  PengumumanPengelola,
+  InformasiPaket,
+  BuletinKegiatan,
+  Login,
+} from "./pages/index";
 
 function App() {
   return (
@@ -29,6 +32,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Home />}></Route>
+            <Route path="/login" element={<Login />}></Route>
             <Route path="/laporan" element={<Laporan />}></Route>
             <Route path="/masukan&Aspirasi" element={<MasukanAspirasi />}></Route>
             <Route path="/pengumuman" element={<Pengumuman />}></Route>

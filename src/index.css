@@ -16,6 +16,7 @@
   --theme2Hover: #caa007;
   --theme2b: #de5433;
   --gradient-theme: linear-gradient(to right, var(--theme), var(--themeTua));
+  --gradient-theme-opacity-80: linear-gradient(to right, #399052e7, #0a7e67);
   --header: #0f0d1d;
   --text: #445375;
   --border: #d4dcff;
@@ -47,7 +48,40 @@ body {
 }
 
 .container-home {
-  background-image: var(--gradient-theme);
+  position: relative;
+  background-position: center center;
+  background-size: cover;
+  background-image: url(/public/assets/images/BangunanJarrdin1.jpeg);
+  z-index: 0;
+}
+.container-home::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: var(--gradient-theme-opacity-80);
+  z-index: -1; /* Letakkan overlay di atas background */
+}
+
+.container-login {
+  position: relative; /* Pastikan posisi elemen relatif untuk lapisan overlay */
+  background-image: url(/public/assets/images/Kolam-1.jpg);
+  background-position: center center;
+  background-size: cover;
+  z-index: 2; /* Pastikan konten berada di atas overlay */
+}
+
+.container-login::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8); /* Warna overlay dengan opacity 50% */
+  z-index: 1; /* Letakkan overlay di atas background */
 }
 
 .bg-theme2 {

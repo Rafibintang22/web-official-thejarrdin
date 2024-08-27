@@ -35,7 +35,7 @@ function Home() {
               {arrAkses.map((akses, j) => (
                 <div
                   key={j}
-                  className="hexagon p-2 shadow-lg"
+                  className="hexagon p-2 shadow shadow-lg"
                   onClick={() => {
                     navigate(akses.key);
                   }}

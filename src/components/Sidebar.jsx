@@ -1,13 +1,13 @@
 import { Button, ConfigProvider, Menu } from "antd";
 import { multiRoleAkses } from "../models/menuRoleAkses";
-import { useState } from "react";
 import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import toogleSidebar from "../utils/toogleSidebar";
 useNavigate;
 
 function Sidebar() {
   const navigate = useNavigate();
-  const rolesUser = ["Pengurus", "Pengelola", "PemilikUnit"];
+  const rolesUser = ["Pengurus", "Pengelola", "PemilikUnit", "PelakuKomersil"];
   const arr = multiRoleAkses(rolesUser);
   const itemsMenu = arr.map((item) => ({
     label: item.label,
@@ -26,15 +26,15 @@ function Sidebar() {
     icon: <img src={newItem.icon} width={25} height={25} />,
   });
 
-  const [collapsed, setCollapsed] = useState(false);
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
+  const { isSidebarOpen, setIsSidebarOpen } = toogleSidebar();
+  const toggleisSidebarOpen = () => {
+    setIsSidebarOpen(isSidebarOpen);
   };
 
   return (
     <div
       className="sidebar h-100 pt-3 pb-3 d-flex flex-column justify-content-between gap-3"
-      style={{ width: collapsed ? "80px" : "20%", backgroundColor: "#F1F6F2" }}
+      style={{ width: isSidebarOpen ? "80px" : "20%", backgroundColor: "#F1F6F2" }}
     >
       <ConfigProvider
         theme={{
@@ -46,14 +46,14 @@ function Sidebar() {
       >
         <div className="head-sidebar ps-4 pe-3 d-flex flex-column gap-4">
           <div className="d-flex justify-content-between">
-            {!collapsed && (
+            {!isSidebarOpen && (
               <div className="d-flex flex-column">
                 <p>Selamat datang,</p>
                 <p className="fw-semibold">Rafi Bintang</p>
               </div>
             )}
-            <Button type="primary" onClick={toggleCollapsed}>
-              {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            <Button type="primary" onClick={toggleisSidebarOpen}>
+              {isSidebarOpen ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             </Button>
           </div>
         </div>
@@ -62,7 +62,7 @@ function Sidebar() {
           className="h-100 d-flex flex-column gap-3"
           mode="inline"
           theme="light"
-          inlineCollapsed={collapsed}
+          inlineisSidebarOpen={isSidebarOpen}
           items={itemsMenu}
           defaultSelectedKeys={[window.location.pathname]}
           onClick={({ key }) => {
@@ -72,7 +72,7 @@ function Sidebar() {
 
         <Button className="ms-4 me-3" type="primary" danger ghost>
           <LogoutOutlined />
-          {!collapsed && "Keluar"}
+          {!isSidebarOpen && "Keluar"}
         </Button>
       </ConfigProvider>
     </div>
