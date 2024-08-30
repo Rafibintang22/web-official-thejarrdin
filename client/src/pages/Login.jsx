@@ -6,15 +6,21 @@ import { useState } from "react";
 function Login() {
   const [noTelp, setNoTelp] = useState("");
   const [otp, setOtp] = useState("");
-  const handleChange = (e, tipe) => {
+  const handleChangeNoTelp = (e) => {
     const { value: inputValue } = e.target;
     const reg = /^-?\d*(\.\d*)?$/;
     if (reg.test(inputValue) || inputValue === "" || inputValue === "-") {
-      if (tipe === "noTelp") {
-        setNoTelp(inputValue);
-      } else if (tipe === "otp") {
-        setOtp(inputValue);
-      }
+      setNoTelp(inputValue);
+    }
+  };
+
+  const handleChangeOtp = (e) => {
+    const { value: inputValue } = e;
+    const reg = /^-?\d*(\.\d*)?$/;
+
+    if (reg.test(inputValue) || inputValue === "" || inputValue === "-") {
+      console.log(inputValue);
+      setOtp(inputValue);
     }
   };
 
@@ -45,7 +51,7 @@ function Login() {
             className="bg-transparent text-light"
             placeholder="no telepon"
             prefix={<UserOutlined />}
-            onChange={(e) => handleChange(e, "noTelp")}
+            onChange={(e) => handleChangeNoTelp(e)}
             value={noTelp}
           />
         </ConfigProvider>
@@ -65,7 +71,7 @@ function Login() {
             length={6}
             size="large"
             className="bg-transparent"
-            onChange={(e) => handleChange(e, "otp")}
+            onChange={(e) => handleChangeOtp(e)}
             value={otp}
           />
         </>
