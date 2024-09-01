@@ -17,6 +17,7 @@ function ModalInsert({ currState, setState, judulInsert }) {
   const [current, setCurrent] = useState("unggah");
 
   const opsiUser = [
+    { label: "Pilih Semua", value: "Pilih Semua" },
     { label: "Ahmad Rizal", value: 1 },
     { label: "Samuel Haratua", value: 2 },
     { label: "Rafi rizky", value: 3 },
@@ -44,6 +45,16 @@ function ModalInsert({ currState, setState, judulInsert }) {
       console.log("Dropped files", e.dataTransfer.files);
     },
   };
+
+  const [test, setTest] = useState([1, 2]);
+  const handleSelectChange = (value) => {
+    if (value.includes("Pilih Semua")) {
+      setTest([1, 2, 3, 4, 5, 6]);
+    } else {
+      setTest(value);
+    }
+  };
+  console.log(test);
 
   const form = () => {
     if (current === "unggah") {
@@ -101,7 +112,8 @@ function ModalInsert({ currState, setState, judulInsert }) {
               mode="multiple"
               allowClear
               placeholder="Pilih..."
-              //   onChange={handleChange}
+              value={test}
+              onChange={handleSelectChange}
               options={opsiUser}
             />
           </div>
