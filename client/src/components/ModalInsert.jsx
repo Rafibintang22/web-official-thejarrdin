@@ -46,15 +46,24 @@ function ModalInsert({ currState, setState, judulInsert }) {
     },
   };
 
-  const [test, setTest] = useState([1, 2]);
-  const handleSelectChange = (value) => {
+  const [dibuatUntukLink, setDibuatUntukLink] = useState([]);
+  const [dibuatUntukDokumen, setDibuatUntukDokumen] = useState([]);
+  const handleSelectChange = (value, tipe) => {
     if (value.includes("Pilih Semua")) {
-      setTest([1, 2, 3, 4, 5, 6]);
+      if (tipe === "link") {
+        setDibuatUntukLink([1, 2, 3, 4, 5, 6]);
+      } else if (tipe === "dokumen") {
+        setDibuatUntukDokumen([1, 2, 3, 4, 5, 6]);
+      }
     } else {
-      setTest(value);
+      if (tipe === "link") {
+        setDibuatUntukLink(value);
+      } else if (tipe === "dokumen") {
+        setDibuatUntukDokumen(value);
+      }
     }
   };
-  console.log(test);
+  console.log(dibuatUntukLink);
 
   const form = () => {
     if (current === "unggah") {
@@ -75,7 +84,8 @@ function ModalInsert({ currState, setState, judulInsert }) {
               mode="multiple"
               allowClear
               placeholder="Pilih..."
-              //   onChange={handleChange}
+              value={dibuatUntukDokumen}
+              onChange={(value) => handleSelectChange(value, "dokumen")}
               options={opsiUser}
             />
           </div>
@@ -112,8 +122,8 @@ function ModalInsert({ currState, setState, judulInsert }) {
               mode="multiple"
               allowClear
               placeholder="Pilih..."
-              value={test}
-              onChange={handleSelectChange}
+              value={dibuatUntukLink}
+              onChange={(value) => handleSelectChange(value, "link")}
               options={opsiUser}
             />
           </div>
