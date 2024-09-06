@@ -1,0 +1,23 @@
+const { DatabaseManager, DataTypes } = require("../../config/DatabaseManager");
+const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
+
+const FiturModel = jarrdinDB.define(
+  "Fitur",
+  {
+    fiturID: {
+      type: DataTypes.INTEGER(11),
+      primaryKey: true,
+      allowNull: false,
+      autoIncrement: true,
+    },
+    nama: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+  },
+  {
+    tableName: "Fitur",
+  }
+);
+
+module.exports = { FiturModel };

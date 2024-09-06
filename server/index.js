@@ -15,8 +15,8 @@ new DatabaseManager(
 );
 DatabaseManager.authenticate(process.env.DB_NAME);
 
-// const { router } = require("./routes");
-// app.use("/", router);
+const { router } = require("./routes");
+app.use("/", router);
 
 const port = 3000;
 app.listen(port, () => {

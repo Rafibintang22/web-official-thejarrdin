@@ -1,0 +1,27 @@
+const { DatabaseManager, DataTypes } = require("../../config/DatabaseManager");
+const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
+
+const RoleModel = jarrdinDB.define(
+  "Role",
+  {
+    roleID: {
+      type: DataTypes.INTEGER(11),
+      primaryKey: true,
+      allowNull: false,
+      autoIncrement: true,
+    },
+    nama: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+    deskripsi: {
+      type: DataTypes.TEXT(),
+      allowNull: true,
+    },
+  },
+  {
+    tableName: "Role",
+  }
+);
+
+module.exports = { RoleModel };
