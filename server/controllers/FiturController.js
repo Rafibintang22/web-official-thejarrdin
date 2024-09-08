@@ -1,11 +1,10 @@
-const { FiturRepository } = require("../database/repositories/FiturRepository");
+const { FiturRepository } = require("../database/repositories");
 // const { Validator } = require("../utils/validator");
 
 class FiturController {
   static async getAll(req, res) {
     try {
       let readFitur = await FiturRepository.readAll();
-
       res.status(200).json(readFitur);
     } catch (error) {
       console.error(error);
@@ -16,7 +15,6 @@ class FiturController {
   static async getOne(req, res) {
     try {
       let readFitur = await FiturRepository.readOne(req.params.id);
-
       res.status(200).json(readFitur);
     } catch (error) {
       console.error(error);

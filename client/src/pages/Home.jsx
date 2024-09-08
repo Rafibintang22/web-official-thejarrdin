@@ -4,12 +4,29 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons/faArrowRightFromBracket";
 import { threelogo } from "../../public/assets/images/index";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import axios from "axios";
+import { urlServer } from "../utils/endpoint";
 
 function Home() {
   const rolesUser = ["Pengurus", "Pengelola", "PemilikUnit"];
   const arr = multiRoleAkses(rolesUser);
   const arr2 = bagiArrayAkses(arr);
   const navigate = useNavigate();
+
+  axios.defaults.withCredentials = true;
+  useEffect(() => {
+    const fetchFitur = async () => {
+      try {
+        const response = await axios.get(`${urlServer}/fitur`);
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchFitur();
+  }, []);
 
   return (
     <>

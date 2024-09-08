@@ -1,6 +1,10 @@
 const { DatabaseManager, DataTypes } = require("../../config/DatabaseManager");
 const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
 
+if (!jarrdinDB) {
+  throw new Error("Failed to retrieve Sequelize instance from DatabaseManager");
+}
+
 const UserModel = jarrdinDB.define(
   "User",
   {

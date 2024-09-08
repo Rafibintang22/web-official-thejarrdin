@@ -1,6 +1,6 @@
-const { FiturModel } = require("../models/index");
+const { FiturModel } = require("../models");
 
-const { DatabaseManager, Sequelize, Op } = require("../../config/DatabaseManager");
+// const { DatabaseManager, Sequelize, Op } = require("../../config/DatabaseManager");
 
 class FiturRepository {
   static async readAll() {

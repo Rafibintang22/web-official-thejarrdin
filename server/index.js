@@ -1,11 +1,13 @@
 const express = require("express");
 const dotenv = require("dotenv");
+dotenv.config({ path: "./config/.env" });
+
+const { router } = require("./routes");
 const { DatabaseManager } = require("./config/DatabaseManager");
 
 const app = express();
-dotenv.config({ path: "./config/.env" });
 
-new DatabaseManager(
+const dbManager = new DatabaseManager(
   process.env.DB_NAME,
   process.env.DB_USERNAME,
   process.env.DB_PASSWORD,
@@ -13,9 +15,9 @@ new DatabaseManager(
   process.env.DB_PORT,
   process.env.DB_DIALECT
 );
-DatabaseManager.authenticate(process.env.DB_NAME);
 
-const { router } = require("./routes");
+dbManager.authenticate(process.env.DB_NAME); // Call authenticate on the instance
+
 app.use("/", router);
 
 const port = 3000;
