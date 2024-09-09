@@ -13,6 +13,16 @@ class FiturRepository {
     }
   }
 
+  static async readAllByRole() {
+    try {
+      const findFitur = await FiturModel.findAll();
+
+      return findFitur;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async readOne(fiturID) {
     try {
       const findFitur = await FiturModel.findOne({

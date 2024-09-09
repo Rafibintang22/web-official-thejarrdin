@@ -21,6 +21,7 @@ const RoleModel = jarrdinDB.define(
   },
   {
     tableName: "Role",
+    timestamps: false,
   }
 );
 

@@ -1,55 +1,72 @@
-// const { DatabaseManager, DataTypes } = require("../../config/DatabaseManager");
-// const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
+const { DatabaseManager, DataTypes } = require("../../config/DatabaseManager");
+const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
+const { FiturModel } = require("./FiturModel");
+const { UserModel } = require("./UserModel");
 
-// const DataFiturModel = jarrdinDB.define(
-//   "DataFitur",
-//   {
-//     dataFiturID: {
-//       type: DataTypes.INTEGER(11),
-//       primaryKey: true,
-//       allowNull: false,
-//       autoIncrement: true,
-//     },
-//     fiturID: {
-//       type: DataTypes.INTEGER(11),
-//       allowNull: false,
-//     },
-//     judul: {
-//       type: DataTypes.STRING(255),
-//       allowNull: false,
-//     },
-//     tglDibuat: {
-//       type: DataTypes.DATE(),
-//       allowNull: false,
-//     },
-//     userID_dibuat: {
-//       type: DataTypes.INTEGER(11),
-//       allowNull: false,
-//     },
-//     fileFolder: {
-//       type: DataTypes.STRING(255),
-//       allowNull: false,
-//     },
-//   },
-//   {
-//     tableName: "DataFitur",
-//   }
-// );
+const DataFiturModel = jarrdinDB.define(
+  "DataFitur",
+  {
+    dataFiturID: {
+      type: DataTypes.INTEGER(11),
+      primaryKey: true,
+      allowNull: false,
+      autoIncrement: true,
+    },
+    fiturID: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+    },
+    judul: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+    tglDibuat: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+    },
+    userID_dibuat: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+    },
+    fileFolder: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+  },
+  {
+    tableName: "DataFitur",
+    timestamps: false,
+  }
+);
 
-// function associationDataFitur() {
-//   // ######################################################################
-//   SparkUserModel.belongsTo(EnterpriseModel, {
-//     foreignKey: "EnterpriseID",
-//     targetKey: "EnterpriseID",
-//     onDelete: "RESTRICT",
-//     onUpdate: "CASCADE",
-//   });
-//   EnterpriseModel.hasMany(SparkUserModel, {
-//     foreignKey: "EnterpriseID",
-//     sourceKey: "EnterpriseID",
-//   });
-// }
+function associationDataFitur() {
+  // Association antara DataFitur dan Fitur
+  DataFiturModel.belongsTo(FiturModel, {
+    foreignKey: "fiturID",
+    targetKey: "fiturID",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
 
-// associationSparkUser();
+  FiturModel.hasMany(DataFiturModel, {
+    foreignKey: "fiturID",
+    sourceKey: "fiturID",
+  });
 
-// module.exports = { DataFiturModel };
+  // Association antara DataFitur dan User
+  DataFiturModel.belongsTo(UserModel, {
+    foreignKey: "userID_dibuat",
+    targetKey: "userID",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+
+  UserModel.hasMany(DataFiturModel, {
+    foreignKey: "userID_dibuat",
+    sourceKey: "userID",
+  });
+}
+
+associationDataFitur();
+
+module.exports = { DataFiturModel };

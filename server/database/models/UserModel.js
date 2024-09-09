@@ -25,6 +25,7 @@ const UserModel = jarrdinDB.define(
   },
   {
     tableName: "User",
+    timestamps: false,
   }
 );
 
