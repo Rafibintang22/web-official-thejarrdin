@@ -10,4 +10,4 @@ router.get("/fitur", FiturController.getAll);
 // ###############################################################################
 //                              AAAA
 
-module.exports = router;
+module.exports = { router };

@@ -17,6 +17,7 @@ const FiturModel = jarrdinDB.define(
   },
   {
     tableName: "Fitur",
+    timestamps: false,
   }
 );
 

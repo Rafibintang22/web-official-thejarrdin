@@ -1,13 +1,14 @@
 const express = require("express");
 const dotenv = require("dotenv");
-dotenv.config({ path: "./config/.env" });
+const bodyParser = require("body-parser");
+const cors = require("cors");
 
-const { router } = require("./routes");
 const { DatabaseManager } = require("./config/DatabaseManager");
 
 const app = express();
+dotenv.config({ path: "./config/.env" });
 
-const dbManager = new DatabaseManager(
+new DatabaseManager(
   process.env.DB_NAME,
   process.env.DB_USERNAME,
   process.env.DB_PASSWORD,
@@ -16,8 +17,22 @@ const dbManager = new DatabaseManager(
   process.env.DB_DIALECT
 );
 
-dbManager.authenticate(process.env.DB_NAME); // Call authenticate on the instance
+DatabaseManager.authenticate(process.env.DB_NAME); // Call authenticate on the instance
 
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(express.json()); //untuk server dapat menerima req body/params/query dari client menjadi format json
+app.use(express.urlencoded({ extended: true })); //agar server bisa membaca req dsri client
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    methods: ["POST", "GET", "DELETE", "PUT", "PATCH", "OPTIONS"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
+    exposedHeaders: ["Authorization"],
+  })
+);
+
+const { router } = require("./routes");
 app.use("/", router);
 
 const port = 3000;

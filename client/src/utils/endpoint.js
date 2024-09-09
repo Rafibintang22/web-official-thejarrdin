@@ -1,4 +1,4 @@
-const urlServer = "http://localhost:5173";
-const urlClient = "http://localhost:3000";
+const urlServer = "http://localhost:3000";
+const urlClient = "http://localhost:5173";
 
 export { urlServer, urlClient };
