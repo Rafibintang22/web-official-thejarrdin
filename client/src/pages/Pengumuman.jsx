@@ -26,7 +26,7 @@ function Pengumuman() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${urlServer}/data/${1}`);
+        const response = await axios.get(`${urlServer}/data/${1}`); //kode 1 untuk menandakan fiturID Pengumuman
         console.log(response);
       } catch (error) {
         console.log(error);

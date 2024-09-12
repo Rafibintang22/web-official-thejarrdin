@@ -10,8 +10,9 @@ const router = express.Router();
 router.get("/fitur", FiturController.getAll);
 
 // ###############################################################################
-//                              LAPORAN
+//                              DATA FITUR
 router.get("/data/:fiturID", DataFiturController.getAll);
 router.post("/data", DataFiturController.post);
+router.delete("/data/:dataFiturID", DataFiturController.delete);
 
 module.exports = { router };

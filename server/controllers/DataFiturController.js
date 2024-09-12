@@ -36,6 +36,17 @@ class DataFiturController {
       return res.status(error.status || 500).json({ error: error.message });
     }
   }
+
+  static async delete(req, res) {
+    try {
+      const deleteDataFitur = await DataFiturRepository.delete(req.params.dataFiturID);
+
+      res.status(201).json({ success: true });
+    } catch (error) {
+      console.error(error);
+      res.status(error.status || 500).json({ error: error.message });
+    }
+  }
 }
 
 module.exports = { DataFiturController };
