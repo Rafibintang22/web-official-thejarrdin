@@ -3,8 +3,11 @@ import HeaderKonten from "../components/HeaderKonten";
 import Sidebar from "../components/Sidebar";
 import { Menu, Table } from "antd";
 import FilterTable from "../components/Filter/FilterTable";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ModalInsert from "../components/ModalInsert";
+import axios from "axios";
+import { urlServer } from "../utils/endpoint";
+import { Fitur } from "../models/FiturModel";
 
 function MasukanAspirasi() {
   const [modalInsert, setModalInsert] = useState(false);
@@ -19,6 +22,19 @@ function MasukanAspirasi() {
       key: "dataDiunggah",
     },
   ];
+  axios.defaults.withCredentials = true;
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${urlServer}/data/${Fitur["Aspirasi"]}`);
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <>
       <div className="container-main w-100 d-flex">

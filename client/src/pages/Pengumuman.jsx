@@ -7,6 +7,7 @@ import ModalInsert from "../components/ModalInsert";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { urlServer } from "../utils/endpoint";
+import { Fitur } from "../models/FiturModel";
 
 function Pengumuman() {
   const [modalInsert, setModalInsert] = useState(false);
@@ -26,7 +27,7 @@ function Pengumuman() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${urlServer}/data/${1}`); //kode 1 untuk menandakan fiturID Pengumuman
+        const response = await axios.get(`${urlServer}/data/${Fitur["Pengumuman"]}`);
         console.log(response);
       } catch (error) {
         console.log(error);
