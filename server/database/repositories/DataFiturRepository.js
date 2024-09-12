@@ -22,6 +22,10 @@ class DataFiturRepository {
         ],
       });
 
+      if (!findDataFitur) {
+        return [];
+      }
+
       const transformedData = findDataFitur[0].user_tujuans.map((data) => ({
         Judul: data.DataFitur.judul,
         DibuatOleh: data.DataFitur.userID_dibuat,
