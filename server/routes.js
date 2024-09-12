@@ -1,13 +1,11 @@
 const express = require("express");
-const { FiturController } = require("./controllers");
-const { HakAksesController } = require("./controllers/HakAksesController");
-const { DataFiturController } = require("./controllers/DataFiturController");
+const { FiturController, DataFiturController } = require("./controllers");
 
 const router = express.Router();
 
 // ###############################################################################
 //                              FITUR
-router.get("/fitur", FiturController.getAll);
+router.get("/fitur", FiturController.getAllByUserID);
 
 // ###############################################################################
 //                              DATA FITUR

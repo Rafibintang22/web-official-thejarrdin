@@ -21,6 +21,16 @@ class FiturController {
       res.status(error.status || 500).json({ error: error.message });
     }
   }
+
+  static async getAllByUserID(req, res) {
+    try {
+      let readFitur = await FiturRepository.readFiturByUserID(2);
+      res.status(200).json(readFitur);
+    } catch (error) {
+      console.error(error);
+      res.status(error.status || 500).json({ error: error.message });
+    }
+  }
 }
 
 module.exports = { FiturController };

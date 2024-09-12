@@ -1,4 +1,4 @@
-const { FiturModel, UserModel, UserRoleModel, HakAksesModel } = require("../models");
+const { FiturModel, UserModel, UserRoleModel, HakAksesModel, RoleModel } = require("../models");
 
 // const { DatabaseManager, Sequelize, Op } = require("../../config/DatabaseManager");
 
