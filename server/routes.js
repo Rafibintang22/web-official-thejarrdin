@@ -1,5 +1,7 @@
 const express = require("express");
 const { FiturController } = require("./controllers");
+const { HakAksesController } = require("./controllers/HakAksesController");
+const { DataFiturController } = require("./controllers/DataFiturController");
 
 const router = express.Router();
 
@@ -8,6 +10,8 @@ const router = express.Router();
 router.get("/fitur", FiturController.getAll);
 
 // ###############################################################################
-//                              AAAA
+//                              LAPORAN
+router.get("/data/:fiturID", DataFiturController.getAll);
+router.post("/data", DataFiturController.post);
 
 module.exports = { router };

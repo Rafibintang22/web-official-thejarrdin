@@ -4,7 +4,9 @@ import Sidebar from "../components/Sidebar";
 import { Menu, Table } from "antd";
 import FilterTable from "../components/Filter/FilterTable";
 import ModalInsert from "../components/ModalInsert";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { urlServer } from "../utils/endpoint";
 
 function Pengumuman() {
   const [modalInsert, setModalInsert] = useState(false);
@@ -19,6 +21,20 @@ function Pengumuman() {
       key: "dataDiunggah",
     },
   ];
+
+  axios.defaults.withCredentials = true;
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${urlServer}/data/${1}`);
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <>
       <div className="container-main w-100 d-flex">

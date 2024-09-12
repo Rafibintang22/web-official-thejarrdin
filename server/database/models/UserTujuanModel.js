@@ -1,6 +1,7 @@
-const { DataTypes } = require("sequelize");
-const jarrdinDB = require("../../config/DatabaseManager").getDatabase(process.env.DB_NAME);
+const { DatabaseManager, DataTypes } = require("../../config/DatabaseManager");
+const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
 const { DataFiturModel } = require("./DataFiturModel");
+const { UserModel } = require("./UserModel");
 
 const UserTujuanModel = jarrdinDB.define(
   "user_tujuan",
@@ -36,6 +37,19 @@ function associationUserTujuan() {
     sourceKey: "dataFiturID",
   });
 }
+
+// Association between UserTujuan and User
+UserTujuanModel.belongsTo(UserModel, {
+  foreignKey: "userID",
+  targetKey: "userID",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+
+UserModel.hasMany(UserTujuanModel, {
+  foreignKey: "userID",
+  sourceKey: "userID",
+});
 
 associationUserTujuan();
 

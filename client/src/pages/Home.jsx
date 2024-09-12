@@ -15,18 +15,18 @@ function Home() {
   const navigate = useNavigate();
 
   axios.defaults.withCredentials = true;
-  useEffect(() => {
-    const fetchFitur = async () => {
-      try {
-        const response = await axios.get(`${urlServer}/fitur`);
-        console.log(response);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchFitur = async () => {
+  //     try {
+  //       const response = await axios.get(`${urlServer}/data/${1}`);
+  //       console.log(response);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
 
-    fetchFitur();
-  }, []);
+  //   fetchFitur();
+  // }, []);
 
   return (
     <>
