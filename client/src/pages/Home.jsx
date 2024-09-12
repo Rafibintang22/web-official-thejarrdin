@@ -4,28 +4,33 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons/faArrowRightFromBracket";
 import { threelogo } from "../../public/assets/images/index";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { urlServer } from "../utils/endpoint";
 
 function Home() {
-  const rolesUser = ["Pengurus", "Pengelola", "PemilikUnit"];
-  const arr = multiRoleAkses(rolesUser);
-  const arr2 = bagiArrayAkses(arr);
+  const [rolesUser, setRolesUser] = useState([]);
   const navigate = useNavigate();
 
   axios.defaults.withCredentials = true;
   useEffect(() => {
-    const fetchFitur = async () => {
+    const fetchRole = async () => {
       try {
-        const response = await axios.get(`${urlServer}/fitur`);
-        console.log(response);
+        const response = await axios.get(`${urlServer}/role`);
+        const responseData = response.data;
+        console.log(responseData);
+
+        const transformedData = responseData.map((data) => data.Nama.replace(/\s+/g, "")); // Menghapus semua spasi);
+        const arr = multiRoleAkses(transformedData);
+        const arr2 = bagiArrayAkses(arr);
+
+        setRolesUser(arr2);
       } catch (error) {
         console.log(error);
       }
     };
 
-    fetchFitur();
+    fetchRole();
   }, []);
 
   return (
@@ -42,7 +47,7 @@ function Home() {
         </div>
 
         <div className="container d-flex justify-content-center align-items-center flex-column flex-wrap h-100">
-          {arr2.map((arrAkses, i) => (
+          {rolesUser.map((arrAkses, i) => (
             <div
               key={i}
               className={`hexagonArea d-flex ${i === 0 ? "first" : "last"} ${
