@@ -21,7 +21,7 @@ const DataFiturModel = jarrdinDB.define(
       allowNull: false,
     },
     tglDibuat: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
       allowNull: false,
     },
     userID_dibuat: {

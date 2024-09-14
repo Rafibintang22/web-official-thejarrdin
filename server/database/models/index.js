@@ -5,6 +5,7 @@ const { DataFiturModel } = require("./DataFiturModel");
 const { UserTujuanModel } = require("./UserTujuanModel");
 const { UserRoleModel } = require("./UserRoleModel");
 const { HakAksesModel } = require("./HakAksesModel");
+const { LoginSessionModel } = require("./LoginSessionModel");
 
 module.exports = {
   UserModel,
@@ -14,4 +15,5 @@ module.exports = {
   UserTujuanModel,
   UserRoleModel,
   HakAksesModel,
+  LoginSessionModel,
 };

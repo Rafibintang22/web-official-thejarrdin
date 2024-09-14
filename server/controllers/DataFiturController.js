@@ -1,6 +1,5 @@
 const { DataFiturRepository } = require("../database/repositories");
 const { Validator } = require("../utils/validator");
-const { DataFiturSchema } = require("../utils/validator/DataFiturSchema");
 
 class DataFiturController {
   static async getAll(req, res) {
@@ -9,10 +8,6 @@ class DataFiturController {
 
     try {
       const readFitur = await DataFiturRepository.readAllByFiturID(userID, fiturID);
-      if (!readFitur || readFitur.length === 0) {
-        return res.status(404).json({ error: "No data found for the given fiturID" });
-      }
-
       return res.status(200).json(readFitur);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -22,7 +17,7 @@ class DataFiturController {
 
   static async post(req, res) {
     // Validasi data dari request body yang ingin di create
-    let { error } = DataFiturSchema.createDataFitur(req.body);
+    let { error } = Validator.createDataFitur(req.body);
 
     if (error) {
       return res.status(400).json({ error: error.details[0].message });

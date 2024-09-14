@@ -1,5 +1,5 @@
 const { DataFiturModel, UserTujuanModel, UserModel } = require("../models");
-const { DatabaseManager, DataTypes } = require("../../config/DatabaseManager");
+const { DatabaseManager } = require("../../config/DatabaseManager");
 const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
 
 class DataFiturRepository {
@@ -16,24 +16,32 @@ class DataFiturRepository {
                 model: DataFiturModel,
                 required: true,
                 where: { fiturID: fiturID },
+                include: [
+                  {
+                    model: UserModel,
+                    required: true,
+                  },
+                ],
               },
             ],
           },
         ],
       });
 
-      if (!findDataFitur) {
+      if (!findDataFitur || !findDataFitur.length === 0 || !findDataFitur[0]?.user_tujuans) {
         return [];
       }
 
-      const transformedData = findDataFitur[0].user_tujuans.map((data) => ({
+      const transformedData = findDataFitur[0]?.user_tujuans.map((data) => ({
         Judul: data.DataFitur.judul,
-        DibuatOleh: data.DataFitur.userID_dibuat,
+        DibuatOleh: data.DataFitur.User.nama,
         TglDibuat: data.DataFitur.tglDibuat,
         File: data.DataFitur.fileFolder,
       }));
 
       return transformedData;
+
+      // return findDataFitur;
     } catch (error) {
       throw error;
     }
