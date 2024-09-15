@@ -1,9 +1,9 @@
 const { UserRepository } = require("../database/repositories");
 const { LoginSessionRepository } = require("../database/repositories/LoginSessionRepository");
+const { Authorization } = require("../utils/Authorization");
 const { generateOtp } = require("../utils/generateOtp");
 const { sendOtpToEmail } = require("../utils/sendEmail");
 const { Validator } = require("../utils/validator");
-const { LoginSessionController } = require("./LoginSessionController");
 const OTP_EXPIRATION_TIME = 300000; // 5 menit (300.000 ms)
 
 class UserController {
@@ -48,11 +48,13 @@ class UserController {
       const otp = generateOtp(identifier);
       // Simpan session login di database
 
-      const loginSession = await LoginSessionController.createLoginSession(
-        readUser.email,
-        readUser.noTelp,
-        otp
-      );
+      // console.log(readUser, "READUSER");
+
+      const loginSession = await LoginSessionRepository.create({
+        email: readUser.email,
+        noTelp: readUser.noTelp,
+        otp: otp,
+      });
       if (loginSession && readUser.email && User.Email) {
         await sendOtpToEmail(readUser.email, otp);
       }
@@ -66,14 +68,14 @@ class UserController {
 
   static async verifyOtp(req, res) {
     try {
-      const { LoginSessionID, Otp } = req.body; // Klien mengirimkan loginSessionID dan OTP
+      const { Otp, Email, NoTelp } = req.body; // Klien mengirimkan EMail, MoTelp, dan OTP
 
-      if (!LoginSessionID || !Otp) {
-        return res.status(400).json({ error: "Login session ID and OTP are required" });
+      if ((!Email && !NoTelp) || !Otp) {
+        return res.status(400).json({ error: "OTP are required OR Email & NoTelp undefined" });
       }
 
-      // Temukan session login berdasarkan LoginSessionID
-      const loginSession = await LoginSessionRepository.readOne(LoginSessionID);
+      // Temukan session login berdasarkan otp,email,noTelp
+      const loginSession = await LoginSessionRepository.readOne(Otp, Email, NoTelp);
 
       if (!loginSession) {
         return res.status(401).json({ error: "Invalid login session ID" });
@@ -93,11 +95,34 @@ class UserController {
         return res.status(401).json({ error: "Invalid OTP" });
       }
 
-      // Set isActive menjadi true karena OTP sudah digunakan
-      loginSession.isActive = true;
-      await loginSession.save(); // Simpan perubahan ke database
+      const payload = {
+        id: loginSession.loginSessionID,
+        Email: loginSession.email,
+        NoTelp: loginSession.noTelp,
+        Otp: loginSession.otp,
+      };
+
       // Jika OTP valid dan masih aktif
+      const token = await Authorization.encryption(payload);
+      res.set("authorization", `Bearer ${token}`);
+
+      // Memasukan token ke database
+      LoginSessionRepository.updateToken(loginSession.loginSessionID, token);
+
       res.status(200).json({ success: true, message: "Login successful" });
+    } catch (error) {
+      console.error(error);
+      res.status(error.status || 500).json({ error: error.message });
+    }
+  }
+
+  static async logout(req, res) {
+    try {
+      const dataSession = req.dataSession;
+      // delete loginSession
+      const loginSession = await LoginSessionRepository.delete(dataSession.id);
+
+      res.status(200).json({ success: true, message: "Logout successful" });
     } catch (error) {
       console.error(error);
       res.status(error.status || 500).json({ error: error.message });

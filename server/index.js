@@ -27,10 +27,12 @@ app.use(
     origin: process.env.CLIENT_URL,
     methods: ["POST", "GET", "DELETE", "PUT", "PATCH", "OPTIONS"],
     credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
-    exposedHeaders: ["Authorization"],
+    allowedHeaders: ["Content-Type", "authorization"],
+    exposedHeaders: ["authorization"],
   })
 );
+
+// DatabaseManager.synchronize(process.env.DB_NAME, false);
 
 const { router } = require("./routes");
 app.use("/", router);

@@ -13,7 +13,6 @@ const LoginSessionModel = jarrdinDB.define(
     email: {
       type: DataTypes.STRING(200),
       allowNull: true,
-      unique: true,
     },
     noTelp: {
       type: DataTypes.STRING(20),
@@ -22,20 +21,27 @@ const LoginSessionModel = jarrdinDB.define(
     otp: {
       type: DataTypes.STRING(6),
       allowNull: false,
-      unique: true,
     },
     entryTime: {
       type: DataTypes.DATE,
       allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
-    isActive: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
+    token: {
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
   },
   {
     tableName: "Login_session",
     timestamps: false,
+    indexes: [
+      {
+        unique: true,
+        fields: ["otp", "noTelp", "email"],
+        name: "Kombinasi unik otp_noTelp_email",
+      },
+    ],
   }
 );
 
