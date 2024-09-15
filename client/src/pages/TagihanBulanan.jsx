@@ -8,8 +8,14 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { urlServer } from "../utils/endpoint";
 import { Fitur } from "../models/FiturModel";
+import UseSessionCheck from "../utils/useSessionCheck";
+import useDataUser from "../constaints/dataLoginUser";
+import { columns } from "../constaints/columnsTable";
 
 function TagihanBulanan() {
+  UseSessionCheck();
+  const { headers } = useDataUser();
+  const [dataTable, setDataTable] = useState([]);
   const [modalInsert, setModalInsert] = useState(false);
   const [currTipeData, setCurrTipeData] = useState("untukSaya");
   const menuInsert = [
@@ -26,8 +32,9 @@ function TagihanBulanan() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${urlServer}/data/${Fitur["TagihanBulanan"]}`);
+        const response = await axios.get(`${urlServer}/data/${Fitur["TagihanBulanan"]}`, headers);
         console.log(response);
+        setDataTable(response.data);
       } catch (error) {
         console.log(error);
       }
@@ -56,7 +63,7 @@ function TagihanBulanan() {
           />
 
           <div className="w-100 p-4">
-            <Table>
+            <Table dataSource={dataTable} columns={columns}>
               <Column title={"Judul"} />
               <Column title={"Dibuat oleh"} />
               <Column title={"Tanggal dibuat"} />

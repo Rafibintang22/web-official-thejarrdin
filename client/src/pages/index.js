@@ -3,6 +3,7 @@ import Home from "./Home";
 import InformasiPaket from "./InformasiPaket";
 import Laporan from "./Laporan";
 import Login from "./Login";
+import Logout from "./Logout";
 import MasukanAspirasi from "./MasukanAspirasi";
 import Pengumuman from "./Pengumuman";
 import PengumumanPengelola from "./PengumumanPengelola";
@@ -18,4 +19,5 @@ export {
   InformasiPaket,
   BuletinKegiatan,
   Login,
+  Logout,
 };

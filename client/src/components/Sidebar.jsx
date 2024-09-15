@@ -3,7 +3,6 @@ import { multiRoleAkses } from "../models/menuRoleAkses";
 import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import toogleSidebar from "../utils/toogleSidebar";
-useNavigate;
 
 function Sidebar() {
   const navigate = useNavigate();
@@ -70,7 +69,13 @@ function Sidebar() {
           }}
         />
 
-        <Button className="ms-4 me-3" type="primary" danger ghost>
+        <Button
+          className="ms-4 me-3"
+          type="primary"
+          danger
+          ghost
+          onClick={() => navigate("/logout")}
+        >
           <LogoutOutlined />
           {!isSidebarOpen && "Keluar"}
         </Button>

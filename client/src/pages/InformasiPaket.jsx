@@ -8,8 +8,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { urlServer } from "../utils/endpoint";
 import { Fitur } from "../models/FiturModel";
+import UseSessionCheck from "../utils/useSessionCheck";
+import useDataUser from "../constaints/dataLoginUser";
 
 function InformasiPaket() {
+  UseSessionCheck();
+  const { headers } = useDataUser();
   const [modalInsert, setModalInsert] = useState(false);
   const [currTipeData, setCurrTipeData] = useState("untukSaya");
   const menuInsert = [
@@ -26,7 +30,7 @@ function InformasiPaket() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${urlServer}/data/${Fitur["InformasiPaket"]}`);
+        const response = await axios.get(`${urlServer}/data/${Fitur["InformasiPaket"]}`, headers);
         console.log(response);
       } catch (error) {
         console.log(error);

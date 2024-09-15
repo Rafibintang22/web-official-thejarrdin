@@ -4,9 +4,9 @@ const UserSchema = {
   loginUser(user) {
     const schema = Joi.object({
       Email: Joi.string().email().max(200),
-      noTelp: Joi.string().min(10).max(15),
+      NoTelp: Joi.string().min(10).max(20),
     })
-      .xor("Email", "noTelp") // Require untuk Email atau noTelp tapi tidak keduanya
+      .xor("Email", "NoTelp") // Require untuk Email atau noTelp tapi tidak keduanya
       .required();
 
     return schema.validate(user);

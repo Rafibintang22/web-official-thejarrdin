@@ -7,20 +7,32 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { urlServer } from "../utils/endpoint";
+import UseSessionCheck from "../utils/useSessionCheck";
+import useDataUser from "../constaints/dataLoginUser";
 
 function Home() {
+  UseSessionCheck();
+  const userSession = JSON.parse(localStorage.getItem("userSession"));
+  const { dataUser } = useDataUser();
   const [rolesUser, setRolesUser] = useState([]);
   const navigate = useNavigate();
+
+  // console.log(dataUser);
 
   axios.defaults.withCredentials = true;
   useEffect(() => {
     const fetchRole = async () => {
+      const headers = {
+        headers: {
+          authorization: userSession?.AuthKey,
+        },
+      };
       try {
-        const response = await axios.get(`${urlServer}/role`);
+        const response = await axios.get(`${urlServer}/role`, headers);
         const responseData = response.data;
-        console.log(responseData);
+        // console.log(responseData);
 
-        const transformedData = responseData.map((data) => data.Nama.replace(/\s+/g, "")); // Menghapus semua spasi);
+        const transformedData = responseData.Role.map((data) => data.Nama.replace(/\s+/g, "")); // Menghapus semua spasi);
         const arr = multiRoleAkses(transformedData);
         const arr2 = bagiArrayAkses(arr);
 
@@ -37,7 +49,7 @@ function Home() {
     <>
       <div className="container-home d-flex w-100 h-100 flex-column p-4">
         <div className="header container d-flex w-100 justify-content-between">
-          <h5 className="text-light fw-medium">Selamat Datang, Rafi</h5>
+          <h5 className="text-light fw-medium">Selamat Datang, {dataUser?.nama}</h5>
           <div
             className="d-flex justify-content-center align-items-center rounded-circle bg-theme2"
             style={{ height: "45px", width: "45px", cursor: "pointer" }}
@@ -75,6 +87,7 @@ function Home() {
           <div
             className="d-flex btn-home-logout justify-content-center align-items-center rounded-circle border border-2"
             style={{ height: "45px", width: "45px", cursor: "pointer" }}
+            onClick={() => navigate("/logout")}
           >
             <FontAwesomeIcon size="sm" icon={faArrowRightFromBracket} color="#FFFFFF" />
           </div>

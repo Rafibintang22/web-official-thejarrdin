@@ -15,6 +15,7 @@ router.get("/fitur", Authorization.decryption, FiturController.getAllByUserID);
 
 // ###############################################################################
 //                              USER
+router.get("/user/session", Authorization.decryption, UserController.getUserSession);
 router.post("/login", UserController.postLogin);
 router.post("/login/verify-otp", UserController.verifyOtp);
 router.get("/logout", Authorization.decryption, UserController.logout);

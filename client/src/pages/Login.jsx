@@ -1,26 +1,61 @@
-import { UserOutlined } from "@ant-design/icons";
-import { Button, ConfigProvider, Input } from "antd";
+import { PhoneOutlined, UserOutlined } from "@ant-design/icons";
+import { Button, ConfigProvider, Input, Menu, Modal, Result } from "antd";
 import { threelogo } from "../../public/assets/images";
 import { useState } from "react";
+import { inputValidator } from "../utils/inputValidator";
+import useValidator from "../constaints/FormValidation";
+import axios from "axios";
+import { urlServer } from "../utils/endpoint";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
-  const [noTelp, setNoTelp] = useState("");
-  const [otp, setOtp] = useState("");
-  const handleChangeNoTelp = (e) => {
+  const navigate = useNavigate();
+  const [dataLogin, setDataLogin] = useState({});
+  const { ValidationStatus, setValidationStatus, setCloseAlert } = useValidator();
+  // const [noTelp, setNoTelp] = useState("");
+  const [otp, setOtp] = useState({ Otp: "" });
+  const [tipeLogin, setTipeLogin] = useState("email");
+  const menuLogin = [
+    {
+      label: "Email",
+      key: "email",
+    },
+    {
+      label: "No Telepon",
+      key: "noTelp",
+    },
+  ];
+  const handleChangeDataLogin = (e) => {
     const { value: inputValue } = e.target;
-    const reg = /^-?\d*(\.\d*)?$/;
-    if (reg.test(inputValue) || inputValue === "" || inputValue === "-") {
-      setNoTelp(inputValue);
+
+    if (tipeLogin === "noTelp") {
+      //jika tipe login no telp
+      const reg = /^-?\d*(\.\d*)?$/; // Validasi untuk input angka (noTelp)
+      if (reg.test(inputValue) || inputValue === "" || inputValue === "-") {
+        setDataLogin({
+          User: { NoTelp: inputValue }, // Hanya menyimpan noTelp
+        });
+      }
+    } else if (tipeLogin === "email") {
+      //jika tipe login email
+      setDataLogin({
+        User: { Email: inputValue }, // Hanya menyimpan Email
+      });
     }
   };
 
-  const handleChangeOtp = (e) => {
-    const { value: inputValue } = e;
-    const reg = /^-?\d*(\.\d*)?$/;
+  const handleChangeMenuLogin = (value) => {
+    setDataLogin({});
+    setTipeLogin(value);
+  };
 
-    if (reg.test(inputValue) || inputValue === "" || inputValue === "-") {
-      console.log(inputValue);
-      setOtp(inputValue);
+  // console.log(dataLogin);
+
+  const handleChangeOtp = (inputValue) => {
+    const reg = /^\d*$/; // Ubah regex untuk hanya menerima angka
+
+    if (reg.test(inputValue) || inputValue === "") {
+      setOtp((prevData) => ({ ...prevData, Otp: inputValue })); // Set nilai OTP ke state jika hanya angka
     }
   };
 
@@ -49,10 +84,10 @@ function Login() {
           <Input
             size="large"
             className="bg-transparent text-light"
-            placeholder="no telepon"
-            prefix={<UserOutlined />}
-            onChange={(e) => handleChangeNoTelp(e)}
-            value={noTelp}
+            placeholder={`${tipeLogin === "email" ? "email" : "no telepon"}`}
+            prefix={tipeLogin === "email" ? <UserOutlined /> : <PhoneOutlined />}
+            onChange={(e) => handleChangeDataLogin(e)}
+            value={tipeLogin === "email" ? dataLogin.User?.Email : dataLogin.User?.NoTelp}
           />
         </ConfigProvider>
       );
@@ -61,7 +96,8 @@ function Login() {
         <>
           <div className="d-flex flex-column justify-content-center">
             <p className="text-light" style={{ fontSize: "0.9rem" }}>
-              Masukan kode yang dikirimkan melalui Whattsap anda
+              Masukan kode yang dikirimkan melalui {tipeLogin === "email" ? "Email " : "Whattsap "}
+              anda
             </p>
             <p className="text-light" style={{ fontSize: "0.8rem" }}>
               Waktu anda untuk memasukan kode ( 04 : 58 )
@@ -72,33 +108,95 @@ function Login() {
             size="large"
             className="bg-transparent"
             onChange={(e) => handleChangeOtp(e)}
-            value={otp}
+            value={otp.Otp}
           />
         </>
       );
     }
   };
 
-  console.log(noTelp);
+  const login = async (currIsActive) => {
+    try {
+      if (currIsActive === 1) {
+        const validateFunction = inputValidator["Login"];
+        validateFunction(dataLogin);
+        const response = await axios.post(`${urlServer}/login`, dataLogin);
+        const responseData = response.data.data.User;
+
+        setOtp((prevData) => ({
+          ...prevData,
+          Email: responseData.email,
+          NoTelp: responseData.noTelp,
+        }));
+        console.log(response);
+
+        setActiveStep(isActiveStep + 1);
+      }
+
+      if (currIsActive === 2) {
+        const response = await axios.post(`${urlServer}/login/verify-otp`, otp);
+        const authorizationHeader = response.headers["authorization"];
+        const userSession = {
+          AuthKey: authorizationHeader.replace("Bearer ", ""),
+          dataUser: response.data.data,
+        };
+        if (userSession.AuthKey !== "") {
+          // sessionStorage.setItem("userSession", JSON.stringify(userSession));
+          // Simpan userSession di localStorage
+          localStorage.setItem("userSession", JSON.stringify(userSession));
+        }
+        navigate("/");
+        console.log(response);
+      }
+    } catch (error) {
+      if (error?.response?.data?.error) {
+        setValidationStatus(error.path, error.response.data.error);
+      } else {
+        setValidationStatus(error.path, error.message);
+      }
+    }
+  };
+
   console.log(otp);
 
   return (
     <div className="container-login d-flex w-100 h-100 flex-column p-4">
+      {ValidationStatus && (
+        <Modal open={ValidationStatus} onCancel={setCloseAlert} footer={null} centered={true}>
+          <Result
+            status="error"
+            title={
+              ValidationStatus.Message === `"User" is required`
+                ? "Isi email / no telepon terlebih dahulu"
+                : ValidationStatus.Message
+            }
+          />
+        </Modal>
+      )}
       <div
         className="container d-flex justify-content-center align-items-center flex-column flex-wrap h-100 w-25 gap-5"
         style={{ zIndex: "99" }}
       >
         <h5 className="text-light text-uppercase fw-semibold">Login Member</h5>
+        {isActiveStep === 1 && (
+          <ConfigProvider
+            theme={{ components: { Menu: { itemColor: "white", itemHoverColor: "#399051" } } }}
+          >
+            <Menu
+              onClick={(e) => handleChangeMenuLogin(e.key)}
+              selectedKeys={[tipeLogin]}
+              mode="horizontal"
+              items={menuLogin}
+              className="d-flex w-100 justify-content-start"
+              style={{ backgroundColor: "transparent" }}
+            />
+          </ConfigProvider>
+        )}
         {listOfStep.map((step) => (
           <>{isActiveStep === step.urut && formStepDisplay()}</>
         ))}
         <div className="d-flex w-100 gap-2 flex-column">
-          <Button
-            type="primary"
-            className="w-100"
-            size="large"
-            onClick={() => setActiveStep(isActiveStep + 1)}
-          >
+          <Button type="primary" className="w-100" size="large" onClick={() => login(isActiveStep)}>
             Selanjutnya
           </Button>
           <Button

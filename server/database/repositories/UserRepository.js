@@ -32,7 +32,7 @@ class UserRepository {
   static async readExisting(identifier) {
     try {
       const finsUser = await UserModel.findOne({
-        where: identifier.includes("@") ? { Email: identifier } : { noTelp: identifier },
+        where: identifier.includes("@") ? { email: identifier } : { noTelp: identifier },
         raw: true,
       });
 

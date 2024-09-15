@@ -41,7 +41,7 @@ class UserController {
       const readUser = await UserRepository.readExisting(User.Email ? User.Email : User.NoTelp);
       if (!readUser) {
         //JIka user tidak ditemukan
-        return res.status(401).json({ error: "Invalid email or password" });
+        return res.status(401).json({ error: "email atau no telepon yang dimasukan salah" });
       }
 
       const identifier = readUser.email ? readUser.email : readUser.noTelp;
@@ -59,7 +59,7 @@ class UserController {
         await sendOtpToEmail(readUser.email, otp);
       }
 
-      res.status(200).json({ success: true, data: { User: readUser, Otp: otp } });
+      res.status(200).json({ success: true, data: { User: readUser } });
     } catch (error) {
       console.error(error);
       res.status(error.status || 500).json({ error: error.message });
@@ -71,7 +71,7 @@ class UserController {
       const { Otp, Email, NoTelp } = req.body; // Klien mengirimkan EMail, MoTelp, dan OTP
 
       if ((!Email && !NoTelp) || !Otp) {
-        return res.status(400).json({ error: "OTP are required OR Email & NoTelp undefined" });
+        return res.status(400).json({ error: "OTP are required OR Email & No Telepon undefined" });
       }
 
       // Temukan session login berdasarkan otp,email,noTelp
@@ -95,11 +95,13 @@ class UserController {
         return res.status(401).json({ error: "Invalid OTP" });
       }
 
+      const readUser = await UserRepository.readExisting(loginSession.email);
       const payload = {
-        id: loginSession.loginSessionID,
-        Email: loginSession.email,
-        NoTelp: loginSession.noTelp,
+        UserID: readUser.userID,
+        Email: readUser.email,
+        NoTelp: readUser.noTelp,
         Otp: loginSession.otp,
+        loginSessionID: loginSession.loginSessionID,
       };
 
       // Jika OTP valid dan masih aktif
@@ -109,7 +111,24 @@ class UserController {
       // Memasukan token ke database
       LoginSessionRepository.updateToken(loginSession.loginSessionID, token);
 
-      res.status(200).json({ success: true, message: "Login successful" });
+      res.status(200).json({ success: true, message: "Login successful", data: readUser });
+    } catch (error) {
+      console.error(error);
+      res.status(error.status || 500).json({ error: error.message });
+    }
+  }
+
+  static async getUserSession(req, res) {
+    try {
+      if (!req.dataSession) {
+        const newError = new Error("Access denied.");
+        newError.status = 403;
+        throw newError;
+      }
+
+      const sessionData = req.dataSession;
+
+      res.status(200).json({ status: "authorized", dataLogin: sessionData });
     } catch (error) {
       console.error(error);
       res.status(error.status || 500).json({ error: error.message });
@@ -120,7 +139,7 @@ class UserController {
     try {
       const dataSession = req.dataSession;
       // delete loginSession
-      const loginSession = await LoginSessionRepository.delete(dataSession.id);
+      const loginSession = await LoginSessionRepository.delete(dataSession.loginSessionID);
 
       res.status(200).json({ success: true, message: "Logout successful" });
     } catch (error) {

@@ -10,6 +10,7 @@ import {
   InformasiPaket,
   BuletinKegiatan,
   Login,
+  Logout,
 } from "./pages/index";
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />}></Route>
             <Route path="/login" element={<Login />}></Route>
+            <Route path="/logout" element={<Logout />}></Route>
             <Route path="/laporan" element={<Laporan />}></Route>
             <Route path="/masukan&Aspirasi" element={<MasukanAspirasi />}></Route>
             <Route path="/pengumuman" element={<Pengumuman />}></Route>
