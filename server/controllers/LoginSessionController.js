@@ -1,9 +1,9 @@
 const { LoginSessionRepository } = require("../database/repositories/LoginSessionRepository");
 
 class LoginSessionController {
-  static async getOne(loginSessionID) {
+  static async getOne(req, res) {
     try {
-      let readLoginSession = await LoginSessionRepository.readOne(loginSessionID);
+      let readLoginSession = await LoginSessionRepository.readOne(req.params.id);
       res.status(200).json(readLoginSession);
     } catch (error) {
       console.error(error);
@@ -17,8 +17,8 @@ class LoginSessionController {
         email,
         noTelp,
         otp,
-        activeTime: new Date(), // Set waktu aktif sekarang
-        isActive: true, // Set sebagai aktif
+        entryTime: new Date().getTime(), // Set waktu masuk
+        isActive: false, // Set sebagai false, karena otp belum digunakan
       };
 
       // Simpan session login ke database

@@ -34,10 +34,11 @@ class LoginSessionRepository {
   static async create(dataInsert) {
     const transaction = await jarrdinDB.transaction();
     try {
-      const { email, noTelp, otp, activeTime, isActive } = dataInsert;
+      const { email, noTelp, otp, entryTime, isActive } = dataInsert;
+      console.log(email, noTelp, otp, entryTime, isActive);
 
       //   EMAIL ATAU NOTELP YANG DIISI
-      if ((!email && !noTelp) || !otp || !activeTime || !isActive) {
+      if ((!email && !noTelp) || !otp || !entryTime || isActive === undefined) {
         throw new Error("Data yang diperlukan tidak lengkap.");
       }
 
@@ -46,7 +47,7 @@ class LoginSessionRepository {
           email,
           noTelp,
           otp,
-          activeTime,
+          entryTime,
           isActive,
         },
         { transaction }

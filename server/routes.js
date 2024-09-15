@@ -15,6 +15,7 @@ router.get("/fitur", FiturController.getAllByUserID);
 // ###############################################################################
 //                              USER
 router.post("/login", UserController.postLogin);
+router.post("/login/verify-otp", UserController.verifyOtp);
 
 // ###############################################################################
 //                              ROLE

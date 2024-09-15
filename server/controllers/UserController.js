@@ -1,4 +1,5 @@
 const { UserRepository } = require("../database/repositories");
+const { LoginSessionRepository } = require("../database/repositories/LoginSessionRepository");
 const { generateOtp } = require("../utils/generateOtp");
 const { sendOtpToEmail } = require("../utils/sendEmail");
 const { Validator } = require("../utils/validator");
@@ -37,7 +38,7 @@ class UserController {
         throw newError;
       }
 
-      const readUser = await UserRepository.readExisting(User.Email ? User.Email : User.noTelp);
+      const readUser = await UserRepository.readExisting(User.Email ? User.Email : User.NoTelp);
       if (!readUser) {
         //JIka user tidak ditemukan
         return res.status(401).json({ error: "Invalid email or password" });
@@ -45,19 +46,16 @@ class UserController {
 
       const identifier = readUser.email ? readUser.email : readUser.noTelp;
       const otp = generateOtp(identifier);
-      if (readUser.email && User.Email) {
-        await sendOtpToEmail(readUser.email, otp);
-      }
-
       // Simpan session login di database
-
-      console.log();
 
       const loginSession = await LoginSessionController.createLoginSession(
         readUser.email,
         readUser.noTelp,
         otp
       );
+      if (loginSession && readUser.email && User.Email) {
+        await sendOtpToEmail(readUser.email, otp);
+      }
 
       res.status(200).json({ success: true, data: { User: readUser, Otp: otp } });
     } catch (error) {
@@ -68,14 +66,14 @@ class UserController {
 
   static async verifyOtp(req, res) {
     try {
-      const { loginSessionID, otp } = req.body; // Klien mengirimkan loginSessionID dan OTP
+      const { LoginSessionID, Otp } = req.body; // Klien mengirimkan loginSessionID dan OTP
 
-      if (!loginSessionID || !otp) {
+      if (!LoginSessionID || !Otp) {
         return res.status(400).json({ error: "Login session ID and OTP are required" });
       }
 
-      // Temukan session login berdasarkan loginSessionID
-      const loginSession = await LoginSessionController.getOne(loginSessionID);
+      // Temukan session login berdasarkan LoginSessionID
+      const loginSession = await LoginSessionRepository.readOne(LoginSessionID);
 
       if (!loginSession) {
         return res.status(401).json({ error: "Invalid login session ID" });
@@ -83,22 +81,21 @@ class UserController {
 
       // Cek apakah OTP masih aktif
       const currentTime = new Date().getTime();
-      const otpCreationTime = new Date(loginSession.activeTime).getTime();
+      const otpCreationTime = new Date(loginSession.entryTime).getTime();
 
       // Periksa apakah waktu aktif sudah melewati batas yang diizinkan
       if (currentTime - otpCreationTime > OTP_EXPIRATION_TIME) {
-        // Set isActive menjadi false karena OTP sudah kadaluarsa
-        loginSession.isActive = false;
-        await loginSession.save(); // Simpan perubahan ke database
-
         return res.status(401).json({ error: "OTP has expired" });
       }
 
       // Cocokkan OTP
-      if (loginSession.otp !== otp) {
+      if (loginSession.otp !== Otp) {
         return res.status(401).json({ error: "Invalid OTP" });
       }
 
+      // Set isActive menjadi true karena OTP sudah digunakan
+      loginSession.isActive = true;
+      await loginSession.save(); // Simpan perubahan ke database
       // Jika OTP valid dan masih aktif
       res.status(200).json({ success: true, message: "Login successful" });
     } catch (error) {

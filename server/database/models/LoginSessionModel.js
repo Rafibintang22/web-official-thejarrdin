@@ -24,7 +24,7 @@ const LoginSessionModel = jarrdinDB.define(
       allowNull: false,
       unique: true,
     },
-    activeTime: {
+    entryTime: {
       type: DataTypes.DATE,
       allowNull: false,
     },
