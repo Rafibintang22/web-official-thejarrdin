@@ -3,9 +3,10 @@ const { DatabaseManager } = require("../../config/DatabaseManager");
 const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
 
 class DataFiturRepository {
-  static async readAllByFiturID(userID, fiturID) {
+  static async readAllByFiturIdUntukUser(userID, fiturID) {
     try {
-      const findDataFitur = await UserModel.findAll({
+      let findDataFitur;
+      findDataFitur = await UserModel.findAll({
         where: { userID: userID },
         include: [
           {
@@ -46,36 +47,74 @@ class DataFiturRepository {
       throw error;
     }
   }
+  static async readAllByFiturIdDibuatUser(userID, fiturID) {
+    try {
+      let findDataFitur;
+      findDataFitur = await UserModel.findAll({
+        where: { userID: userID },
+        include: [
+          {
+            model: DataFiturModel,
+            required: true,
+            where: { fiturID: fiturID },
+            include: [
+              {
+                model: UserModel,
+                required: true,
+              },
+            ],
+          },
+        ],
+      });
+
+      if (!findDataFitur || !findDataFitur.length === 0 || !findDataFitur[0]?.DataFiturs) {
+        return [];
+      }
+
+      const transformedData = findDataFitur[0]?.DataFiturs.map((data) => ({
+        Judul: data.judul,
+        DibuatOleh: data.User.nama,
+        TglDibuat: data.tglDibuat,
+        File: data.fileFolder,
+      }));
+
+      return transformedData;
+
+      // return findDataFitur;
+    } catch (error) {
+      throw error;
+    }
+  }
 
   static async create(dataInsert) {
     const transaction = await jarrdinDB.transaction();
     try {
-      const { fiturID, judul, tglDibuat, userID_dibuat, fileFolder, userTujuan } = dataInsert;
+      const { FiturID, Judul, TglDibuat, UserID_dibuat, FileFolder, UserTujuan } = dataInsert;
 
       if (
-        !fiturID ||
-        !judul ||
-        !tglDibuat ||
-        !userID_dibuat ||
-        !fileFolder ||
-        !userTujuan ||
-        !Array.isArray(userTujuan)
+        !FiturID ||
+        !Judul ||
+        !TglDibuat ||
+        !UserID_dibuat ||
+        !FileFolder ||
+        !UserTujuan ||
+        !Array.isArray(UserTujuan)
       ) {
         throw new Error("Data yang diperlukan tidak lengkap.");
       }
 
       const newDataFitur = await DataFiturModel.create(
         {
-          fiturID,
-          judul,
-          tglDibuat,
-          userID_dibuat,
-          fileFolder,
+          fiturID: FiturID,
+          judul: Judul,
+          tglDibuat: new Date(TglDibuat),
+          userID_dibuat: UserID_dibuat,
+          fileFolder: FileFolder,
         },
         { transaction }
       );
 
-      const userTujuanRecords = userTujuan.map((userID) => ({
+      const userTujuanRecords = UserTujuan.map((userID) => ({
         dataFiturID: newDataFitur.dataFiturID,
         userID,
       }));

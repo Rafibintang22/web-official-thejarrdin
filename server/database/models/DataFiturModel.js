@@ -29,7 +29,7 @@ const DataFiturModel = jarrdinDB.define(
       allowNull: false,
     },
     fileFolder: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.TEXT,
       allowNull: false,
     },
   },

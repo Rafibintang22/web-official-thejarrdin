@@ -8,12 +8,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { urlServer } from "../utils/endpoint";
 import UseSessionCheck from "../utils/useSessionCheck";
-import useDataUser from "../constaints/dataLoginUser";
 
 function Home() {
   UseSessionCheck();
   const userSession = JSON.parse(localStorage.getItem("userSession"));
-  const { dataUser } = useDataUser();
+  const dataUser = userSession?.dataUser;
   const [rolesUser, setRolesUser] = useState([]);
   const navigate = useNavigate();
 

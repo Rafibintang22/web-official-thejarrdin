@@ -9,11 +9,12 @@ import axios from "axios";
 import { urlServer } from "../utils/endpoint";
 import { Fitur } from "../models/FiturModel";
 import UseSessionCheck from "../utils/useSessionCheck";
-import useDataUser from "../constaints/dataLoginUser";
+import columns from "../constaints/columnsTable";
 
 function InformasiPaket() {
   UseSessionCheck();
-  const { headers } = useDataUser();
+  const userSession = JSON.parse(localStorage.getItem("userSession"));
+  const [dataTable, setDataTable] = useState([]);
   const [modalInsert, setModalInsert] = useState(false);
   const [currTipeData, setCurrTipeData] = useState("untukSaya");
   const menuInsert = [
@@ -29,16 +30,27 @@ function InformasiPaket() {
   axios.defaults.withCredentials = true;
   useEffect(() => {
     const fetchData = async () => {
+      const headers = {
+        headers: {
+          authorization: userSession?.AuthKey,
+        },
+      };
       try {
-        const response = await axios.get(`${urlServer}/data/${Fitur["InformasiPaket"]}`, headers);
+        const response = await axios.get(
+          `${urlServer}/data/${Fitur["InformasiPaket"]}/${
+            currTipeData === "untukSaya" ? "untukUser" : "dibuatUser"
+          }`,
+          headers
+        );
         console.log(response);
+        setDataTable(response.data);
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [currTipeData]);
   return (
     <>
       <div className="container-main w-100 d-flex">
@@ -60,20 +72,17 @@ function InformasiPaket() {
           />
 
           <div className="w-100 p-4">
-            <Table>
-              <Column title={"Judul"} />
-              <Column title={"Dibuat oleh"} />
-              <Column title={"Tanggal dibuat"} />
-              <Column title={"Aksi"} />
-            </Table>
+            <Table dataSource={dataTable} columns={columns} />
           </div>
         </div>
       </div>
-      <ModalInsert
-        currState={modalInsert}
-        setState={setModalInsert}
-        judulInsert={"Tambah Informasi Paket"}
-      />
+      {modalInsert && (
+        <ModalInsert
+          currState={modalInsert}
+          setState={setModalInsert}
+          judulInsert={"Tambah Informasi Paket"}
+        />
+      )}
     </>
   );
 }

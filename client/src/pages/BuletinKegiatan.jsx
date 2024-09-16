@@ -9,11 +9,12 @@ import axios from "axios";
 import { urlServer } from "../utils/endpoint";
 import { Fitur } from "../models/FiturModel";
 import UseSessionCheck from "../utils/useSessionCheck";
-import useDataUser from "../constaints/dataLoginUser";
+import columns from "../constaints/columnsTable";
 
 function BuletinKegiatan() {
   UseSessionCheck();
-  const { headers } = useDataUser();
+  const userSession = JSON.parse(localStorage.getItem("userSession"));
+  const [dataTable, setDataTable] = useState([]);
   const [modalInsert, setModalInsert] = useState(false);
   const [currTipeData, setCurrTipeData] = useState("untukSaya");
   const menuInsert = [
@@ -28,17 +29,28 @@ function BuletinKegiatan() {
   ];
   axios.defaults.withCredentials = true;
   useEffect(() => {
+    const headers = {
+      headers: {
+        authorization: userSession?.AuthKey,
+      },
+    };
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${urlServer}/data/${Fitur["BuletinKegiatan"]}`, headers);
+        const response = await axios.get(
+          `${urlServer}/data/${Fitur["BuletinKegiatan"]}/${
+            currTipeData === "untukSaya" ? "untukUser" : "dibuatUser"
+          }`,
+          headers
+        );
         console.log(response);
+        setDataTable(response.data);
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [currTipeData]);
   return (
     <>
       <div className="container-main w-100 d-flex">
@@ -60,20 +72,17 @@ function BuletinKegiatan() {
           />
 
           <div className="w-100 p-4">
-            <Table>
-              <Column title={"Judul"} />
-              <Column title={"Dibuat oleh"} />
-              <Column title={"Tanggal dibuat"} />
-              <Column title={"Aksi"} />
-            </Table>
+            <Table dataSource={dataTable} columns={columns} />
           </div>
         </div>
       </div>
-      <ModalInsert
-        currState={modalInsert}
-        setState={setModalInsert}
-        judulInsert={"Tambah Buletin Kegiatan"}
-      />
+      {modalInsert && (
+        <ModalInsert
+          currState={modalInsert}
+          setState={setModalInsert}
+          judulInsert={"Tambah Buletin Kegiatan"}
+        />
+      )}
     </>
   );
 }

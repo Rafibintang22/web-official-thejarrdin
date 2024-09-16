@@ -4,11 +4,27 @@ const { Validator } = require("../utils/validator");
 class DataFiturController {
   static async getAll(req, res) {
     const fiturID = req.params.fiturID;
-    const userID = 3;
+    const tipe = req.params.tipe;
+    const userID = req.dataSession.UserID;
+
+    // console.log(tipe);
 
     try {
-      const readFitur = await DataFiturRepository.readAllByFiturID(userID, fiturID);
-      return res.status(200).json(readFitur);
+      if (tipe === "untukUser") {
+        const readFiturUntukuser = await DataFiturRepository.readAllByFiturIdUntukUser(
+          userID,
+          fiturID
+        );
+        return res.status(200).json(readFiturUntukuser);
+      }
+
+      if (tipe === "dibuatUser") {
+        const readFiturDibuatUser = await DataFiturRepository.readAllByFiturIdDibuatUser(
+          userID,
+          fiturID
+        );
+        return res.status(200).json(readFiturDibuatUser);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
       return res.status(500).json({ error: "Internal server error" });

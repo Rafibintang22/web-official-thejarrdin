@@ -1,9 +1,20 @@
 import { InboxOutlined, SaveTwoTone } from "@ant-design/icons";
-import { Button, Input, Menu, Modal, Popover, Select, message } from "antd";
+import { Button, Input, Menu, Modal, Popover, Result, Select, message } from "antd";
 import Dragger from "antd/es/upload/Dragger";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { urlServer } from "../utils/endpoint";
+import useValidator from "../constaints/FormValidation";
+import { inputValidator } from "../utils/inputValidator";
+import { fiturMaping } from "../utils/mappingFiturID";
 
+// eslint-disable-next-line react/prop-types
 function ModalInsert({ currState, setState, judulInsert }) {
+  const userSession = JSON.parse(localStorage.getItem("userSession"));
+  console.log(userSession);
+
+  const { ValidationStatus, setValidationStatus, setCloseAlert } = useValidator();
+  const [formData, setFormData] = useState({ Judul: "", UserTujuan: [], FileFolder: "" });
   const menuInsert = [
     {
       label: "Unggah dokumen",
@@ -16,15 +27,7 @@ function ModalInsert({ currState, setState, judulInsert }) {
   ];
   const [current, setCurrent] = useState("unggah");
 
-  const opsiUser = [
-    { label: "Pilih Semua", value: "Pilih Semua" },
-    { label: "Ahmad Rizal", value: 1 },
-    { label: "Samuel Haratua", value: 2 },
-    { label: "Rafi rizky", value: 3 },
-    { label: "Indah Sanjana", value: 4 },
-    { label: "Adrian Lusikooy", value: 5 },
-    { label: "Jason", value: 6 },
-  ];
+  const [opsiUser, setOpsiUser] = useState([]);
 
   const props = {
     name: "file",
@@ -46,50 +49,100 @@ function ModalInsert({ currState, setState, judulInsert }) {
     },
   };
 
-  const [dibuatUntukLink, setDibuatUntukLink] = useState([]);
-  const [dibuatUntukDokumen, setDibuatUntukDokumen] = useState([]);
-  const handleSelectChange = (value, tipe) => {
+  const handleCurrentMenu = (value) => {
+    setFormData({ Judul: "", UserTujuan: [], FileFolder: "" });
+    setCurrent(value);
+  };
+  const handleSelectChange = (value) => {
     if (value.includes("Pilih Semua")) {
-      if (tipe === "link") {
-        setDibuatUntukLink([1, 2, 3, 4, 5, 6]);
-      } else if (tipe === "dokumen") {
-        setDibuatUntukDokumen([1, 2, 3, 4, 5, 6]);
-      }
+      const allValuesExceptPilihSemua = opsiUser
+        .filter((option) => option.value !== "Pilih Semua") // Filter out "Pilih Semua"
+        .map((option) => option.value); // Get all other values
+
+      setFormData((prevData) => ({
+        ...prevData,
+        UserTujuan: allValuesExceptPilihSemua,
+      }));
     } else {
-      if (tipe === "link") {
-        setDibuatUntukLink(value);
-      } else if (tipe === "dokumen") {
-        setDibuatUntukDokumen(value);
-      }
+      setFormData((prevData) => ({
+        ...prevData,
+        UserTujuan: value,
+      }));
     }
   };
-  console.log(dibuatUntukLink);
+  const handleFormDataChange = (tipe, value) => {
+    if (tipe === "UserTujuan") {
+      handleSelectChange(value);
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [tipe]: value,
+      }));
+    }
+  };
+
+  // console.log(formData);
+
+  axios.defaults.withCredentials = true;
+  useEffect(() => {
+    const fetchDataUser = async () => {
+      const headers = {
+        headers: {
+          authorization: userSession?.AuthKey,
+        },
+      };
+      try {
+        const response = await axios.get(`${urlServer}/user`, headers);
+        const responseData = response.data;
+
+        const currentUserID = userSession?.dataUser?.userID;
+
+        // Transform the data and filter out the current userID
+        const transformedData = responseData
+          .filter((data) => data.userID !== currentUserID) // Exclude the current userID
+          .map((data) => ({
+            value: data.userID,
+            label: data.nama,
+          }));
+
+        // Set the opsiUser state while keeping "Pilih Semua" as the first option
+        setOpsiUser([{ value: "Pilih Semua", label: "Pilih Semua" }, ...transformedData]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchDataUser();
+  }, []);
 
   const form = () => {
-    if (current === "unggah") {
-      return (
-        <div className="d-flex flex-column gap-3">
-          <div className="form-input text d-flex align-items-center">
-            <label htmlFor="" className="w-25">
-              Judul dokumen
-            </label>
-            <Input />
-          </div>
-          <div className="form-input select d-flex align-items-center">
-            <label htmlFor="" className="w-25">
-              Dibuat untuk
-            </label>
-            <Select
-              className="w-100"
-              mode="multiple"
-              allowClear
-              placeholder="Pilih..."
-              value={dibuatUntukDokumen}
-              onChange={(value) => handleSelectChange(value, "dokumen")}
-              options={opsiUser}
-            />
-          </div>
-
+    return (
+      <div className="d-flex flex-column gap-3">
+        <div className="form-input text d-flex align-items-center">
+          <label htmlFor="" className="w-25">
+            Judul dokumen
+          </label>
+          <Input
+            value={formData["Judul"]}
+            onChange={(e) => handleFormDataChange("Judul", e.target.value)}
+          />
+        </div>
+        <div className="form-input select d-flex align-items-center">
+          <label htmlFor="" className="w-25">
+            Dibuat untuk
+          </label>
+          <Select
+            className="w-100"
+            mode="multiple"
+            allowClear
+            placeholder="Pilih..."
+            value={formData["UserTujuan"]}
+            onChange={(value) => handleFormDataChange("UserTujuan", value)}
+            optionFilterProp="label"
+            options={opsiUser}
+          />
+        </div>
+        {current === "unggah" && (
           <div className="form-input file">
             <Dragger height={250}>
               <p className="ant-upload-drag-icon">
@@ -102,39 +155,58 @@ function ModalInsert({ currState, setState, judulInsert }) {
               </p>
             </Dragger>
           </div>
-        </div>
-      );
-    } else if (current === "link") {
-      return (
-        <div className="d-flex flex-column gap-3">
-          <div className="form-input text d-flex align-items-center">
-            <label htmlFor="" className="w-25">
-              Judul dokumen
-            </label>
-            <Input />
-          </div>
-          <div className="form-input select d-flex align-items-center">
-            <label htmlFor="" className="w-25">
-              Dibuat untuk
-            </label>
-            <Select
-              className="w-100"
-              mode="multiple"
-              allowClear
-              placeholder="Pilih..."
-              value={dibuatUntukLink}
-              onChange={(value) => handleSelectChange(value, "link")}
-              options={opsiUser}
-            />
-          </div>
+        )}
+
+        {current === "link" && (
           <div className="form-input text d-flex align-items-center">
             <label htmlFor="" className="w-25">
               Link/url dokumen
             </label>
-            <Input />
+            <Input
+              value={formData["FileFolder"]}
+              onChange={(e) => handleFormDataChange("FileFolder", e.target.value)}
+            />
           </div>
-        </div>
-      );
+        )}
+      </div>
+    );
+  };
+
+  const formatFormData = (formData) => {
+    let fiturID = fiturMaping[judulInsert];
+    let newFormData = {
+      ...formData,
+      FiturID: fiturID,
+      TglDibuat: new Date().getTime(),
+      UserID_dibuat: userSession?.dataUser?.userID,
+    };
+
+    return newFormData;
+  };
+
+  const insertFormData = async () => {
+    try {
+      const headers = {
+        headers: {
+          authorization: userSession?.AuthKey,
+        },
+      };
+      const formattedFormData = formatFormData(formData);
+      // console.log(formattedFormData, "FORMATTED");
+
+      const validateFunction = inputValidator["DataFitur"];
+      validateFunction(formattedFormData);
+
+      const response = await axios.post(`${urlServer}/data`, formattedFormData, headers);
+      // console.log(response);
+    } catch (error) {
+      // console.log(error);
+
+      if (error?.response?.data?.error) {
+        setValidationStatus(error.path, error.response.data.error);
+      } else {
+        setValidationStatus(error.path, error.message);
+      }
     }
   };
   return (
@@ -148,6 +220,11 @@ function ModalInsert({ currState, setState, judulInsert }) {
       footer={[
         <>
           <div className="d-flex w-100 justify-content-between">
+            {ValidationStatus && (
+              <Modal open={ValidationStatus} onCancel={setCloseAlert} footer={null} centered={true}>
+                <Result status="error" title={ValidationStatus.Message} />
+              </Modal>
+            )}
             <div>
               <Popover content={<p>Simpan di draft</p>} trigger={"hover"}>
                 <Button key="save" icon={<SaveTwoTone twoToneColor={"#399051"} />}></Button>
@@ -162,7 +239,7 @@ function ModalInsert({ currState, setState, judulInsert }) {
                 Kembali
               </Button>
 
-              <Button key="unggah" type="primary">
+              <Button key="unggah" type="primary" onClick={insertFormData}>
                 Unggah
               </Button>
             </div>
@@ -171,7 +248,7 @@ function ModalInsert({ currState, setState, judulInsert }) {
       ]}
     >
       <Menu
-        onClick={(e) => setCurrent(e.key)}
+        onClick={(e) => handleCurrentMenu(e.key)}
         selectedKeys={[current]}
         mode="horizontal"
         items={menuInsert}

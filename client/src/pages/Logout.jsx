@@ -2,14 +2,18 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { urlServer } from "../utils/endpoint";
-import useDataUser from "../constaints/dataLoginUser";
 
 function Logout() {
   const navigate = useNavigate();
-  const { headers } = useDataUser();
+  const userSession = JSON.parse(localStorage.getItem("userSession"));
 
   useEffect(() => {
     const logout = async () => {
+      const headers = {
+        headers: {
+          authorization: userSession?.AuthKey,
+        },
+      };
       try {
         const response = await axios.get(`${urlServer}/logout`, headers);
         console.log(response);

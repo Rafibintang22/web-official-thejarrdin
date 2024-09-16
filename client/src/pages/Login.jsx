@@ -157,7 +157,7 @@ function Login() {
     }
   };
 
-  console.log(otp);
+  // console.log(otp);
 
   return (
     <div className="container-login d-flex w-100 h-100 flex-column p-4">

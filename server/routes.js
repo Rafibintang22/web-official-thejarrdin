@@ -15,6 +15,7 @@ router.get("/fitur", Authorization.decryption, FiturController.getAllByUserID);
 
 // ###############################################################################
 //                              USER
+router.get("/user", Authorization.decryption, UserController.getAll);
 router.get("/user/session", Authorization.decryption, UserController.getUserSession);
 router.post("/login", UserController.postLogin);
 router.post("/login/verify-otp", UserController.verifyOtp);
@@ -26,7 +27,7 @@ router.get("/role", Authorization.decryption, UserRoleController.getAllByUserID)
 
 // ###############################################################################
 //                              DATA FITUR
-router.get("/data/:fiturID", Authorization.decryption, DataFiturController.getAll);
+router.get("/data/:fiturID/:tipe", Authorization.decryption, DataFiturController.getAll);
 router.post("/data", Authorization.decryption, DataFiturController.post);
 router.delete("/data/:dataFiturID", Authorization.decryption, DataFiturController.delete);
 

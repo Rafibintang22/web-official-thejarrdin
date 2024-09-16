@@ -1,3 +1,6 @@
+// columns.jsx
+import { Button } from "antd";
+
 const columns = [
   {
     title: "Judul",
@@ -18,7 +21,10 @@ const columns = [
     title: "File",
     dataIndex: "File",
     key: "File",
+    render: (text, record) => (
+      <Button onClick={() => window.open(record.File, "_blank")}>Open</Button>
+    ),
   },
 ];
 
-export { columns };
+export default columns;

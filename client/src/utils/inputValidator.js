@@ -40,6 +40,37 @@ const VerifyOtp = Joi.object({
   }),
 });
 
+const DataFitur = Joi.object({
+  FiturID: Joi.number().integer().min(1).required().messages({
+    "number.base": "ID fitur harus berupa angka",
+    "number.min": "ID fitur minimal 1",
+    "any.required": "ID fitur wajib diisi",
+  }),
+  Judul: Joi.string().min(3).max(255).required().messages({
+    "string.min": "Judul minimal harus 3 karakter",
+    "string.max": "Judul tidak boleh lebih dari 255 karakter",
+    "any.required": "Judul wajib diisi",
+  }),
+  TglDibuat: Joi.number().integer().min(0).required().messages({
+    "number.base": "Tanggal harus berupa epoch time dalam milidetik",
+    "number.min": "Tanggal tidak boleh negatif",
+  }), // Accept epoch timestamp as a positive integer
+  UserID_dibuat: Joi.number().integer().min(1).required().messages({
+    "number.base": "UserID dibuat harus berupa angka",
+    "number.min": "UserID dibuat minimal 1",
+    "any.required": "UserID dibuat wajib diisi",
+  }),
+  FileFolder: Joi.string().min(1).max(255).required().messages({
+    "string.min": "File/folder minimal harus 1 karakter",
+    "string.max": "File/folder tidak boleh lebih dari 255 karakter",
+    "any.required": "File/folder wajib diisi",
+  }),
+  UserTujuan: Joi.array().items(Joi.number().integer().min(1)).min(1).required().messages({
+    "array.min": "Minimal harus ada 1 user tujuan",
+    "any.required": "User tujuan wajib diisi",
+  }),
+});
+
 const validateData = (data, schema) => {
   const { error } = schema.validate(data, { abortEarly: false });
   if (error) {
@@ -55,4 +86,5 @@ const validateData = (data, schema) => {
 export const inputValidator = {
   Login: (formData) => validateData(formData, LoginSchema),
   VerifyOtp: (formData) => validateData(formData, VerifyOtp),
+  DataFitur: (formData) => validateData(formData, DataFitur),
 };
