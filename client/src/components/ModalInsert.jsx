@@ -11,10 +11,12 @@ import { fiturMaping } from "../utils/mappingFiturID";
 // eslint-disable-next-line react/prop-types
 function ModalInsert({ currState, setState, judulInsert }) {
   const userSession = JSON.parse(localStorage.getItem("userSession"));
-  console.log(userSession);
+  // console.log(userSession);
 
   const { ValidationStatus, setValidationStatus, setCloseAlert } = useValidator();
   const [formData, setFormData] = useState({ Judul: "", UserTujuan: [], FileFolder: "" });
+  console.log(formData, "FORMDATA");
+
   const menuInsert = [
     {
       label: "Unggah dokumen",
@@ -29,20 +31,26 @@ function ModalInsert({ currState, setState, judulInsert }) {
 
   const [opsiUser, setOpsiUser] = useState([]);
 
-  const props = {
-    name: "file",
+  const propsUploadImg = {
+    name: judulInsert,
     multiple: true,
-    action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
+    listType: "picture",
+    accept: ".png,.jpg,.jpeg,.webp,.pdf,.doc,.docx,.xlxs",
+    beforeUpload(file) {
+      //jika size > 5Mb
+      if (file.size > 5242880) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     onChange(info) {
-      const { status } = info.file;
-      if (status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (status === "done") {
-        message.success(`${info.file.name} file uploaded successfully.`);
-      } else if (status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
-      }
+      setFormData((prevData) => ({ ...prevData, FileFolder: info.fileList }));
+      // axios.post(`${urlServer}/data`, info, {
+      //   onUploadProgress: (event) => {
+      //     console.log(event);
+      //   },
+      // });
     },
     onDrop(e) {
       console.log("Dropped files", e.dataTransfer.files);
@@ -144,14 +152,14 @@ function ModalInsert({ currState, setState, judulInsert }) {
         </div>
         {current === "unggah" && (
           <div className="form-input file">
-            <Dragger height={250}>
+            <Dragger height={250} {...propsUploadImg}>
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>
-              <p className="ant-upload-text">Click or drag file to this area to upload</p>
+              <p className="ant-upload-text">Klik atau tarik file ke area ini untuk mengunggah</p>
               <p className="ant-upload-hint">
-                Support for a single or bulk upload. Strictly prohibited from uploading company data
-                or other banned files.
+                Mendukung unggah file tunggal atau dalam jumlah banyak. Ukuran file maksimal adalah
+                5 Mb
               </p>
             </Dragger>
           </div>
@@ -184,31 +192,77 @@ function ModalInsert({ currState, setState, judulInsert }) {
     return newFormData;
   };
 
+  // const insertFormData = async () => {
+  //   try {
+  //     const headers = {
+  //       headers: {
+  //         authorization: userSession?.AuthKey,
+  //         "Content-Type": "multipart/form-data", // Important for file uploads
+  //       },
+  //     };
+  //     const formattedFormData = formatFormData(formData);
+  //     // console.log(formattedFormData, "FORMATTED");
+
+  //     // const validateFunction = inputValidator["DataFitur"];
+  //     // validateFunction(formattedFormData);
+
+  //     const response = await axios.post(`${urlServer}/data`, formattedFormData, headers);
+  //     // console.log(response);
+  //   } catch (error) {
+  //     // console.log(error);
+
+  //     if (error?.response?.data?.error) {
+  //       setValidationStatus(error.path, error.response.data.error);
+  //     } else {
+  //       setValidationStatus(error.path, error.message);
+  //     }
+  //   }
+  // };
   const insertFormData = async () => {
     try {
       const headers = {
-        headers: {
-          authorization: userSession?.AuthKey,
-        },
+        authorization: userSession?.AuthKey,
+        "Content-Type": "multipart/form-data",
       };
-      const formattedFormData = formatFormData(formData);
-      // console.log(formattedFormData, "FORMATTED");
+      let formattedFormData = new FormData();
 
-      const validateFunction = inputValidator["DataFitur"];
-      validateFunction(formattedFormData);
-
-      const response = await axios.post(`${urlServer}/data`, formattedFormData, headers);
-      // console.log(response);
-    } catch (error) {
-      // console.log(error);
-
-      if (error?.response?.data?.error) {
-        setValidationStatus(error.path, error.response.data.error);
-      } else {
-        setValidationStatus(error.path, error.message);
+      for (const key in formData) {
+        if (key === "FileFolder" && Array.isArray(formData[key])) {
+          formData[key].forEach((file) => {
+            const fileObj = file.originFileObj || file;
+            formattedFormData.append(key, fileObj);
+          });
+        } else {
+          formattedFormData.append(key, formData[key]);
+        }
       }
+
+      formattedFormData.append("FiturID", fiturMaping[judulInsert]);
+      formattedFormData.append("TglDibuat", new Date().getTime());
+      formattedFormData.append("UserID_dibuat", userSession?.dataUser?.userID);
+
+      console.log(formattedFormData, "FORMATED");
+
+      const response = await fetch(`${urlServer}/data`, {
+        method: "POST",
+        headers: headers,
+        body: formattedFormData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to upload data");
+      }
+
+      const responseData = await response.json();
+      message.success("Data successfully uploaded!");
+      console.log("Server Response:", responseData);
+    } catch (error) {
+      console.error("Error uploading form data:", error);
+      setValidationStatus(null, error.message || "An error occurred");
     }
   };
+
   return (
     <Modal
       title={judulInsert}

@@ -51,6 +51,7 @@ class UserController {
       // console.log(readUser, "READUSER");
 
       const loginSession = await LoginSessionRepository.create({
+        userID: readUser.userID,
         email: readUser.email,
         noTelp: readUser.noTelp,
         otp: otp,

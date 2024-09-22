@@ -3,25 +3,25 @@ const { Validator } = require("../utils/validator");
 
 class DataFiturController {
   static async getAll(req, res) {
-    const fiturID = req.params.fiturID;
-    const tipe = req.params.tipe;
-    const userID = req.dataSession.UserID;
+    const FiturID = req.params.FiturID;
+    const Tipe = req.params.Tipe;
+    const UserID = req.dataSession.UserID;
 
     // console.log(tipe);
 
     try {
-      if (tipe === "untukUser") {
+      if (Tipe === "untukUser") {
         const readFiturUntukuser = await DataFiturRepository.readAllByFiturIdUntukUser(
-          userID,
-          fiturID
+          UserID,
+          FiturID
         );
         return res.status(200).json(readFiturUntukuser);
       }
 
-      if (tipe === "dibuatUser") {
+      if (Tipe === "dibuatUser") {
         const readFiturDibuatUser = await DataFiturRepository.readAllByFiturIdDibuatUser(
-          userID,
-          fiturID
+          UserID,
+          FiturID
         );
         return res.status(200).json(readFiturDibuatUser);
       }
@@ -31,21 +31,38 @@ class DataFiturController {
     }
   }
 
-  static async post(req, res) {
-    // Validasi data dari request body yang ingin di create
-    let { error } = Validator.createDataFitur(req.body);
-
-    if (error) {
-      return res.status(400).json({ error: error.details[0].message });
-    }
+  static async getOne(req, res) {
+    const DataFiturID = req.params.DataFiturID;
+    const UserID = req.dataSession.UserID;
 
     try {
-      const createDataFitur = await DataFiturRepository.create(req.body);
-      return res.status(201).json({ success: true, data: createDataFitur });
+      const readOneDataFitur = await DataFiturRepository.readOne(UserID, DataFiturID);
+
+      return res.status(200).json(readOneDataFitur);
     } catch (error) {
-      console.error(error);
-      return res.status(error.status || 500).json({ error: error.message });
+      console.error("Error fetching data:", error);
+      return res.status(500).json({ error: "Internal server error" });
     }
+  }
+
+  static async post(req, res) {
+    console.log(req.body);
+    console.log(req.file);
+
+    // Validasi data dari request body yang ingin di create
+    // let { error } = Validator.createDataFitur(req.body);
+
+    // if (error) {
+    //   return res.status(400).json({ error: error.details[0].message });
+    // }
+
+    // try {
+    //   const createDataFitur = await DataFiturRepository.create(req.body);
+    //   return res.status(201).json({ success: true, data: createDataFitur });
+    // } catch (error) {
+    //   console.error(error);
+    //   return res.status(error.status || 500).json({ error: error.message });
+    // }
   }
 
   static async delete(req, res) {

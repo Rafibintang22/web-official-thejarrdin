@@ -60,11 +60,22 @@ const DataFitur = Joi.object({
     "number.min": "UserID dibuat minimal 1",
     "any.required": "UserID dibuat wajib diisi",
   }),
-  FileFolder: Joi.string().min(1).max(255).required().messages({
-    "string.min": "File/folder minimal harus 1 karakter",
-    "string.max": "File/folder tidak boleh lebih dari 255 karakter",
-    "any.required": "File/folder wajib diisi",
-  }),
+  FileFolder: Joi.alternatives()
+    .try(
+      Joi.string().min(1).max(255).messages({
+        "string.min": "File/folder minimal harus 1 karakter",
+        "string.max": "File/folder tidak boleh lebih dari 255 karakter",
+      }),
+      Joi.object({
+        file: Joi.any().required().messages({
+          "any.required": "File input wajib diisi",
+        }),
+      })
+    )
+    .required()
+    .messages({
+      "any.required": "File/folder wajib diisi",
+    }),
   UserTujuan: Joi.array().items(Joi.number().integer().min(1)).min(1).required().messages({
     "array.min": "Minimal harus ada 1 user tujuan",
     "any.required": "User tujuan wajib diisi",

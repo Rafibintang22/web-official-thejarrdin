@@ -1,4 +1,5 @@
 const { DatabaseManager, DataTypes } = require("../../config/DatabaseManager");
+const { UserModel } = require("./UserModel");
 const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
 
 const LoginSessionModel = jarrdinDB.define(
@@ -9,6 +10,10 @@ const LoginSessionModel = jarrdinDB.define(
       primaryKey: true,
       allowNull: false,
       autoIncrement: true,
+    },
+    userID: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
     },
     email: {
       type: DataTypes.STRING(200),
@@ -44,5 +49,21 @@ const LoginSessionModel = jarrdinDB.define(
     ],
   }
 );
+
+function associationLoginSession() {
+  LoginSessionModel.belongsTo(UserModel, {
+    foreignKey: "userID",
+    targetKey: "userID",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+
+  UserModel.hasMany(LoginSessionModel, {
+    foreignKey: "userID",
+    sourceKey: "userID",
+  });
+}
+
+associationLoginSession();
 
 module.exports = { LoginSessionModel };

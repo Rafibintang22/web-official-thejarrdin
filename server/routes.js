@@ -27,7 +27,8 @@ router.get("/role", Authorization.decryption, UserRoleController.getAllByUserID)
 
 // ###############################################################################
 //                              DATA FITUR
-router.get("/data/:fiturID/:tipe", Authorization.decryption, DataFiturController.getAll);
+router.get("/data/:FiturID/:Tipe", Authorization.decryption, DataFiturController.getAll);
+router.get("/data/:DataFiturID", Authorization.decryption, DataFiturController.getOne);
 router.post("/data", Authorization.decryption, DataFiturController.post);
 router.delete("/data/:dataFiturID", Authorization.decryption, DataFiturController.delete);
 

@@ -1,12 +1,13 @@
 import { PhoneOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, ConfigProvider, Input, Menu, Modal, Result } from "antd";
 import { threelogo } from "../../public/assets/images";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { inputValidator } from "../utils/inputValidator";
 import useValidator from "../constaints/FormValidation";
 import axios from "axios";
 import { urlServer } from "../utils/endpoint";
 import { useNavigate } from "react-router-dom";
+import formatTime from "../utils/FormatTime";
 
 function Login() {
   const navigate = useNavigate();
@@ -15,6 +16,24 @@ function Login() {
   // const [noTelp, setNoTelp] = useState("");
   const [otp, setOtp] = useState({ Otp: "" });
   const [tipeLogin, setTipeLogin] = useState("email");
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
+  const [isActiveStep, setActiveStep] = useState(1);
+  // Countdown timer logic
+  useEffect(() => {
+    let timer;
+    if (isActiveStep === 2 && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      clearInterval(timer);
+      // Handle when the time runs out, e.g., show alert or allow OTP resend
+      console.log("Time's up! Resend OTP or show alert.");
+    }
+
+    return () => clearInterval(timer); // Cleanup on component unmount
+  }, [timeLeft, isActiveStep]);
+
   const menuLogin = [
     {
       label: "Email",
@@ -70,7 +89,6 @@ function Login() {
     },
   ];
 
-  const [isActiveStep, setActiveStep] = useState(1);
   const formStepDisplay = () => {
     if (isActiveStep === 1) {
       return (
@@ -100,7 +118,7 @@ function Login() {
               anda
             </p>
             <p className="text-light" style={{ fontSize: "0.8rem" }}>
-              Waktu anda untuk memasukan kode ( 04 : 58 )
+              Waktu anda untuk memasukan kode {formatTime(timeLeft)}
             </p>
           </div>
           <Input.OTP

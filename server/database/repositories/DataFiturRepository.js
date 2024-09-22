@@ -86,6 +86,60 @@ class DataFiturRepository {
     }
   }
 
+  static async readOne(userID, dataFiturID) {
+    try {
+      let findDataFitur;
+      findDataFitur = await UserModel.findOne({
+        where: { userID: userID },
+        include: [
+          {
+            model: DataFiturModel,
+            required: true,
+            where: { dataFiturID: dataFiturID },
+            include: [
+              {
+                model: UserModel,
+                required: true,
+              },
+              {
+                model: UserTujuanModel,
+                required: true,
+                include: [
+                  {
+                    model: UserModel,
+                    required: true,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+
+      if (!findDataFitur) {
+        const newError = new Error("Data tidak ditemukan.");
+        newError.status = 404;
+        throw newError;
+      }
+
+      // Extract the first (and only) DataFitur
+      const dataFitur = findDataFitur.DataFiturs[0];
+
+      // Transform the data to the desired format
+      const transformedData = {
+        Judul: dataFitur.judul,
+        TglDibuat: dataFitur.tglDibuat,
+        DibuatOleh: dataFitur.User.nama,
+        UserTujuan: dataFitur.user_tujuans.map((tujuan) => tujuan.User.nama),
+        File: dataFitur.fileFolder,
+      };
+
+      return transformedData;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async create(dataInsert) {
     const transaction = await jarrdinDB.transaction();
     try {

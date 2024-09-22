@@ -34,7 +34,7 @@ class LoginSessionRepository {
   static async create(dataInsert) {
     const transaction = await jarrdinDB.transaction();
     try {
-      const { email, noTelp, otp } = dataInsert;
+      const { userID, email, noTelp, otp } = dataInsert;
       //   console.log(email, noTelp, otp);
 
       //   EMAIL ATAU NOTELP YANG DIISI
@@ -44,6 +44,7 @@ class LoginSessionRepository {
 
       const newDataLoginSession = await LoginSessionModel.create(
         {
+          userID,
           email,
           noTelp,
           otp,

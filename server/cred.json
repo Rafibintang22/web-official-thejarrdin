@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "jarrdinofficialweb",
+  "private_key_id": "8eab21fd9774312ebc93739464f77cc9173bec3f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDnPLSZjEbHNvtL\n94fyzr8NRsF57rinN/PGVuXPx6cthZgKDGNrOYI6hNaeLfJK5UU+LkM5aJ72M0hJ\nA+71agdP8oF7Srlt2kA45hqGt7yTNiDjipoc4V9wTFOV5KqCJ+C+tTX9gMHLd4B4\ntCqOSFPBd553wwUoG78lty0zplCBiqsPwwFkX7DH3R2hyVJJrFk9Am3LJIJ5B2Ry\nyizpnn/y+QOBhT9ldfnvGfHr5tBoVE7GB6/buEubipHmmVA2JUlSiUVnc3byi6zT\nk8deNJPWQA29TrCImbViqNxdp569pM+C2H7cQ8GBG9a3xzzRiUgRTZjjZ7UrTIfh\noNYOLsy9AgMBAAECggEAH9RGU8BwWamiy6El8HEu8SflJ+CJQFM+VfXOKlykEWsL\nM47i/HZtC5sPY7SVXmPStS1vCW7yOpdygsJs2REgMowB8LOndIyPPIXH7vVJmsXf\nnxKMBh+roGyRMNfJ9KKCmB2fceaQRm6Lm5HJLc6c4MuTX47TneK72/gr26kv+bSW\nvgTlnZm5PsROZsZpid2kWZIkpMEMXCK91TCwmbuSX6osGXOSDrF5H3COc9ZRz1hV\nIVpslNnCPYSmpGRSlbl+zvGQIu74msmJbvXLECU3WHUF2yMw6WchCJgebBN6rgkt\ny17pFq1oppSc6Ts57r3NEFOFEMO2BohAyr0jv/uvYQKBgQD0H7/9AKAaAtajwq3A\nGJvie59k4uroZ4LQwIsJgiEom/CeCmgbu+N0La9DMi7gASTzLDHQgslhJ9RgidmU\n7OLjDnHkrePvjbRJ2IdpXNs1Vt9mlxCMBq8h9QlDBtJgwvhGdgohqS3yh60Oli9G\nMlQ2rO//1hIHeeb9yxkPUB3teQKBgQDyfHdDxcHVz+gp0HECTl+32Vo7QMYZZXUy\nY6cJdF5SHJYm/LMTTx2qiUPrwYAoUVRoAtj3sCiFY6cXT1O5hn9P+gN7f/MmSlxG\nj1i0OFaS+mpDppicasIuaNoAO62E/sr2LVX/u72ZgpPF5M21Aym44HJx2otDNgAM\ntpXlE0X8ZQKBgQCFsIWBVkBXPkqxL8HbOx7TLwQhSat/ToBzNZ5uvJbQGGXzBpvw\n5Doxu3sJf4fwIHBNw1wcZiNGU3uYyqUfS4MM+TIiG6CB5cZf0naFmtZpJYP+OKhV\nJqvuGrTRwgCgAOXaIHZ37KA++1IodNK6zIEV2CsundsNwRJg1kKJAkUBcQKBgQDK\ngf/obaNvuO4e3aFDV8jAdZjRm0rVstGpf2fkkXakBJOxg6DaI1yXK4O5xCQPh7yC\nEL66PDfbDlphMTKu4hA47ocyAK1D8R4XH2fpOpOys8dDMEKLfu0kbRSC1VQYmeFO\nrpX/uP6i0VYwEuFopneVmnx5cRaUzuhDtciBQxNTsQKBgGfD0Qis4/RceMLOnF4C\n7DlgI1jRgVEe6csM2NRu0x2beumhFZdl3nSU5FZ4GgOPGUsWaJz+CM4rtHGCmf6z\n9p/cMh870bxjHRnaDxkJBiLfU21/KdzmwlWhWj85sI9Lqqxg4tAzQrxXsK0s+1Gb\nhpVRkxb5rSlSnqQP/XjrQoph\n-----END PRIVATE KEY-----\n",
+  "client_email": "uploadfilesjarrdin@jarrdinofficialweb.iam.gserviceaccount.com",
+  "client_id": "104147877107436087463",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/uploadfilesjarrdin%40jarrdinofficialweb.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

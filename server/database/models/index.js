@@ -6,6 +6,9 @@ const { UserTujuanModel } = require("./UserTujuanModel");
 const { UserRoleModel } = require("./UserRoleModel");
 const { HakAksesModel } = require("./HakAksesModel");
 const { LoginSessionModel } = require("./LoginSessionModel");
+const { MessageModel } = require("./MessageModel");
+const { MessageStatusModel } = require("./MessageStatusModel");
+const { MessageTujuanModel } = require("./MessageTujuanModel");
 
 module.exports = {
   UserModel,
@@ -16,4 +19,7 @@ module.exports = {
   UserRoleModel,
   HakAksesModel,
   LoginSessionModel,
+  MessageModel,
+  MessageStatusModel,
+  MessageTujuanModel,
 };
