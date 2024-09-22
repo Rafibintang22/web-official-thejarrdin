@@ -2,13 +2,6 @@ const express = require("express");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-// UPLOAD FILE KE GDRIVE
-const stream = require("stream");
-const multer = require("multer");
-const path = require("path");
-const { google } = require("googleapis");
-const upload = multer();
-// END UPLOAD FILE KE GDRIVE
 
 const { DatabaseManager } = require("./config/DatabaseManager");
 
@@ -48,28 +41,3 @@ const port = 3000;
 app.listen(port, () => {
   console.log(`>> Server is running on http://localhost:${port}`);
 });
-
-const KEYFILEPATH = path.join(__dirname, "cred.json");
-const SCOPES = ["https://www.googleapis.com/auth/drive"];
-
-const auth = new google.auth.GoogleAuth({
-  keyFile: KEYFILEPATH,
-  scopes: SCOPES,
-});
-
-const uploadFile = async (fileObject) => {
-  const bufferStream = new stream.PassThrough();
-  bufferStream.end(fileObject.buffer);
-  const { data } = await google.drive({ version: "v3", auth }).files.create({
-    media: {
-      mimeType: fileObject.mimeType,
-      body: bufferStream,
-    },
-    requestBody: {
-      name: fileObject.originalname,
-      parents: ["1OocQkL2Yd-w_l_YEfnG1C5lx6HpNOY"],
-    },
-    fields: "id,name",
-  });
-  console.log(`Uploaded file ${data.name} ${data.id}`);
-};

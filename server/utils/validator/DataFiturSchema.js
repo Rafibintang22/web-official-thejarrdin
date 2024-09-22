@@ -8,7 +8,18 @@ const DataFiturSchema = {
       Judul: Joi.string().min(3).max(255).required(),
       TglDibuat: Joi.number().integer().min(0).required(),
       UserID_dibuat: Joi.number().integer().min(1).required(),
-      FileFolder: Joi.string().min(1).max(255).required(),
+      FileFolder: Joi.alternatives()
+        .try(
+          Joi.array().min(1).messages({
+            "array.base": "FileFolder harus berupa array",
+            "array.min": "Minimal harus ada 1 file",
+          }),
+          Joi.string() // Allow FileFolder to be a string
+        )
+        .required()
+        .messages({
+          "any.required": "File wajib diisi",
+        }),
       UserTujuan: Joi.array().items(Joi.number().integer().min(1)).min(1).required(), // Array berisi userID tujuan, minimal ada 1
     });
 

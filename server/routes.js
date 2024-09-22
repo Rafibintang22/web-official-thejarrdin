@@ -6,6 +6,10 @@ const {
   UserController,
 } = require("./controllers");
 const { Authorization } = require("./utils/Authorization");
+const multer = require("multer");
+const upload = multer({
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB limit
+}); // Atur multer sesuai kebutuhan
 
 const router = express.Router();
 
@@ -29,7 +33,12 @@ router.get("/role", Authorization.decryption, UserRoleController.getAllByUserID)
 //                              DATA FITUR
 router.get("/data/:FiturID/:Tipe", Authorization.decryption, DataFiturController.getAll);
 router.get("/data/:DataFiturID", Authorization.decryption, DataFiturController.getOne);
-router.post("/data", Authorization.decryption, DataFiturController.post);
+router.post(
+  "/data",
+  upload.fields([{ name: "FileFolder", maxCount: 10 }]),
+  Authorization.decryption,
+  DataFiturController.post
+);
 router.delete("/data/:dataFiturID", Authorization.decryption, DataFiturController.delete);
 
 module.exports = { router };

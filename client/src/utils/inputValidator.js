@@ -54,7 +54,7 @@ const DataFitur = Joi.object({
   TglDibuat: Joi.number().integer().min(0).required().messages({
     "number.base": "Tanggal harus berupa epoch time dalam milidetik",
     "number.min": "Tanggal tidak boleh negatif",
-  }), // Accept epoch timestamp as a positive integer
+  }),
   UserID_dibuat: Joi.number().integer().min(1).required().messages({
     "number.base": "UserID dibuat harus berupa angka",
     "number.min": "UserID dibuat minimal 1",
@@ -62,19 +62,15 @@ const DataFitur = Joi.object({
   }),
   FileFolder: Joi.alternatives()
     .try(
-      Joi.string().min(1).max(255).messages({
-        "string.min": "File/folder minimal harus 1 karakter",
-        "string.max": "File/folder tidak boleh lebih dari 255 karakter",
+      Joi.array().min(1).messages({
+        "array.base": "FileFolder harus berupa array",
+        "array.min": "Minimal harus ada 1 file",
       }),
-      Joi.object({
-        file: Joi.any().required().messages({
-          "any.required": "File input wajib diisi",
-        }),
-      })
+      Joi.string() // Allow FileFolder to be a string
     )
     .required()
     .messages({
-      "any.required": "File/folder wajib diisi",
+      "any.required": "File wajib diisi",
     }),
   UserTujuan: Joi.array().items(Joi.number().integer().min(1)).min(1).required().messages({
     "array.min": "Minimal harus ada 1 user tujuan",

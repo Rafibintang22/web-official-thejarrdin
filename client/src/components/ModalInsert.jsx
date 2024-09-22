@@ -2,7 +2,7 @@ import { InboxOutlined, SaveTwoTone } from "@ant-design/icons";
 import { Button, Input, Menu, Modal, Popover, Result, Select, message } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios, { formToJSON } from "axios";
 import { urlServer } from "../utils/endpoint";
 import useValidator from "../constaints/FormValidation";
 import { inputValidator } from "../utils/inputValidator";
@@ -14,7 +14,7 @@ function ModalInsert({ currState, setState, judulInsert }) {
   // console.log(userSession);
 
   const { ValidationStatus, setValidationStatus, setCloseAlert } = useValidator();
-  const [formData, setFormData] = useState({ Judul: "", UserTujuan: [], FileFolder: "" });
+  const [formData, setFormData] = useState({ Judul: "", UserTujuan: [], FileFolder: [] });
   console.log(formData, "FORMDATA");
 
   const menuInsert = [
@@ -46,11 +46,6 @@ function ModalInsert({ currState, setState, judulInsert }) {
     },
     onChange(info) {
       setFormData((prevData) => ({ ...prevData, FileFolder: info.fileList }));
-      // axios.post(`${urlServer}/data`, info, {
-      //   onUploadProgress: (event) => {
-      //     console.log(event);
-      //   },
-      // });
     },
     onDrop(e) {
       console.log("Dropped files", e.dataTransfer.files);
@@ -181,85 +176,72 @@ function ModalInsert({ currState, setState, judulInsert }) {
   };
 
   const formatFormData = (formData) => {
-    let fiturID = fiturMaping[judulInsert];
-    let newFormData = {
-      ...formData,
-      FiturID: fiturID,
-      TglDibuat: new Date().getTime(),
-      UserID_dibuat: userSession?.dataUser?.userID,
-    };
+    let newFormData = new FormData();
+
+    for (const key in formData) {
+      if (key === "FileFolder" && Array.isArray(formData[key])) {
+        formData[key].map((file) => {
+          const fileObj = file.originFileObj;
+          newFormData.append(key, fileObj);
+        });
+      } else {
+        newFormData.append(key, formData[key]);
+      }
+    }
+    newFormData.append("FiturID", fiturMaping[judulInsert]);
+    newFormData.append("TglDibuat", new Date().getTime());
+    newFormData.append("UserID_dibuat", userSession?.dataUser?.userID);
 
     return newFormData;
   };
 
-  // const insertFormData = async () => {
-  //   try {
-  //     const headers = {
-  //       headers: {
-  //         authorization: userSession?.AuthKey,
-  //         "Content-Type": "multipart/form-data", // Important for file uploads
-  //       },
-  //     };
-  //     const formattedFormData = formatFormData(formData);
-  //     // console.log(formattedFormData, "FORMATTED");
+  //agar ketika FileFolder berukuran 1 array dan di formToJSON akan tetap berformat array
+  //karena kalau tidak formToJSON akan mengubah array berukuran 1 itu menjadi object biasa
+  const normalizeFileFolder = (data) => {
+    // Jika FileFolder adalah array dari objek file, kita bisa mengambil hanya metadata yang diperlukan
+    if (!Array.isArray(data.FileFolder)) {
+      data.FileFolder = [data.FileFolder];
+    }
 
-  //     // const validateFunction = inputValidator["DataFitur"];
-  //     // validateFunction(formattedFormData);
+    // Konversi UserTujuan dari string karena formTOJSOn "2,3" menjadi array [2, 3]
+    data.UserTujuan = data.UserTujuan.split(",").map(Number);
 
-  //     const response = await axios.post(`${urlServer}/data`, formattedFormData, headers);
-  //     // console.log(response);
-  //   } catch (error) {
-  //     // console.log(error);
+    // Pastikan ID dan Tanggal dalam format number
+    data.FiturID = Number(data.FiturID);
+    data.TglDibuat = Number(data.TglDibuat);
+    data.UserID_dibuat = Number(data.UserID_dibuat);
 
-  //     if (error?.response?.data?.error) {
-  //       setValidationStatus(error.path, error.response.data.error);
-  //     } else {
-  //       setValidationStatus(error.path, error.message);
-  //     }
-  //   }
-  // };
+    return data;
+  };
+
   const insertFormData = async () => {
     try {
       const headers = {
-        authorization: userSession?.AuthKey,
-        "Content-Type": "multipart/form-data",
+        headers: {
+          authorization: userSession?.AuthKey,
+          "Content-Type": "multipart/form-data", // Important for file uploads
+        },
       };
-      let formattedFormData = new FormData();
 
-      for (const key in formData) {
-        if (key === "FileFolder" && Array.isArray(formData[key])) {
-          formData[key].forEach((file) => {
-            const fileObj = file.originFileObj || file;
-            formattedFormData.append(key, fileObj);
-          });
-        } else {
-          formattedFormData.append(key, formData[key]);
-        }
-      }
+      const formattedFormData = formatFormData(formData);
 
-      formattedFormData.append("FiturID", fiturMaping[judulInsert]);
-      formattedFormData.append("TglDibuat", new Date().getTime());
-      formattedFormData.append("UserID_dibuat", userSession?.dataUser?.userID);
+      const normalizedData = normalizeFileFolder(formToJSON(formattedFormData)); // Normalisasi file folder untuk validasi
+      console.log(normalizedData, "TEST");
 
-      console.log(formattedFormData, "FORMATED");
+      // Lakukan validasi menggunakan Joi
+      const validateFunction = inputValidator["DataFitur"];
+      validateFunction(normalizedData);
 
-      const response = await fetch(`${urlServer}/data`, {
-        method: "POST",
-        headers: headers,
-        body: formattedFormData,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to upload data");
-      }
-
-      const responseData = await response.json();
-      message.success("Data successfully uploaded!");
-      console.log("Server Response:", responseData);
+      const response = await axios.post(`${urlServer}/data`, formattedFormData, headers);
+      console.log(response);
     } catch (error) {
-      console.error("Error uploading form data:", error);
-      setValidationStatus(null, error.message || "An error occurred");
+      console.log(error);
+
+      if (error?.response?.data?.error) {
+        setValidationStatus(error.path, error.response.data.error);
+      } else {
+        setValidationStatus(error.path, error.message);
+      }
     }
   };
 

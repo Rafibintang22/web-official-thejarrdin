@@ -25,7 +25,7 @@ class FiturRepository {
         throw newError;
       }
 
-      return findFitur;
+      return findFitur.dataValues;
     } catch (error) {
       throw error;
     }
