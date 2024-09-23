@@ -44,7 +44,7 @@ class UserController {
         return res.status(401).json({ error: "email atau no telepon yang dimasukan salah" });
       }
 
-      const identifier = readUser.email ? readUser.email : readUser.noTelp;
+      const identifier = readUser.Email ? readUser.Email : readUser.NoTelp;
       const otp = generateOtp(identifier);
       // Simpan session login di database
 
@@ -140,6 +140,7 @@ class UserController {
   static async logout(req, res) {
     try {
       const dataSession = req.dataSession;
+      // console.log(dataSession);
       // delete loginSession
       const loginSession = await LoginSessionRepository.delete(dataSession.loginSessionID);
 

@@ -99,7 +99,7 @@ function ModalInsert({ currState, setState, judulInsert }) {
         const response = await axios.get(`${urlServer}/user`, headers);
         const responseData = response.data;
 
-        const currentUserID = userSession?.dataUser?.userID;
+        const currentUserID = userSession?.dataUser?.UserID;
 
         // Transform the data and filter out the current userID
         const transformedData = responseData

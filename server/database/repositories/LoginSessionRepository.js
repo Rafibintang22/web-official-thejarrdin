@@ -84,7 +84,7 @@ class LoginSessionRepository {
         newError.status = 404;
         throw newError;
       }
-      //   console.log(findLoginSession);
+      // console.log(findLoginSession);
 
       const deleteLoginSession = await LoginSessionModel.destroy({
         where: { loginSessionID: findLoginSession.loginSessionID },
