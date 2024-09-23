@@ -9,9 +9,14 @@ import { urlServer } from "../utils/endpoint";
 import { Fitur } from "../models/FiturModel";
 import UseSessionCheck from "../utils/useSessionCheck";
 import columns from "../constaints/columnsTable";
+import DetailDataController from "../utils/detailDataController";
+import ModalDetail from "../components/ModalDetail";
 
 function Laporan() {
   UseSessionCheck();
+  const { isDetailOpen, oneDataID, setDetailOpen } = DetailDataController();
+  const fieldDetail = "Laporan";
+  console.log(isDetailOpen, oneDataID);
   const userSession = JSON.parse(localStorage.getItem("userSession"));
   const [dataTable, setDataTable] = useState([]);
   const [modalInsert, setModalInsert] = useState(false);
@@ -74,7 +79,7 @@ function Laporan() {
           />
 
           <div className="w-100 p-4">
-            <Table dataSource={dataTable} columns={columns} />
+            <Table dataSource={dataTable} columns={columns(fieldDetail, setDetailOpen)} />
           </div>
         </div>
       </div>
@@ -85,6 +90,8 @@ function Laporan() {
           judulInsert={"Tambah Data Laporan"}
         />
       )}
+
+      {isDetailOpen === "Laporan" && <ModalDetail judulDetail={"Detail Laporan"} />}
     </>
   );
 }

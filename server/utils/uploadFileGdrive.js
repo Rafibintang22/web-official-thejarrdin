@@ -42,6 +42,7 @@ async function setFilePermissions(fileId, emailUser) {
       resource: permission,
       fileId: fileId,
       fields: "id",
+      sendNotificationEmail: false, //agar tidak terkena limit (karena hanya boleh 50 req dalam 24H)
     });
   }
 }

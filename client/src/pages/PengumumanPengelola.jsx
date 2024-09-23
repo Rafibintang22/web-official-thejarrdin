@@ -1,4 +1,3 @@
-import Column from "antd/es/table/Column";
 import HeaderKonten from "../components/HeaderKonten";
 import Sidebar from "../components/Sidebar";
 import { Menu, Table } from "antd";
@@ -10,9 +9,14 @@ import { urlServer } from "../utils/endpoint";
 import { Fitur } from "../models/FiturModel";
 import UseSessionCheck from "../utils/useSessionCheck";
 import columns from "../constaints/columnsTable";
+import DetailDataController from "../utils/detailDataController";
+import ModalDetail from "../components/ModalDetail";
 
 function PengumumanPengelola() {
   UseSessionCheck();
+  const { isDetailOpen, oneDataID, setDetailOpen } = DetailDataController();
+  const fieldDetail = "PengumumanPengelola";
+  console.log(isDetailOpen, oneDataID);
   const userSession = JSON.parse(localStorage.getItem("userSession"));
   const [dataTable, setDataTable] = useState([]);
   const [modalInsert, setModalInsert] = useState(false);
@@ -73,7 +77,7 @@ function PengumumanPengelola() {
           />
 
           <div className="w-100 p-4">
-            <Table dataSource={dataTable} columns={columns} />
+            <Table dataSource={dataTable} columns={columns(fieldDetail, setDetailOpen)} />
           </div>
         </div>
       </div>
@@ -83,6 +87,9 @@ function PengumumanPengelola() {
           setState={setModalInsert}
           judulInsert={"Tambah Pengumuman Pengelola"}
         />
+      )}
+      {isDetailOpen === "PengumumanPengelola" && (
+        <ModalDetail judulDetail={"Detail Pengumuman Pengelola"} />
       )}
     </>
   );

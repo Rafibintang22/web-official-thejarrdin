@@ -34,10 +34,10 @@ class DataFiturRepository {
       }
 
       const transformedData = findDataFitur[0]?.user_tujuans.map((data) => ({
+        Id: data.DataFitur.dataFiturID,
         Judul: data.DataFitur.judul,
         DibuatOleh: data.DataFitur.User.nama,
         TglDibuat: data.DataFitur.tglDibuat,
-        File: data.DataFitur.fileFolder,
       }));
 
       return transformedData;
@@ -72,10 +72,10 @@ class DataFiturRepository {
       }
 
       const transformedData = findDataFitur[0]?.DataFiturs.map((data) => ({
+        Id: data.dataFiturID,
         Judul: data.judul,
         DibuatOleh: data.User.nama,
         TglDibuat: data.tglDibuat,
-        File: data.fileFolder,
       }));
 
       return transformedData;
@@ -135,6 +135,7 @@ class DataFiturRepository {
       };
 
       return transformedData;
+      // return dataFitur;
     } catch (error) {
       throw error;
     }
@@ -168,7 +169,10 @@ class DataFiturRepository {
         { transaction }
       );
 
-      const userTujuanRecords = UserTujuan.map((userID) => ({
+      // Filter to hapus UserID_dibuat dari UserTujuan if ada
+      const filteredUserTujuan = UserTujuan.filter((userID) => userID !== UserID_dibuat);
+
+      const userTujuanRecords = filteredUserTujuan.map((userID) => ({
         dataFiturID: newDataFitur.dataFiturID,
         userID,
       }));

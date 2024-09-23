@@ -1,5 +1,5 @@
 import { InboxOutlined, SaveTwoTone } from "@ant-design/icons";
-import { Button, Input, Menu, Modal, Popover, Result, Select, message } from "antd";
+import { Button, Input, Menu, Modal, Popover, Result, Select } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 import { useEffect, useState } from "react";
 import axios, { formToJSON } from "axios";
@@ -13,6 +13,7 @@ function ModalInsert({ currState, setState, judulInsert }) {
   const userSession = JSON.parse(localStorage.getItem("userSession"));
   // console.log(userSession);
 
+  // const [uploadProgress, setUploadProgress] = useState(0); // State untuk melacak progress upload
   const { ValidationStatus, setValidationStatus, setCloseAlert } = useValidator();
   const [formData, setFormData] = useState({ Judul: "", UserTujuan: [], FileFolder: [] });
   console.log(formData, "FORMDATA");
@@ -214,6 +215,8 @@ function ModalInsert({ currState, setState, judulInsert }) {
     return data;
   };
 
+  // console.log(uploadProgress);
+
   const insertFormData = async () => {
     try {
       const headers = {
@@ -256,11 +259,6 @@ function ModalInsert({ currState, setState, judulInsert }) {
       footer={[
         <>
           <div className="d-flex w-100 justify-content-between">
-            {ValidationStatus && (
-              <Modal open={ValidationStatus} onCancel={setCloseAlert} footer={null} centered={true}>
-                <Result status="error" title={ValidationStatus.Message} />
-              </Modal>
-            )}
             <div>
               <Popover content={<p>Simpan di draft</p>} trigger={"hover"}>
                 <Button key="save" icon={<SaveTwoTone twoToneColor={"#399051"} />}></Button>
@@ -283,6 +281,11 @@ function ModalInsert({ currState, setState, judulInsert }) {
         </>,
       ]}
     >
+      {ValidationStatus && (
+        <Modal open={ValidationStatus} onCancel={setCloseAlert} footer={null} centered={true}>
+          <Result status="error" title={ValidationStatus.Message} />
+        </Modal>
+      )}
       <Menu
         onClick={(e) => handleCurrentMenu(e.key)}
         selectedKeys={[current]}

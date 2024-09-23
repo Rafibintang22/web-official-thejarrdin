@@ -1,14 +1,14 @@
 // columns.jsx
 import { Button } from "antd";
 
-const columns = [
+const columns = (isDetailOpen, setDetailOpen) => [
   {
     title: "Judul",
     dataIndex: "Judul",
     key: "Judul",
   },
   {
-    title: "Dibuat oleh",
+    title: "Diunggah oleh",
     dataIndex: "DibuatOleh",
     key: "DibuatOleh",
   },
@@ -18,11 +18,11 @@ const columns = [
     key: "TglDibuat",
   },
   {
-    title: "File",
-    dataIndex: "File",
-    key: "File",
+    title: "Aksi",
+    dataIndex: "Id",
+    key: "Id",
     render: (text, record) => (
-      <Button onClick={() => window.open(record.File, "_blank")}>Open</Button>
+      <Button onClick={() => setDetailOpen(isDetailOpen, record.Id)}>Lihat detail</Button>
     ),
   },
 ];

@@ -82,24 +82,28 @@ class DataFiturController {
     // console.log(arrEmailUser);
     // END Fetch user emails from UserRepository
 
-    let linkFiles = [];
+    let linkFiles = ""; //berupa string
     // // JIKA post terdapat files
     if (files && files.FileFolder) {
       // membuat folder berdasarkan nama fitur_judul
       const namaFolder = `${readFitur.nama}_${judul}`;
       const folderId = await createFolder(namaFolder);
       try {
-        for (let f = 0; f < files.FileFolder.length; f += 1) {
-          console.log(`Uploading file: ${files.FileFolder[f].originalname}`);
-          const dataFile = await uploadFileGdrive(files.FileFolder[f], arrEmailUser, folderId);
+        for (let i = 0; i < files.FileFolder.length; i++) {
+          console.log(`Uploading file: ${files.FileFolder[i].originalname}`);
+          const dataFile = await uploadFileGdrive(files.FileFolder[i], arrEmailUser, folderId);
           const url = `https://drive.google.com/file/d/${dataFile.id}/view`; //link dari file pada gdrive
-          linkFiles.push(url);
+          if (i === files.FileFolder.length - 1) {
+            linkFiles += url;
+          } else {
+            linkFiles += url + ",";
+          }
         }
       } catch (error) {
         console.error(`Error uploading file: ${error}`);
         return res.status(500).send(`Error uploading file: ${error.message}`);
       }
-      // console.log(linkFiles);
+      console.log(linkFiles);
       dataFitur = {
         ...dataFitur,
         FileFolder: linkFiles,
