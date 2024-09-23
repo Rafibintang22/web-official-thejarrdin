@@ -143,8 +143,8 @@ function Login() {
 
         setOtp((prevData) => ({
           ...prevData,
-          Email: responseData.email,
-          NoTelp: responseData.noTelp,
+          Email: responseData.Email,
+          NoTelp: responseData.NoTelp,
         }));
         console.log(response);
 
@@ -153,6 +153,8 @@ function Login() {
 
       if (currIsActive === 2) {
         const response = await axios.post(`${urlServer}/login/verify-otp`, otp);
+        console.log(response);
+
         const authorizationHeader = response.headers["authorization"];
         const userSession = {
           AuthKey: authorizationHeader.replace("Bearer ", ""),

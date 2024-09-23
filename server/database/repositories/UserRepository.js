@@ -1,4 +1,4 @@
-const { UserModel } = require("../models");
+const { UserModel, RoleModel, UserRoleModel } = require("../models");
 
 class UserRepository {
   static async readAll() {
@@ -31,12 +31,37 @@ class UserRepository {
 
   static async readExisting(identifier) {
     try {
-      const finsUser = await UserModel.findOne({
+      const findUser = await UserModel.findOne({
         where: identifier.includes("@") ? { email: identifier } : { noTelp: identifier },
-        raw: true,
+        include: [
+          {
+            model: UserRoleModel,
+            required: true,
+            include: [
+              {
+                model: RoleModel,
+                required: true,
+              },
+            ],
+          },
+        ],
+        raw: false, // Untuk mempertahankan struktur objek terkait
       });
 
-      return finsUser;
+      // console.log(findUser);
+      // Transform the data
+      const formattedData = {
+        UserID: findUser.userID,
+        NoTelp: findUser.noTelp,
+        Nama: findUser.nama,
+        Email: findUser.email,
+        Role: findUser.user_roles.map((userRole) => ({
+          Nama: userRole.Role.nama,
+          Deskripsi: userRole.Role.deskripsi,
+        })),
+      };
+
+      return formattedData;
     } catch (error) {
       throw error;
     }

@@ -51,13 +51,13 @@ class UserController {
       // console.log(readUser, "READUSER");
 
       const loginSession = await LoginSessionRepository.create({
-        userID: readUser.userID,
-        email: readUser.email,
-        noTelp: readUser.noTelp,
+        userID: readUser.UserID,
+        email: readUser.Email,
+        noTelp: readUser.NoTelp,
         otp: otp,
       });
-      if (loginSession && readUser.email && User.Email) {
-        await sendOtpToEmail(readUser.email, otp);
+      if (loginSession && readUser.Email && User.Email) {
+        await sendOtpToEmail(readUser.Email, otp);
       }
 
       res.status(200).json({ success: true, data: { User: readUser } });
@@ -97,10 +97,11 @@ class UserController {
       }
 
       const readUser = await UserRepository.readExisting(loginSession.email);
+
       const payload = {
-        UserID: readUser.userID,
-        Email: readUser.email,
-        NoTelp: readUser.noTelp,
+        UserID: readUser.UserID,
+        Email: readUser.Email,
+        NoTelp: readUser.NoTelp,
         Otp: loginSession.otp,
         loginSessionID: loginSession.loginSessionID,
       };

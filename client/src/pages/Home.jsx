@@ -5,8 +5,6 @@ import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons/faArr
 import { threelogo } from "../../public/assets/images/index";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { urlServer } from "../utils/endpoint";
 import UseSessionCheck from "../utils/useSessionCheck";
 
 function Home() {
@@ -17,38 +15,25 @@ function Home() {
   const navigate = useNavigate();
 
   // console.log(dataUser);
+  // console.log(rolesUser);
 
-  axios.defaults.withCredentials = true;
   useEffect(() => {
-    const fetchRole = async () => {
-      const headers = {
-        headers: {
-          authorization: userSession?.AuthKey,
-        },
-      };
-      try {
-        const response = await axios.get(`${urlServer}/role`, headers);
-        const responseData = response.data;
-        // console.log(responseData);
+    const transformedRole = () => {
+      const transformedData = dataUser.Role.map((data) => data.Nama.replace(/\s+/g, "")); // Menghapus semua spasi);
+      const arr = multiRoleAkses(transformedData);
+      const arr2 = bagiArrayAkses(arr);
 
-        const transformedData = responseData.Role.map((data) => data.Nama.replace(/\s+/g, "")); // Menghapus semua spasi);
-        const arr = multiRoleAkses(transformedData);
-        const arr2 = bagiArrayAkses(arr);
-
-        setRolesUser(arr2);
-      } catch (error) {
-        console.log(error);
-      }
+      setRolesUser(arr2);
     };
 
-    fetchRole();
+    transformedRole();
   }, []);
 
   return (
     <>
       <div className="container-home d-flex w-100 h-100 flex-column p-4">
         <div className="header container d-flex w-100 justify-content-between">
-          <h5 className="text-light fw-medium">Selamat Datang, {dataUser?.nama}</h5>
+          <h5 className="text-light fw-medium">Selamat Datang, {dataUser?.Nama}</h5>
           <div
             className="d-flex justify-content-center align-items-center rounded-circle bg-theme2"
             style={{ height: "45px", width: "45px", cursor: "pointer" }}

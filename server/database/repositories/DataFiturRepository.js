@@ -89,53 +89,43 @@ class DataFiturRepository {
   static async readOne(userID, dataFiturID) {
     try {
       let findDataFitur;
-      findDataFitur = await UserModel.findOne({
-        where: { userID: userID },
+
+      findDataFitur = await DataFiturModel.findOne({
+        where: { dataFiturID: dataFiturID },
         include: [
           {
-            model: DataFiturModel,
-            required: true,
-            where: { dataFiturID: dataFiturID },
+            model: UserModel, // Include untuk user pembuat data
+            attributes: ["nama"], // Ambil hanya nama pembuat
+          },
+          {
+            model: UserTujuanModel, // Include untuk user tujuan
+            required: false, // Jika ada, ambil data UserTujuan
             include: [
               {
-                model: UserModel,
-                required: true,
-              },
-              {
-                model: UserTujuanModel,
-                required: true,
-                include: [
-                  {
-                    model: UserModel,
-                    required: true,
-                  },
-                ],
+                model: UserModel, // Include data dari UserModel di dalam UserTujuan
+                attributes: ["nama"], // Ambil nama user tujuan
               },
             ],
           },
         ],
       });
-
       if (!findDataFitur) {
         const newError = new Error("Data tidak ditemukan.");
         newError.status = 404;
         throw newError;
       }
 
-      // Extract the first (and only) DataFitur
-      const dataFitur = findDataFitur.DataFiturs[0];
-
       // Transform the data to the desired format
       const transformedData = {
-        Judul: dataFitur.judul,
-        TglDibuat: dataFitur.tglDibuat,
-        DibuatOleh: dataFitur.User.nama,
-        UserTujuan: dataFitur.user_tujuans.map((tujuan) => tujuan.User.nama),
-        File: dataFitur.fileFolder,
+        Judul: findDataFitur.judul,
+        TglDibuat: findDataFitur.tglDibuat,
+        DibuatOleh: findDataFitur.User.nama,
+        UserTujuan: findDataFitur.user_tujuans.map((tujuan) => tujuan.User.nama),
+        File: findDataFitur.fileFolder,
       };
 
       return transformedData;
-      // return dataFitur;
+      // return findDataFitur;
     } catch (error) {
       throw error;
     }

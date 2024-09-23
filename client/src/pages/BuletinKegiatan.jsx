@@ -11,26 +11,32 @@ import UseSessionCheck from "../utils/useSessionCheck";
 import columns from "../constaints/columnsTable";
 import DetailDataController from "../utils/detailDataController";
 import ModalDetail from "../components/ModalDetail";
+import HakAkses from "../utils/hakAkses";
 
 function BuletinKegiatan() {
   UseSessionCheck();
-  const { isDetailOpen, oneDataID, setDetailOpen } = DetailDataController();
+  const { isDetailOpen, setDetailOpen } = DetailDataController();
   const fieldDetail = "BuletinKegiatan";
-  console.log(isDetailOpen, oneDataID);
   const userSession = JSON.parse(localStorage.getItem("userSession"));
-  const [dataTable, setDataTable] = useState([]);
-  const [modalInsert, setModalInsert] = useState(false);
-  const [currTipeData, setCurrTipeData] = useState("untukSaya");
+  const { hasPengelola } = HakAkses();
   const menuInsert = [
     {
       label: "Untuk saya",
       key: "untukSaya",
     },
-    {
+  ];
+  // Jika hasPengelola true, tambahkan "Data diunggah" ke dalam menu
+  if (hasPengelola) {
+    menuInsert.push({
       label: "Data diunggah",
       key: "dataDiunggah",
-    },
-  ];
+    });
+  }
+
+  const [dataTable, setDataTable] = useState(null);
+  const [modalInsert, setModalInsert] = useState(false);
+  const [currTipeData, setCurrTipeData] = useState("untukSaya");
+
   axios.defaults.withCredentials = true;
   useEffect(() => {
     const headers = {
@@ -62,7 +68,7 @@ function BuletinKegiatan() {
         <div className="container-content w-100 h-100 d-flex flex-column bg-light">
           <HeaderKonten
             judul={"Data Buletin Kegiatan"}
-            isInsert={true}
+            isInsert={hasPengelola ? true : false}
             nameInsert={"Tambah Buletin Kegiatan"}
             setInsertBtn={setModalInsert}
           />
@@ -76,7 +82,11 @@ function BuletinKegiatan() {
           />
 
           <div className="w-100 p-4">
-            <Table dataSource={dataTable} columns={columns(fieldDetail, setDetailOpen)} />
+            <Table
+              loading={dataTable ? false : true}
+              dataSource={dataTable}
+              columns={columns(fieldDetail, setDetailOpen)}
+            />
           </div>
         </div>
       </div>

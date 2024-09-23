@@ -3,12 +3,25 @@ import { multiRoleAkses } from "../models/menuRoleAkses";
 import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import toogleSidebar from "../utils/toogleSidebar";
+import { useEffect, useState } from "react";
 
 function Sidebar() {
   const navigate = useNavigate();
-  const rolesUser = ["Pengurus", "Pengelola", "PemilikUnit", "PelakuKomersil"];
-  const arr = multiRoleAkses(rolesUser);
-  const itemsMenu = arr.map((item) => ({
+  const userSession = JSON.parse(localStorage.getItem("userSession"));
+  const dataUser = userSession?.dataUser;
+  const [rolesUser, setRolesUser] = useState([]);
+  useEffect(() => {
+    const transformedRole = () => {
+      const transformedData = dataUser.Role.map((data) => data.Nama.replace(/\s+/g, "")); // Menghapus semua spasi);
+      const arr = multiRoleAkses(transformedData);
+
+      setRolesUser(arr);
+    };
+
+    transformedRole();
+  }, []);
+
+  const itemsMenu = rolesUser.map((item) => ({
     label: item.label,
     key: item.key,
     icon: <img src={item.icon} width={25} height={25} />,

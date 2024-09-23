@@ -11,27 +11,34 @@ import UseSessionCheck from "../utils/useSessionCheck";
 import columns from "../constaints/columnsTable";
 import DetailDataController from "../utils/detailDataController";
 import ModalDetail from "../components/ModalDetail";
+import HakAkses from "../utils/hakAkses";
 
 function Pengumuman() {
   UseSessionCheck();
-  const { isDetailOpen, oneDataID, setDetailOpen } = DetailDataController();
+  const { isDetailOpen, setDetailOpen } = DetailDataController();
   const fieldDetail = "Pengumuman";
-  console.log(isDetailOpen, oneDataID);
 
   const userSession = JSON.parse(localStorage.getItem("userSession"));
-  const [dataTable, setDataTable] = useState([]);
-  const [modalInsert, setModalInsert] = useState(false);
-  const [currTipeData, setCurrTipeData] = useState("untukSaya");
+  const { hasPengurus } = HakAkses();
   const menuInsert = [
     {
       label: "Untuk saya",
       key: "untukSaya",
     },
-    {
+  ];
+  // Jika hasPengurus true, tambahkan "Data diunggah" ke dalam menu
+  if (hasPengurus) {
+    menuInsert.push({
       label: "Data diunggah",
       key: "dataDiunggah",
-    },
-  ];
+    });
+  }
+
+  const [dataTable, setDataTable] = useState(null);
+  const [modalInsert, setModalInsert] = useState(false);
+  const [currTipeData, setCurrTipeData] = useState("untukSaya");
+
+  console.log(currTipeData);
 
   axios.defaults.withCredentials = true;
   useEffect(() => {
@@ -64,7 +71,7 @@ function Pengumuman() {
         <div className="container-content w-100 h-100 d-flex flex-column bg-light">
           <HeaderKonten
             judul={"Data Pengumuman"}
-            isInsert={true}
+            isInsert={hasPengurus ? true : false}
             nameInsert={"Tambah Pengumuman"}
             setInsertBtn={setModalInsert}
           />
@@ -79,7 +86,7 @@ function Pengumuman() {
 
           <div className="w-100 p-4">
             <Table
-              loading={dataTable.length > 0 ? false : true}
+              loading={dataTable ? false : true}
               dataSource={dataTable}
               columns={columns(fieldDetail, setDetailOpen)}
             />
