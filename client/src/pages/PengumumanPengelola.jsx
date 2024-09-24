@@ -19,6 +19,8 @@ function PengumumanPengelola() {
   const fieldDetail = "PengumumanPengelola";
   const userSession = JSON.parse(localStorage.getItem("userSession"));
   const { hasPengelola } = HakAkses();
+  console.log(hasPengelola);
+
   const menuInsert = [
     {
       label: "Untuk saya",

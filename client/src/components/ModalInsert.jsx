@@ -191,7 +191,7 @@ function ModalInsert({ currState, setState, judulInsert }) {
     }
     newFormData.append("FiturID", fiturMaping[judulInsert]);
     newFormData.append("TglDibuat", new Date().getTime());
-    newFormData.append("UserID_dibuat", userSession?.dataUser?.userID);
+    newFormData.append("UserID_dibuat", userSession?.dataUser?.UserID);
 
     return newFormData;
   };
@@ -236,7 +236,7 @@ function ModalInsert({ currState, setState, judulInsert }) {
       validateFunction(normalizedData);
 
       const response = await axios.post(`${urlServer}/data`, formattedFormData, headers);
-      console.log(response);
+      setValidationStatus("Berhasil", "Data berhasil ditambahkan");
     } catch (error) {
       console.log(error);
 
@@ -282,8 +282,18 @@ function ModalInsert({ currState, setState, judulInsert }) {
       ]}
     >
       {ValidationStatus && (
-        <Modal open={ValidationStatus} onCancel={setCloseAlert} footer={null} centered={true}>
-          <Result status="error" title={ValidationStatus.Message} />
+        <Modal
+          open={ValidationStatus}
+          onCancel={() => {
+            setState(false), setCloseAlert, window.location.reload();
+          }}
+          footer={null}
+          centered={true}
+        >
+          <Result
+            status={ValidationStatus.Path !== "Berhasil" ? "error" : "success"}
+            title={ValidationStatus.Message}
+          />
         </Modal>
       )}
       <Menu

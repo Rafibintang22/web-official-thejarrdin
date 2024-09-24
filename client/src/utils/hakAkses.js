@@ -1,5 +1,7 @@
 import { create } from "zustand";
 const userSession = JSON.parse(localStorage.getItem("userSession"));
+console.log(userSession);
+
 const dataUser = userSession?.dataUser;
 
 const HakAkses = create(() => ({

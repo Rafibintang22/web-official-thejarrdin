@@ -20,6 +20,8 @@ function Pengumuman() {
 
   const userSession = JSON.parse(localStorage.getItem("userSession"));
   const { hasPengurus } = HakAkses();
+  // console.log(hasPengurus);
+
   const menuInsert = [
     {
       label: "Untuk saya",

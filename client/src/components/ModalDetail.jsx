@@ -63,28 +63,28 @@ function ModalDetail({ judulDetail }) {
           <label htmlFor="" className="w-25">
             Judul dokumen
           </label>
-          <Input value={dataOne?.Judul} disabled />
+          <Input style={{ color: "#616161" }} value={dataOne?.Judul} disabled />
         </div>
 
         <div className="form-input text d-flex align-items-center">
           <label htmlFor="" className="w-25">
             Tanggal diunggah
           </label>
-          <Input value={formatDate(dataOne?.TglDibuat)} disabled />
+          <Input style={{ color: "#616161" }} value={formatDate(dataOne?.TglDibuat)} disabled />
         </div>
 
         <div className="form-input text d-flex align-items-center">
           <label htmlFor="" className="w-25">
             Diunggah oleh
           </label>
-          <Input value={dataOne?.DibuatOleh} disabled />
+          <Input style={{ color: "#616161" }} value={dataOne?.DibuatOleh} disabled />
         </div>
 
         <div className="form-input text d-flex align-items-center">
           <label htmlFor="" className="w-25">
             Tujuan
           </label>
-          <Input value={dataOne?.UserTujuan} disabled />
+          <Input style={{ color: "#616161" }} value={dataOne?.UserTujuan} disabled />
         </div>
 
         <div className="form-input text d-flex flex-column gap-3">
