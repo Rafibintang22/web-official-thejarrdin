@@ -1,16 +1,16 @@
 import { PhoneOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, ConfigProvider, Input, Menu, Modal, Result } from "antd";
+import { Alert, Button, ConfigProvider, Input, Menu, Modal, Result, Spin } from "antd";
 import { threelogo } from "../../public/assets/images";
 import { useEffect, useState } from "react";
 import { inputValidator } from "../utils/inputValidator";
 import useValidator from "../constaints/FormValidation";
 import axios from "axios";
 import { urlClient, urlServer } from "../utils/endpoint";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import formatTime from "../utils/FormatTime";
 
 function Login() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [dataLogin, setDataLogin] = useState({});
   const { ValidationStatus, setValidationStatus, setCloseAlert } = useValidator();
   // const [noTelp, setNoTelp] = useState("");
@@ -18,6 +18,8 @@ function Login() {
   const [tipeLogin, setTipeLogin] = useState("email");
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
   const [isActiveStep, setActiveStep] = useState(1);
+  const [otpFromServer, setOtpFromServer] = useState(null);
+  const [loading, setLoading] = useState(false); // Tambahkan state loading
   // Countdown timer logic
   useEffect(() => {
     let timer;
@@ -135,6 +137,7 @@ function Login() {
 
   const login = async (currIsActive) => {
     try {
+      setLoading(true); // Set loading ke true saat login dijalankan
       if (currIsActive === 1) {
         const validateFunction = inputValidator["Login"];
         validateFunction(dataLogin);
@@ -149,6 +152,8 @@ function Login() {
         console.log(response);
 
         setActiveStep(isActiveStep + 1);
+        setOtpFromServer(response.data.data.Otp);
+        setLoading(false);
       }
 
       if (currIsActive === 2) {
@@ -165,6 +170,7 @@ function Login() {
           // Simpan userSession di localStorage
           localStorage.setItem("userSession", JSON.stringify(userSession));
         }
+        setLoading(false);
         window.location.href = `${urlClient}/`; //enggunakan window.location.href karena agar me reload halaman tujuan;
         console.log(response);
       }
@@ -197,6 +203,18 @@ function Login() {
         className="container d-flex justify-content-center align-items-center flex-column flex-wrap h-100 w-25 gap-5"
         style={{ zIndex: "99" }}
       >
+        {otpFromServer && (
+          <Alert
+            style={{
+              position: "fixed",
+              right: 25,
+              top: 25,
+            }}
+            message={`Kode otp anda adalah : ${otpFromServer}`}
+            type="info"
+            showIcon
+          />
+        )}
         <h5 className="text-light text-uppercase fw-semibold">Login Member</h5>
         {isActiveStep === 1 && (
           <ConfigProvider
@@ -216,7 +234,13 @@ function Login() {
           <>{isActiveStep === step.urut && formStepDisplay()}</>
         ))}
         <div className="d-flex w-100 gap-2 flex-column">
-          <Button type="primary" className="w-100" size="large" onClick={() => login(isActiveStep)}>
+          <Button
+            type="primary"
+            loading={loading}
+            className="w-100"
+            size="large"
+            onClick={() => login(isActiveStep)}
+          >
             Selanjutnya
           </Button>
           <Button

@@ -122,16 +122,17 @@ function ModalInsert({ currState, setState, judulInsert }) {
   const form = () => {
     return (
       <div className="d-flex flex-column gap-3">
-        <div className="form-input text d-flex align-items-center">
+        <div className="form-input text d-flex align-items-start">
           <label htmlFor="" className="w-25">
             Judul dokumen
           </label>
           <Input
             value={formData["Judul"]}
+            placeholder="Masukkan judul dokumen"
             onChange={(e) => handleFormDataChange("Judul", e.target.value)}
           />
         </div>
-        <div className="form-input select d-flex align-items-center">
+        <div className="form-input select d-flex align-items-start">
           <label htmlFor="" className="w-25">
             Dibuat untuk
           </label>
@@ -162,11 +163,12 @@ function ModalInsert({ currState, setState, judulInsert }) {
         )}
 
         {current === "link" && (
-          <div className="form-input text d-flex align-items-center">
+          <div className="form-input text d-flex align-items-start">
             <label htmlFor="" className="w-25">
               Link/url dokumen
             </label>
             <Input
+              placeholder="Masukkan link/url dari dokumen Anda"
               value={formData["FileFolder"]}
               onChange={(e) => handleFormDataChange("FileFolder", e.target.value)}
             />
@@ -266,11 +268,11 @@ function ModalInsert({ currState, setState, judulInsert }) {
             </div>
             <div className="d-flex gap-3">
               <Button
-                key="kembali"
+                key="tutup"
                 className="text-light bg-secondary"
                 onClick={() => setState(false)}
               >
-                Kembali
+                Tutup
               </Button>
 
               <Button key="unggah" type="primary" onClick={insertFormData}>

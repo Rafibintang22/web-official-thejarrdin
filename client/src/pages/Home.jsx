@@ -6,6 +6,7 @@ import { threelogo } from "../../public/assets/images/index";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import UseSessionCheck from "../utils/useSessionCheck";
+import { Avatar, Badge, Popover } from "antd";
 
 function Home() {
   UseSessionCheck();
@@ -29,17 +30,26 @@ function Home() {
     transformedRole();
   }, []);
 
+  const content = (
+    <div>
+      <p>Content</p>
+      <p>Content</p>
+    </div>
+  );
   return (
     <>
       <div className="container-home d-flex w-100 h-100 flex-column p-4">
         <div className="header container d-flex w-100 justify-content-between">
           <h5 className="text-light fw-medium">Selamat Datang, {dataUser?.Nama}</h5>
-          <div
-            className="d-flex justify-content-center align-items-center rounded-circle bg-theme2"
-            style={{ height: "45px", width: "45px", cursor: "pointer" }}
-          >
-            <FontAwesomeIcon size="lg" icon={faBell} color="#024332" />
-          </div>
+          <Badge count={0}>
+            <Avatar
+              style={{ cursor: "pointer" }}
+              shape="circle"
+              size={"large"}
+              className="bg-theme2"
+              icon={<FontAwesomeIcon size="sm" icon={faBell} color="#024332" />}
+            />
+          </Badge>
         </div>
 
         <div className="container d-flex justify-content-center align-items-center flex-column flex-wrap h-100">

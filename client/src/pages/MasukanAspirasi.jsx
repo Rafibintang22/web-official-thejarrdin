@@ -12,6 +12,7 @@ import columns from "../constaints/columnsTable";
 import DetailDataController from "../utils/detailDataController";
 import ModalDetail from "../components/ModalDetail";
 import HakAkses from "../utils/hakAkses";
+import ModalInsertAspirasi from "../components/ModalInsertAspirasi";
 
 function MasukanAspirasi() {
   UseSessionCheck();
@@ -90,7 +91,7 @@ function MasukanAspirasi() {
         </div>
       </div>
       {modalInsert && (
-        <ModalInsert
+        <ModalInsertAspirasi
           currState={modalInsert}
           setState={setModalInsert}
           judulInsert={"Tambah Masukan & Aspirasi"}
