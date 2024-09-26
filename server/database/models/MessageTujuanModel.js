@@ -16,6 +16,15 @@ const MessageTujuanModel = jarrdinDB.define(
       primaryKey: true,
       allowNull: false,
     },
+    isRead: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false, // By default, the message is unread
+    },
+    tglDibaca: {
+      type: DataTypes.DATE,
+      allowNull: true, // Null means the message hasn't been read
+    },
   },
   {
     tableName: "message_tujuan",

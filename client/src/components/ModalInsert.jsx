@@ -16,6 +16,7 @@ function ModalInsert({ currState, setState, judulInsert }) {
   // const [uploadProgress, setUploadProgress] = useState(0); // State untuk melacak progress upload
   const { ValidationStatus, setValidationStatus, setCloseAlert } = useValidator();
   const [formData, setFormData] = useState({ Judul: "", UserTujuan: [], FileFolder: [] });
+  const [loading, setLoading] = useState(false); // Tambahkan state loading
   console.log(formData, "FORMDATA");
 
   const menuInsert = [
@@ -220,6 +221,7 @@ function ModalInsert({ currState, setState, judulInsert }) {
   // console.log(uploadProgress);
 
   const insertFormData = async () => {
+    setLoading(true); // Set loading ke true saat login dijalankan
     try {
       const headers = {
         headers: {
@@ -237,7 +239,9 @@ function ModalInsert({ currState, setState, judulInsert }) {
       const validateFunction = inputValidator["DataFitur"];
       validateFunction(normalizedData);
 
-      const response = await axios.post(`${urlServer}/data`, formattedFormData, headers);
+      //POST REQUEST
+      await axios.post(`${urlServer}/data`, formattedFormData, headers);
+      setLoading(false);
       setValidationStatus("Berhasil", "Data berhasil ditambahkan");
     } catch (error) {
       console.log(error);
@@ -258,6 +262,7 @@ function ModalInsert({ currState, setState, judulInsert }) {
       open={currState}
       onOk={() => setState(false)}
       onCancel={() => setState(false)}
+      loading={loading}
       footer={[
         <>
           <div className="d-flex w-100 justify-content-between">
@@ -275,7 +280,7 @@ function ModalInsert({ currState, setState, judulInsert }) {
                 Tutup
               </Button>
 
-              <Button key="unggah" type="primary" onClick={insertFormData}>
+              <Button loading={loading} key="unggah" type="primary" onClick={insertFormData}>
                 Unggah
               </Button>
             </div>

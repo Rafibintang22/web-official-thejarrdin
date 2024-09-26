@@ -19,15 +19,15 @@ function MasukanAspirasi() {
   const { isDetailOpen, setDetailOpen } = DetailDataController();
   const fieldDetail = "Aspirasi";
   const userSession = JSON.parse(localStorage.getItem("userSession"));
-  const { hasPengurus } = HakAkses();
+  const { hasPengurus, hasPemilikUnit } = HakAkses();
   const menuInsert = [
     {
       label: "Untuk saya",
       key: "untukSaya",
     },
   ];
-  // Jika hasPengurus true, tambahkan "Data diunggah" ke dalam menu
-  if (hasPengurus) {
+  // Jika hasPengurus true ATAU hasPemilikUnit, tambahkan "Data diunggah" ke dalam menu
+  if (hasPengurus || hasPemilikUnit) {
     menuInsert.push({
       label: "Data diunggah",
       key: "dataDiunggah",
@@ -68,7 +68,7 @@ function MasukanAspirasi() {
         <div className="container-content w-100 h-100 d-flex flex-column bg-light">
           <HeaderKonten
             judul={"Data Masukan & Aspirasi"}
-            isInsert={hasPengurus ? true : false}
+            isInsert={hasPengurus || hasPemilikUnit ? true : false}
             nameInsert={"Tambah Masukan & Aspirasi"}
             setInsertBtn={setModalInsert}
           />

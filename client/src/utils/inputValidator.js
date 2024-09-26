@@ -78,6 +78,14 @@ const DataFitur = Joi.object({
   }),
 });
 
+const DataAspirasi = Joi.object({
+  Judul: Joi.string().min(3).max(255).required().messages({
+    "string.min": "Judul minimal harus 3 karakter",
+    "string.max": "Judul tidak boleh lebih dari 255 karakter",
+    "any.required": "Judul wajib diisi",
+  }),
+});
+
 const validateData = (data, schema) => {
   const { error } = schema.validate(data, { abortEarly: false });
   if (error) {
@@ -94,4 +102,5 @@ export const inputValidator = {
   Login: (formData) => validateData(formData, LoginSchema),
   VerifyOtp: (formData) => validateData(formData, VerifyOtp),
   DataFitur: (formData) => validateData(formData, DataFitur),
+  DataAspirasi: (formData) => validateData(formData, DataAspirasi),
 };

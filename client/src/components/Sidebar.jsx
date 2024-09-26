@@ -46,7 +46,10 @@ function Sidebar() {
   return (
     <div
       className="sidebar h-100 pt-3 pb-3 d-flex flex-column justify-content-between gap-3"
-      style={{ width: isSidebarOpen ? "80px" : "20%", backgroundColor: "#F1F6F2" }}
+      style={{
+        width: isSidebarOpen ? "80px" : "20%",
+        backgroundColor: "#F1F6F2",
+      }}
     >
       <ConfigProvider
         theme={{
@@ -75,6 +78,7 @@ function Sidebar() {
           mode="inline"
           theme="light"
           inlineisSidebarOpen={isSidebarOpen}
+          inlineCollapsed={isSidebarOpen}
           items={itemsMenu}
           defaultSelectedKeys={[window.location.pathname]}
           onClick={({ key }) => {

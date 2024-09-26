@@ -11,6 +11,7 @@ function ModalDetail({ judulDetail }) {
   const userSession = JSON.parse(localStorage.getItem("userSession"));
   const { isDetailOpen, oneDataID, setDetailOpen } = DetailDataController();
   const [dataOne, setDataOne] = useState(null);
+  const [loading, setLoading] = useState(false); // Tambahkan state loading
 
   axios.defaults.withCredentials = true;
   useEffect(() => {
@@ -20,6 +21,7 @@ function ModalDetail({ judulDetail }) {
           authorization: userSession?.AuthKey,
         },
       };
+      setLoading(true);
       try {
         const response = await axios.get(`${urlServer}/data/${oneDataID}`, headers);
         const responseData = response.data;
@@ -36,6 +38,7 @@ function ModalDetail({ judulDetail }) {
           ...responseData,
           File: transformedFile, // Menambahkan transformedFile ke dalam responseData
         });
+        setLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -47,6 +50,7 @@ function ModalDetail({ judulDetail }) {
   return (
     <Modal
       title={judulDetail}
+      loading={loading}
       centered
       width={1000}
       open={isDetailOpen}

@@ -6,7 +6,7 @@ import { threelogo } from "../../public/assets/images/index";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import UseSessionCheck from "../utils/useSessionCheck";
-import { Avatar, Badge, Popover } from "antd";
+import { Avatar, Badge, List, Popover } from "antd";
 
 function Home() {
   UseSessionCheck();
@@ -30,17 +30,79 @@ function Home() {
     transformedRole();
   }, []);
 
-  const content = (
-    <div>
-      <p>Content</p>
-      <p>Content</p>
-    </div>
-  );
+  const contentInfoRole = (role) => {
+    switch (role) {
+      case "Pengurus":
+        return (
+          <div>
+            <p>Membuat Pengumuman</p>
+            <p>Membuat Laporan</p>
+            <p>Menerima Aspirasi</p>
+          </div>
+        );
+
+      case "Pengelola":
+        return (
+          <div>
+            <p>Membuat Tagihan Bulanan</p>
+            <p>Membuat Buletin Kegiatan</p>
+            <p>Membuat Informasi Paket</p>
+            <p>Membuat Pengumuman Pengelola</p>
+          </div>
+        );
+
+      case "Pemilik Unit":
+        return (
+          <div>
+            <p>Membuat Aspirasi</p>
+            <p>Menerima Pengumuman</p>
+            <p>Menerima Laporan</p>
+            <p>Menerima Tagihan Bulanan</p>
+            <p>Menerima Buletin Kegiatan</p>
+            <p>Menerima Informasi Paket</p>
+          </div>
+        );
+
+      case "Pelaku Komersil":
+        return (
+          <div>
+            <p>Membuat Pengumuman Usaha</p>
+            <p>Menerima Pengumuman</p>
+            <p>Menerima Laporan</p>
+            <p>Menerima Tagihan Bulanan</p>
+            <p>Menerima Buletin Kegiatan</p>
+            <p>Menerima Informasi Paket</p>
+          </div>
+        );
+    }
+  };
   return (
     <>
       <div className="container-home d-flex w-100 h-100 flex-column p-4">
         <div className="header container d-flex w-100 justify-content-between">
-          <h5 className="text-light fw-medium">Selamat Datang, {dataUser?.Nama}</h5>
+          <div className="d-flex flex-column gap-3">
+            <h5 className="text-light fw-medium">Selamat Datang, {dataUser?.Nama}</h5>
+            <List
+              size="small"
+              className="text-light"
+              header={<div>Peran Anda saat ini sebagai </div>}
+              bordered
+              dataSource={dataUser?.Role}
+              renderItem={(item) => (
+                <>
+                  <Popover
+                    placement="right"
+                    title={<span>Fitur yang dimiliki:</span>}
+                    content={contentInfoRole(item.Nama)}
+                  >
+                    <List.Item style={{ cursor: "help" }} className="text-light ms-3">
+                      {item.Nama}
+                    </List.Item>
+                  </Popover>
+                </>
+              )}
+            />
+          </div>
           <Badge count={0}>
             <Avatar
               style={{ cursor: "pointer" }}

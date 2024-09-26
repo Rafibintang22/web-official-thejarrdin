@@ -1,8 +1,11 @@
 import { SaveTwoTone } from "@ant-design/icons";
-import { Button, Input, Menu, Modal, Popover, Result } from "antd";
+import { Button, Input, Modal, Popover, Result } from "antd";
 import useValidator from "../constaints/FormValidation";
 import { useState } from "react";
 import TextArea from "antd/es/input/TextArea";
+import { urlServer } from "../utils/endpoint";
+import axios from "axios";
+import { inputValidator } from "../utils/inputValidator";
 
 // eslint-disable-next-line react/prop-types
 function ModalInsertAspirasi({ currState, setState, judulInsert }) {
@@ -10,6 +13,7 @@ function ModalInsertAspirasi({ currState, setState, judulInsert }) {
 
   const { ValidationStatus, setValidationStatus, setCloseAlert } = useValidator();
   const [formData, setFormData] = useState({ Judul: "", Pesan: "" });
+  const [loading, setLoading] = useState(false); // Tambahkan state loading
   // console.log(formData, "FORMDATA");
 
   const handleFormDataChange = (tipe, value) => {
@@ -50,9 +54,36 @@ function ModalInsertAspirasi({ currState, setState, judulInsert }) {
     );
   };
 
+  const insertFormData = async () => {
+    setLoading(true); // Set loading ke true saat login dijalankan
+    try {
+      const headers = {
+        headers: {
+          authorization: userSession?.AuthKey,
+        },
+      };
+
+      // Lakukan validasi menggunakan Joi
+      const validateFunction = inputValidator["DataAspirasi"];
+      validateFunction(formData);
+
+      //POST REQUEST
+      await axios.post(`${urlServer}/data`, formData, headers);
+      setLoading(false);
+      setValidationStatus("Berhasil", "Data berhasil ditambahkan");
+    } catch (error) {
+      if (error?.response?.data?.error) {
+        setValidationStatus(error.path, error.response.data.error);
+      } else {
+        setValidationStatus(error.path, error.message);
+      }
+    }
+  };
+
   return (
     <Modal
       title={judulInsert}
+      loading={loading}
       centered
       width={1000}
       open={currState}
@@ -75,7 +106,7 @@ function ModalInsertAspirasi({ currState, setState, judulInsert }) {
                 Tutup
               </Button>
 
-              <Button key="unggah" type="primary">
+              <Button key="unggah" type="primary" onClick={insertFormData}>
                 Unggah
               </Button>
             </div>

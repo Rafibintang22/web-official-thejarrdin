@@ -7,7 +7,6 @@ const { UserRoleModel } = require("./UserRoleModel");
 const { HakAksesModel } = require("./HakAksesModel");
 const { LoginSessionModel } = require("./LoginSessionModel");
 const { MessageModel } = require("./MessageModel");
-const { MessageStatusModel } = require("./MessageStatusModel");
 const { MessageTujuanModel } = require("./MessageTujuanModel");
 
 module.exports = {
@@ -20,6 +19,5 @@ module.exports = {
   HakAksesModel,
   LoginSessionModel,
   MessageModel,
-  MessageStatusModel,
   MessageTujuanModel,
 };

@@ -16,6 +16,7 @@ const columns = (isDetailOpen, setDetailOpen) => [
     title: "Tanggal dibuat",
     dataIndex: "TglDibuat",
     key: "TglDibuat",
+    defaultSortOrder: "descend",
   },
   {
     title: "Aksi",
