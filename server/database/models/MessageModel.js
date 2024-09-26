@@ -20,11 +20,19 @@ const MessageModel = jarrdinDB.define(
       type: DataTypes.INTEGER(11),
       allowNull: false,
     },
+    judul: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
     messageText: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    tglKirim: {
+    messageFile: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    tglDibuat: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },

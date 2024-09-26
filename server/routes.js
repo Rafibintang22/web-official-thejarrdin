@@ -4,6 +4,7 @@ const {
   DataFiturController,
   UserRoleController,
   UserController,
+  MessageController,
 } = require("./controllers");
 const { Authorization } = require("./utils/Authorization");
 const multer = require("multer");
@@ -41,4 +42,8 @@ router.post(
 );
 router.delete("/data/:dataFiturID", Authorization.decryption, DataFiturController.delete);
 
+// ###############################################################################
+//                              MESSAGE ASPIRASI
+router.post("/aspirasi", Authorization.decryption, MessageController.post);
+router.patch("/aspirasi", Authorization.decryption, MessageController.updateRead);
 module.exports = { router };
