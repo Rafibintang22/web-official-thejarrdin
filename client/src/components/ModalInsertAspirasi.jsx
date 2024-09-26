@@ -1,4 +1,4 @@
-import { SaveTwoTone } from "@ant-design/icons";
+import { InboxOutlined, SaveTwoTone } from "@ant-design/icons";
 import { Button, Input, Modal, Popover, Result } from "antd";
 import useValidator from "../constaints/FormValidation";
 import { useState } from "react";
@@ -6,13 +6,14 @@ import TextArea from "antd/es/input/TextArea";
 import { urlServer } from "../utils/endpoint";
 import axios from "axios";
 import { inputValidator } from "../utils/inputValidator";
+import Dragger from "antd/es/upload/Dragger";
 
 // eslint-disable-next-line react/prop-types
 function ModalInsertAspirasi({ currState, setState, judulInsert }) {
   const userSession = JSON.parse(localStorage.getItem("userSession"));
 
   const { ValidationStatus, setValidationStatus, setCloseAlert } = useValidator();
-  const [formData, setFormData] = useState({ Judul: "", Pesan: "" });
+  const [formData, setFormData] = useState({ Judul: "", Pesan: "", PesanFile: [] });
   const [loading, setLoading] = useState(false); // Tambahkan state loading
   // console.log(formData, "FORMDATA");
 
@@ -23,11 +24,32 @@ function ModalInsertAspirasi({ currState, setState, judulInsert }) {
     }));
   };
 
+  const propsUploadImg = {
+    name: judulInsert,
+    multiple: true,
+    listType: "picture",
+    accept: ".png,.jpg,.jpeg,.webp,.pdf,.doc,.docx,.xlxs",
+    beforeUpload(file) {
+      //jika size > 5Mb
+      if (file.size > 5242880) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    onChange(info) {
+      setFormData((prevData) => ({ ...prevData, PesanFile: info.fileList }));
+    },
+    onDrop(e) {
+      console.log("Dropped files", e.dataTransfer.files);
+    },
+  };
   const form = () => {
     return (
       <div className="d-flex flex-column gap-3">
         <div className="form-input text d-flex align-items-start">
-          <label htmlFor="" className="w-25">
+          <label htmlFor="" className="d-flex w-25 gap-2">
+            <p className="text-danger">*</p>
             Judul aspirasi
           </label>
           <Input
@@ -37,7 +59,8 @@ function ModalInsertAspirasi({ currState, setState, judulInsert }) {
           />
         </div>
         <div className="form-input text d-flex align-items-start">
-          <label htmlFor="" className="w-25">
+          <label htmlFor="" className="d-flex w-25 gap-2">
+            <p className="text-danger">*</p>
             Pesan
           </label>
           <TextArea
@@ -50,8 +73,39 @@ function ModalInsertAspirasi({ currState, setState, judulInsert }) {
             }}
           />
         </div>
+        <div className="form-input file">
+          <Dragger height={250} {...propsUploadImg}>
+            <p className="ant-upload-drag-icon">
+              <InboxOutlined />
+            </p>
+            <p className="ant-upload-text">Klik atau tarik file ke area ini untuk mengunggah</p>
+            <p className="ant-upload-hint">
+              Mendukung unggah file tunggal atau dalam jumlah banyak. Ukuran file maksimal adalah 5
+              Mb
+            </p>
+          </Dragger>
+        </div>
       </div>
     );
+  };
+
+  const formatFormData = (formData) => {
+    let newFormData = new FormData();
+
+    for (const key in formData) {
+      if (key === "PesanFile" && Array.isArray(formData[key])) {
+        formData[key].map((file) => {
+          const fileObj = file.originFileObj;
+          newFormData.append(key, fileObj);
+        });
+      } else {
+        newFormData.append(key, formData[key]);
+      }
+    }
+    newFormData.append("TglDibuat", new Date().getTime());
+    newFormData.append("UserID_dibuat", userSession?.dataUser?.UserID);
+
+    return newFormData;
   };
 
   const insertFormData = async () => {
@@ -60,18 +114,22 @@ function ModalInsertAspirasi({ currState, setState, judulInsert }) {
       const headers = {
         headers: {
           authorization: userSession?.AuthKey,
+          "Content-Type": "multipart/form-data", // Important for file uploads
         },
       };
+
+      const formattedFormData = formatFormData(formData);
 
       // Lakukan validasi menggunakan Joi
       const validateFunction = inputValidator["DataAspirasi"];
       validateFunction(formData);
 
       //POST REQUEST
-      await axios.post(`${urlServer}/data`, formData, headers);
+      await axios.post(`${urlServer}/aspirasi`, formattedFormData, headers);
       setLoading(false);
       setValidationStatus("Berhasil", "Data berhasil ditambahkan");
     } catch (error) {
+      setLoading(false);
       if (error?.response?.data?.error) {
         setValidationStatus(error.path, error.response.data.error);
       } else {
@@ -118,7 +176,13 @@ function ModalInsertAspirasi({ currState, setState, judulInsert }) {
         <Modal
           open={ValidationStatus}
           onCancel={() => {
-            setState(false), setCloseAlert, window.location.reload();
+            //jika gagal maka modal aler saja yg ditutup
+            if (ValidationStatus.Path !== "Berhasil") {
+              setCloseAlert();
+            } else {
+              //jika berhasil maka modal alert & modal form  yg ditutup
+              setCloseAlert(), setState(false), window.location.reload();
+            }
           }}
           footer={null}
           centered={true}

@@ -44,6 +44,11 @@ router.delete("/data/:dataFiturID", Authorization.decryption, DataFiturControlle
 
 // ###############################################################################
 //                              MESSAGE ASPIRASI
-router.post("/aspirasi", Authorization.decryption, MessageController.post);
+router.post(
+  "/aspirasi",
+  upload.fields([{ name: "PesanFile", maxCount: 10 }]),
+  Authorization.decryption,
+  MessageController.post
+);
 router.patch("/aspirasi", Authorization.decryption, MessageController.updateRead);
 module.exports = { router };

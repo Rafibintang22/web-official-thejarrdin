@@ -65,26 +65,26 @@ class DataFiturController {
     const readFitur = await FiturRepository.readOne(dataFitur.FiturID);
     const judul = dataFitur.Judul; // Get the title
 
-    // Fetch user emails from UserRepository
-    let userIds = dataFitur.UserTujuan;
-    userIds.push(dataFitur.UserID_dibuat); //menambah juga userID untuk yg buat data
-    let arrEmailUser = [];
-    try {
-      arrEmailUser = await Promise.all(
-        userIds.map(async (id) => {
-          const user = await UserRepository.readOne(id);
-          return user ? user.email : null; // Assuming user has an 'email' field
-        })
-      );
-    } catch (error) {
-      return res.status(500).json({ error: "Error fetching user emails." });
-    }
-    // console.log(arrEmailUser);
-    // END Fetch user emails from UserRepository
-
     let linkFiles = ""; //berupa string
     // // JIKA post terdapat files
     if (files && files.FileFolder) {
+      // Fetch user emails from UserRepository
+      let userIds = dataFitur.UserTujuan;
+      userIds.push(dataFitur.UserID_dibuat); //menambah juga userID untuk yg buat data
+      let arrEmailUser = [];
+      try {
+        arrEmailUser = await Promise.all(
+          userIds.map(async (id) => {
+            const user = await UserRepository.readOne(id);
+            return user ? user.email : null; // Assuming user has an 'email' field
+          })
+        );
+      } catch (error) {
+        return res.status(500).json({ error: "Error fetching user emails." });
+      }
+      // console.log(arrEmailUser);
+      // END Fetch user emails from UserRepository
+
       // membuat folder berdasarkan nama fitur_judul
       const namaFolder = `${readFitur.nama}_${judul}`;
       const folderId = await createFolder(namaFolder);

@@ -7,7 +7,7 @@ class MessageRepository {
     const transaction = await jarrdinDB.transaction();
 
     try {
-      const { Judul, TglDibuat, UserID_dibuat, Pesan, PesanFile } = dataInsert;
+      const { Judul, TglDibuat, UserID_dibuat, Pesan, PesanFile, AllPengurusID } = dataInsert;
       if (!Judul || !TglDibuat || !UserID_dibuat || !Pesan) {
         throw new Error("Data yang diperlukan tidak lengkap.");
       }
@@ -24,15 +24,10 @@ class MessageRepository {
         { transaction }
       );
 
-      let allPengurusID;
-      allPengurusID = await UserRoleModel.findAll({
-        where: { roleID: 1 }, //roleID 1 merupakan id pengurus
-        attributes: ["userID"], // mengambil kolom userID saja
-        raw: true,
-      });
+      // console.log(AllPengurusID);
 
       // Filter to hapus UserID_dibuat dari UserTujuan if ada
-      const filteredUserTujuan = allPengurusID.filter((user) => user.userID !== UserID_dibuat);
+      const filteredUserTujuan = AllPengurusID.filter((user) => user.userID !== UserID_dibuat);
       const messageID = newMessage.messageID;
 
       const messageTujuanRecords = filteredUserTujuan.map((user) => ({

@@ -124,7 +124,8 @@ function ModalInsert({ currState, setState, judulInsert }) {
     return (
       <div className="d-flex flex-column gap-3">
         <div className="form-input text d-flex align-items-start">
-          <label htmlFor="" className="w-25">
+          <label htmlFor="" className="d-flex w-25 gap-2">
+            <p className="text-danger">*</p>
             Judul dokumen
           </label>
           <Input
@@ -134,7 +135,8 @@ function ModalInsert({ currState, setState, judulInsert }) {
           />
         </div>
         <div className="form-input select d-flex align-items-start">
-          <label htmlFor="" className="w-25">
+          <label htmlFor="" className="d-flex w-25 gap-2">
+            <p className="text-danger">*</p>
             Dibuat untuk
           </label>
           <Select
@@ -165,7 +167,8 @@ function ModalInsert({ currState, setState, judulInsert }) {
 
         {current === "link" && (
           <div className="form-input text d-flex align-items-start">
-            <label htmlFor="" className="w-25">
+            <label htmlFor="" className="d-flex w-25 gap-2">
+              <p className="text-danger">*</p>
               Link/url dokumen
             </label>
             <Input
@@ -245,7 +248,7 @@ function ModalInsert({ currState, setState, judulInsert }) {
       setValidationStatus("Berhasil", "Data berhasil ditambahkan");
     } catch (error) {
       console.log(error);
-
+      setLoading(false);
       if (error?.response?.data?.error) {
         setValidationStatus(error.path, error.response.data.error);
       } else {
@@ -292,7 +295,13 @@ function ModalInsert({ currState, setState, judulInsert }) {
         <Modal
           open={ValidationStatus}
           onCancel={() => {
-            setState(false), setCloseAlert, window.location.reload();
+            //jika gagal maka modal aler saja yg ditutup
+            if (ValidationStatus.Path !== "Berhasil") {
+              setCloseAlert();
+            } else {
+              //jika berhasil maka modal alert & modal form  yg ditutup
+              setCloseAlert(), setState(false), window.location.reload();
+            }
           }}
           footer={null}
           centered={true}

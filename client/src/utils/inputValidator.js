@@ -84,6 +84,13 @@ const DataAspirasi = Joi.object({
     "string.max": "Judul tidak boleh lebih dari 255 karakter",
     "any.required": "Judul wajib diisi",
   }),
+  Pesan: Joi.string().min(3).required().messages({
+    "string.min": "Pesan minimal harus 3 karakter",
+    "any.required": "Pesan wajib diisi",
+  }),
+  PesanFile: Joi.array().messages({
+    "array.base": "FileFolder harus berupa array",
+  }),
 });
 
 const validateData = (data, schema) => {

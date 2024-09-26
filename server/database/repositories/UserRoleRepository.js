@@ -35,6 +35,20 @@ class UserRoleRepository {
       throw error;
     }
   }
+
+  static async readAllPengurusID() {
+    try {
+      const findUserID = await UserRoleModel.findAll({
+        where: { roleID: 1 }, //roleID 1 merupakan id pengurus
+        attributes: ["userID"], // mengambil kolom userID saja
+        raw: true,
+      });
+
+      return findUserID;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = { UserRoleRepository };
