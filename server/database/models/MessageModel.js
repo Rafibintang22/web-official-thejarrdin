@@ -20,10 +20,6 @@ const MessageModel = jarrdinDB.define(
       type: DataTypes.INTEGER(11),
       allowNull: false,
     },
-    parentMessageID: {
-      type: DataTypes.INTEGER(11),
-      allowNull: true, // Nullable: null for original messages, set for replies
-    },
     judul: {
       type: DataTypes.STRING(255),
       allowNull: false,
@@ -48,19 +44,6 @@ const MessageModel = jarrdinDB.define(
 );
 
 function associationMessage() {
-  // Association antara message dan message untuk bisa replies
-  MessageModel.belongsTo(MessageModel, {
-    as: "parentMessage",
-    foreignKey: "parentMessageID",
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  });
-
-  MessageModel.hasMany(MessageModel, {
-    as: "replies",
-    foreignKey: "parentMessageID",
-  });
-
   // Association antara Message dan Fitur
   MessageModel.belongsTo(FiturModel, {
     foreignKey: "fiturID",

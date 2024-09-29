@@ -29,12 +29,13 @@ class MessageController {
 
   static async getOne(req, res) {
     const PesanID = req.params.PesanID;
+    const Tipe = req.params.Tipe;
     const UserID = req.dataSession.UserID;
 
     // console.log("Fetching message with ID:", PesanID, "for user:", UserID);
 
     try {
-      const readOneMessage = await MessageRepository.readOne(UserID, PesanID);
+      const readOneMessage = await MessageRepository.readOne(UserID, PesanID, Tipe);
       // console.log("Fetched message:", readOneMessage);
 
       return res.status(200).json(readOneMessage);

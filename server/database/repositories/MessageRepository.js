@@ -63,34 +63,73 @@ class MessageRepository {
     }
   }
 
-  static async readOne(userID, messageID) {
+  static async readOne(userID, messageID, tipeRead) {
     try {
-      const findMessage = await MessageModel.findOne({
-        where: { messageID: messageID },
-        include: [
-          { model: UserModel, required: true },
-          { model: MessageTujuanModel, where: { penerimaID: userID }, required: true },
-        ],
-      });
-      // console.log(findMessage);
+      let findMessage;
 
-      if (!findMessage) {
-        const newError = new Error("Data tidak ditemukan.");
-        newError.status = 404;
-        throw newError;
+      if (tipeRead === "untukUser") {
+        findMessage = await MessageModel.findOne({
+          where: { messageID: messageID },
+          include: [
+            { model: UserModel, required: true },
+            { model: MessageTujuanModel, where: { penerimaID: userID }, required: true },
+          ],
+        });
+
+        if (!findMessage) {
+          const newError = new Error("Data tidak ditemukan.");
+          newError.status = 404;
+          throw newError;
+        }
+
+        const transformedData = {
+          Id: findMessage.messageID,
+          Judul: findMessage.judul,
+          TglDibuat: findMessage.tglDibuat,
+          DibuatOleh: { UserID: findMessage.User.userID, Nama: findMessage.User.nama },
+          Pesan: findMessage.messageText,
+          IsRead: findMessage.message_tujuans[0].isRead,
+          File: findMessage.messageFile,
+        };
+
+        return transformedData;
+      } else if (tipeRead === "dibuatUser") {
+        findMessage = await MessageModel.findOne({
+          where: { messageID: messageID, pengirimID: userID },
+          include: [
+            { model: UserModel, required: true },
+            {
+              model: MessageTujuanModel,
+              required: true,
+              include: { model: UserModel, required: true },
+            },
+          ],
+        });
+
+        if (!findMessage) {
+          const newError = new Error("Data tidak ditemukan.");
+          newError.status = 404;
+          throw newError;
+        }
+
+        const transformedData = {
+          Id: findMessage.messageID,
+          Judul: findMessage.judul,
+          TglDibuat: findMessage.tglDibuat,
+          DibuatOleh: { UserID: findMessage.User.userID, Nama: findMessage.User.nama },
+          Pesan: findMessage.messageText,
+          // UserTujuan: findMessage.message_tujuans.map((msg) => ({
+          //   UserID: msg.User.userID,
+          //   Nama: msg.User.nama,
+          // })),
+          UserTujuan: findMessage.message_tujuans.map((msg) => msg.User.nama),
+          File: findMessage.messageFile,
+        };
+
+        return transformedData;
       }
 
-      const transformedData = {
-        Id: findMessage.messageID,
-        Judul: findMessage.judul,
-        TglDibuat: findMessage.tglDibuat,
-        DibuatOleh: { UserID: findMessage.User.userID, Nama: findMessage.User.nama },
-        Pesan: findMessage.messageText,
-        IsRead: findMessage.message_tujuans[0].isRead,
-        File: findMessage.messageFile,
-      };
-
-      return transformedData;
+      // console.log(findMessage);
     } catch (error) {
       throw error;
     }

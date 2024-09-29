@@ -115,7 +115,7 @@ function MasukanAspirasi() {
       )}
 
       {isDetailOpen === "Aspirasi" && (
-        <ModalDetailAspirasi judulDetail={"Detail Masukan & Aspirasi"} />
+        <ModalDetailAspirasi judulDetail={"Detail Masukan & Aspirasi"} tipeDetail={currTipeData} />
       )}
     </>
   );

@@ -9,7 +9,7 @@ import TextArea from "antd/es/input/TextArea";
 import ModalInsertAspirasi from "./ModalInsertAspirasi";
 
 // eslint-disable-next-line react/prop-types
-function ModalDetailAspirasi({ judulDetail }) {
+function ModalDetailAspirasi({ judulDetail, tipeDetail }) {
   const userSession = JSON.parse(localStorage.getItem("userSession"));
   const { isDetailOpen, oneDataID, setDetailOpen } = DetailDataController();
   const [modalInsert, setModalInsert] = useState(false);
@@ -27,7 +27,12 @@ function ModalDetailAspirasi({ judulDetail }) {
         },
       };
       try {
-        const response = await axios.get(`${urlServer}/aspirasi/detail/${oneDataID}`, headers);
+        const response = await axios.get(
+          `${urlServer}/aspirasi/detail/${oneDataID}/${
+            tipeDetail === "untukSaya" ? "untukUser" : "dibuatUser"
+          }`,
+          headers
+        );
 
         console.log(response);
 
@@ -92,6 +97,9 @@ function ModalDetailAspirasi({ judulDetail }) {
       console.log(error);
     }
   };
+
+  console.log(tipeDetail);
+
   return (
     <>
       <Modal
@@ -110,18 +118,25 @@ function ModalDetailAspirasi({ judulDetail }) {
         }}
         footer={[
           <>
-            <div className="d-flex w-100 justify-content-between">
-              <Button
-                key="isRead"
-                type={dataOne?.IsRead ? "primary" : ""}
-                icon={dataOne?.IsRead ? <CheckOutlined /> : false}
-                onClick={() => updateIsRead()}
-              >
-                {dataOne?.IsRead ? "Dibaca" : "Tandai untuk dibaca"}
-              </Button>
+            <div
+              className={`d-flex w-100 justify-content-${
+                tipeDetail === "untukSaya" ? "between" : "end"
+              }`}
+            >
+              {tipeDetail === "untukSaya" && (
+                <Button
+                  key="isRead"
+                  type={dataOne?.IsRead ? "primary" : ""}
+                  icon={dataOne?.IsRead ? <CheckOutlined /> : false}
+                  onClick={() => updateIsRead()}
+                >
+                  {dataOne?.IsRead ? "Dibaca" : "Tandai untuk dibaca"}
+                </Button>
+              )}
               <div className="d-flex gap-3">
                 <Button
                   key="tutup"
+                  type={tipeDetail === "untukSaya" ? "default" : "primary"}
                   onClick={() => {
                     setDetailOpen(null, null);
                     window.location.reload();
@@ -130,9 +145,11 @@ function ModalDetailAspirasi({ judulDetail }) {
                   Tutup
                 </Button>
 
-                <Button key="unggah" type="primary" onClick={() => setModalInsert(true)}>
-                  Balas
-                </Button>
+                {tipeDetail === "untukSaya" && (
+                  <Button key="unggah" type="primary" onClick={() => setModalInsert(true)}>
+                    Balas
+                  </Button>
+                )}
               </div>
             </div>
           </>,
@@ -158,6 +175,21 @@ function ModalDetailAspirasi({ judulDetail }) {
               Diunggah oleh
             </label>
             <Input style={{ color: "#616161" }} value={dataOne?.DibuatOleh.Nama} disabled />
+          </div>
+
+          {tipeDetail !== "untukSaya" && (
+            <div className="form-input text d-flex align-items-center">
+              <label htmlFor="" className="w-25">
+                Tujuan
+              </label>
+              <Input style={{ color: "#616161" }} value={dataOne?.UserTujuan} disabled />
+            </div>
+          )}
+          <div className="form-input text d-flex align-items-start">
+            <label htmlFor="" className="d-flex w-25 gap-2">
+              Pesan
+            </label>
+            <TextArea style={{ color: "#616161" }} value={dataOne?.Pesan} disabled />
           </div>
 
           {dataOne?.File && dataOne?.File.length > 1 && (
@@ -191,13 +223,6 @@ function ModalDetailAspirasi({ judulDetail }) {
               )}
             </div>
           )}
-
-          <div className="form-input text d-flex align-items-start">
-            <label htmlFor="" className="d-flex w-25 gap-2">
-              Pesan
-            </label>
-            <TextArea style={{ color: "#616161" }} value={dataOne?.Pesan} disabled />
-          </div>
         </div>
       </Modal>
       {modalInsert && (
