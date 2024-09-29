@@ -3,10 +3,8 @@ import Sidebar from "../components/Sidebar";
 import { Menu, Table } from "antd";
 import FilterTable from "../components/Filter/FilterTable";
 import { useEffect, useState } from "react";
-import ModalInsert from "../components/ModalInsert";
 import axios from "axios";
 import { urlServer } from "../utils/endpoint";
-import { Fitur } from "../models/FiturModel";
 import UseSessionCheck from "../utils/useSessionCheck";
 import columns from "../constaints/columnsTable";
 import DetailDataController from "../utils/detailDataController";
@@ -16,6 +14,7 @@ import ModalInsertAspirasi from "../components/ModalInsertAspirasi";
 
 function MasukanAspirasi() {
   UseSessionCheck();
+  const [loading, setLoading] = useState(false);
   const { isDetailOpen, setDetailOpen } = DetailDataController();
   const fieldDetail = "Aspirasi";
   const userSession = JSON.parse(localStorage.getItem("userSession"));
@@ -33,13 +32,14 @@ function MasukanAspirasi() {
       key: "dataDiunggah",
     });
   }
-  const [dataTable, setDataTable] = useState(null);
+  const [dataTable, setDataTable] = useState([]);
   const [modalInsert, setModalInsert] = useState(false);
   const [currTipeData, setCurrTipeData] = useState("untukSaya");
 
   axios.defaults.withCredentials = true;
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       const headers = {
         headers: {
           authorization: userSession?.AuthKey,
@@ -55,10 +55,13 @@ function MasukanAspirasi() {
       } catch (error) {
         console.log(error);
       }
+      setLoading(false);
     };
 
     fetchData();
   }, [currTipeData]);
+  console.log(loading);
+
   return (
     <>
       <div className="container-main w-100 d-flex">
@@ -81,7 +84,7 @@ function MasukanAspirasi() {
 
           <div className="w-100 p-4">
             <Table
-              loading={dataTable ? false : true}
+              loading={loading}
               dataSource={dataTable}
               columns={columns(fieldDetail, setDetailOpen)}
             />

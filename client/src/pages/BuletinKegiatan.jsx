@@ -15,6 +15,7 @@ import HakAkses from "../utils/hakAkses";
 
 function BuletinKegiatan() {
   UseSessionCheck();
+  const [loading, setLoading] = useState(false);
   const { isDetailOpen, setDetailOpen } = DetailDataController();
   const fieldDetail = "BuletinKegiatan";
   const userSession = JSON.parse(localStorage.getItem("userSession"));
@@ -33,7 +34,7 @@ function BuletinKegiatan() {
     });
   }
 
-  const [dataTable, setDataTable] = useState(null);
+  const [dataTable, setDataTable] = useState([]);
   const [modalInsert, setModalInsert] = useState(false);
   const [currTipeData, setCurrTipeData] = useState("untukSaya");
 
@@ -45,6 +46,7 @@ function BuletinKegiatan() {
       },
     };
     const fetchData = async () => {
+      setLoading(true);
       try {
         const response = await axios.get(
           `${urlServer}/data/${Fitur["BuletinKegiatan"]}/${
@@ -54,6 +56,7 @@ function BuletinKegiatan() {
         );
         console.log(response);
         setDataTable(response.data);
+        setLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -83,7 +86,7 @@ function BuletinKegiatan() {
 
           <div className="w-100 p-4">
             <Table
-              loading={dataTable ? false : true}
+              loading={loading}
               dataSource={dataTable}
               columns={columns(fieldDetail, setDetailOpen)}
             />

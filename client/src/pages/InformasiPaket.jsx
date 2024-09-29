@@ -15,6 +15,7 @@ import HakAkses from "../utils/hakAkses";
 
 function InformasiPaket() {
   UseSessionCheck();
+  const [loading, setLoading] = useState(false);
   const { isDetailOpen, setDetailOpen } = DetailDataController();
   const fieldDetail = "InformasiPaket";
   const userSession = JSON.parse(localStorage.getItem("userSession"));
@@ -32,13 +33,14 @@ function InformasiPaket() {
       key: "dataDiunggah",
     });
   }
-  const [dataTable, setDataTable] = useState(null);
+  const [dataTable, setDataTable] = useState([]);
   const [modalInsert, setModalInsert] = useState(false);
   const [currTipeData, setCurrTipeData] = useState("untukSaya");
 
   axios.defaults.withCredentials = true;
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       const headers = {
         headers: {
           authorization: userSession?.AuthKey,
@@ -53,6 +55,7 @@ function InformasiPaket() {
         );
         console.log(response);
         setDataTable(response.data);
+        setLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -82,7 +85,7 @@ function InformasiPaket() {
 
           <div className="w-100 p-4">
             <Table
-              loading={dataTable ? false : true}
+              loading={loading}
               dataSource={dataTable}
               columns={columns(fieldDetail, setDetailOpen)}
             />
