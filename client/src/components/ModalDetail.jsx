@@ -4,7 +4,8 @@ import DetailDataController from "../utils/detailDataController";
 import axios from "axios";
 import { urlServer } from "../utils/endpoint";
 import formatDate from "../utils/formatDate";
-import { FileOutlined } from "@ant-design/icons";
+import { CheckOutlined, FileOutlined } from "@ant-design/icons";
+import TextArea from "antd/es/input/TextArea";
 
 // eslint-disable-next-line react/prop-types
 function ModalDetail({ judulDetail }) {
@@ -24,7 +25,7 @@ function ModalDetail({ judulDetail }) {
       };
       try {
         const response = await axios.get(
-          `${urlServer}/${isDetailOpen === "Aspirasi" ? "aspirasi" : "data"}/${oneDataID}`,
+          `${urlServer}/${isDetailOpen === "Aspirasi" ? "aspirasi/detail" : "data"}/${oneDataID}`,
           headers
         );
 
@@ -33,17 +34,20 @@ function ModalDetail({ judulDetail }) {
         const responseData = response?.data;
         console.log(responseData);
 
-        let transformedFile = [];
-        if (responseData?.File.includes(",")) {
-          transformedFile = responseData?.File.split(",").map((url) => url.trim());
+        if (responseData.File) {
+          let transformedFile = [];
+          if (responseData?.File.includes(",")) {
+            transformedFile = responseData?.File.split(",").map((url) => url.trim());
+          } else {
+            transformedFile = responseData?.File; // Jika tidak ada koma, jadikan sebagai array dengan satu elemen
+          }
+          setDataOne({
+            ...responseData,
+            File: transformedFile, // Menambahkan transformedFile ke dalam responseData
+          });
         } else {
-          transformedFile = responseData?.File; // Jika tidak ada koma, jadikan sebagai array dengan satu elemen
+          setDataOne(responseData);
         }
-
-        setDataOne({
-          ...responseData,
-          File: transformedFile, // Menambahkan transformedFile ke dalam responseData
-        });
       } catch (error) {
         console.log(error);
       } finally {
@@ -53,6 +57,29 @@ function ModalDetail({ judulDetail }) {
 
     fetchOneData();
   }, [isDetailOpen]);
+
+  const updateIsRead = async () => {
+    const body = {
+      MessageID: dataOne.Id,
+    };
+    const headers = {
+      headers: {
+        authorization: userSession?.AuthKey,
+      },
+    };
+    try {
+      const response = await axios.patch(`${urlServer}/aspirasi`, body, headers);
+      const resultIsRead = response.data.IsRead;
+
+      // Jika berhasil, langsung update dataOne untuk mengubah IsRead
+      setDataOne((prevData) => ({
+        ...prevData,
+        IsRead: resultIsRead, // Mengubah status pesan
+      }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Modal
@@ -64,9 +91,21 @@ function ModalDetail({ judulDetail }) {
       onOk={() => setDetailOpen(null, null)}
       onCancel={() => setDetailOpen(null, null)}
       footer={[
-        <Button key="tutup" type="primary" onClick={() => setDetailOpen(null, null)}>
-          Tutup
-        </Button>,
+        <>
+          <div className="d-flex w-100 justify-content-between">
+            <Button
+              key="isRead"
+              type={dataOne?.IsRead ? "primary" : ""}
+              icon={dataOne?.IsRead ? <CheckOutlined /> : false}
+              onClick={() => updateIsRead()}
+            >
+              {dataOne?.IsRead ? "Dibaca" : "Tandai untuk dibaca"}
+            </Button>
+            <Button key="tutup" type="primary" onClick={() => setDetailOpen(null, null)}>
+              Tutup
+            </Button>
+          </div>
+        </>,
       ]}
     >
       <div className="d-flex flex-column gap-3">
@@ -91,42 +130,55 @@ function ModalDetail({ judulDetail }) {
           <Input style={{ color: "#616161" }} value={dataOne?.DibuatOleh} disabled />
         </div>
 
-        <div className="form-input text d-flex align-items-center">
-          <label htmlFor="" className="w-25">
-            Tujuan
-          </label>
-          <Input style={{ color: "#616161" }} value={dataOne?.UserTujuan} disabled />
-        </div>
+        {isDetailOpen !== "Aspirasi" && (
+          <div className="form-input text d-flex align-items-center">
+            <label htmlFor="" className="w-25">
+              Tujuan
+            </label>
+            <Input style={{ color: "#616161" }} value={dataOne?.UserTujuan} disabled />
+          </div>
+        )}
 
-        <div className="form-input text d-flex flex-column gap-3">
-          <label htmlFor="" className="w-25">
-            File/folder dokumen
-          </label>
-          {Array.isArray(dataOne?.File) ? (
-            <div className="d-flex gap-3">
-              {dataOne?.File.map((url, i) => (
+        {dataOne?.File && dataOne?.File.length > 1 && (
+          <div className="form-input text d-flex flex-column gap-3">
+            <label htmlFor="" className="w-25">
+              File/folder dokumen
+            </label>
+            {Array.isArray(dataOne?.File) ? (
+              <div className="d-flex gap-3">
+                {dataOne?.File.map((url, i) => (
+                  <Button
+                    shape="rounded"
+                    icon={<FileOutlined />}
+                    key={i}
+                    onClick={() => window.open(url, "_blank")}
+                  >
+                    Lihat file/folder {i + 1}
+                  </Button>
+                ))}
+              </div>
+            ) : (
+              <div className="d-flex gap-3">
                 <Button
                   shape="rounded"
                   icon={<FileOutlined />}
-                  key={i}
-                  onClick={() => window.open(url, "_blank")}
+                  onClick={() => window.open(dataOne?.File, "_blank")}
                 >
-                  Lihat file/folder {i + 1}
+                  Lihat file/folder
                 </Button>
-              ))}
-            </div>
-          ) : (
-            <div className="d-flex gap-3">
-              <Button
-                shape="rounded"
-                icon={<FileOutlined />}
-                onClick={() => window.open(dataOne?.File, "_blank")}
-              >
-                Lihat file/folder
-              </Button>
-            </div>
-          )}
-        </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {isDetailOpen === "Aspirasi" && (
+          <div className="form-input text d-flex align-items-start">
+            <label htmlFor="" className="d-flex w-25 gap-2">
+              Pesan
+            </label>
+            <TextArea style={{ color: "#616161" }} value={dataOne?.Pesan} disabled />
+          </div>
+        )}
       </div>
     </Modal>
   );

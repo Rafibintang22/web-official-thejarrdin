@@ -1,5 +1,5 @@
 const { DatabaseManager } = require("../../config/DatabaseManager");
-const { MessageModel, UserRoleModel, UserModel, MessageTujuanModel } = require("../models");
+const { MessageModel, UserModel, MessageTujuanModel } = require("../models");
 const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
 
 class MessageRepository {
@@ -63,7 +63,7 @@ class MessageRepository {
 
   static async readOne(userID, messageID) {
     try {
-      let findMessage = await MessageModel.findOne({
+      const findMessage = await MessageModel.findOne({
         where: { messageID: messageID },
         include: [
           { model: UserModel, required: true },
@@ -79,12 +79,13 @@ class MessageRepository {
       }
 
       const transformedData = {
+        Id: findMessage.messageID,
         Judul: findMessage.judul,
         TglDibuat: findMessage.tglDibuat,
         DibuatOleh: findMessage.User.nama,
         Pesan: findMessage.messageText,
         IsRead: findMessage.message_tujuans[0].isRead,
-        File: findMessage.fileFolder,
+        File: findMessage.messageFile,
       };
 
       return transformedData;
@@ -150,16 +151,20 @@ class MessageRepository {
 
       //jika isRead True
       if (messageTujuan.isRead === 1) {
-        return await MessageTujuanModel.update(
+        await MessageTujuanModel.update(
           { isRead: false, tglDibaca: null },
           { where: { messageID: messageID, penerimaID: userID } }
         );
+
+        return { IsRead: false };
       } else {
         //Jika isread false
-        return await MessageTujuanModel.update(
+        await MessageTujuanModel.update(
           { isRead: true, tglDibaca: new Date() },
           { where: { messageID: messageID, penerimaID: userID } }
         );
+
+        return { IsRead: true };
       }
     } catch (error) {
       throw error;

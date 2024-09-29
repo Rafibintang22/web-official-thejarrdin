@@ -31,13 +31,18 @@ class MessageController {
     const PesanID = req.params.PesanID;
     const UserID = req.dataSession.UserID;
 
+    console.log("Fetching message with ID:", PesanID, "for user:", UserID);
+
     try {
       const readOneMessage = await MessageRepository.readOne(UserID, PesanID);
+      console.log("Fetched message:", readOneMessage);
 
       return res.status(200).json(readOneMessage);
     } catch (error) {
       console.error("Error fetching data:", error);
-      return res.status(500).json({ error: "Internal server error" });
+      return res
+        .status(error.status || 500)
+        .json({ error: error.message || "Internal server error" });
     }
   }
 
@@ -125,7 +130,7 @@ class MessageController {
 
     try {
       const updateMessage = await MessageRepository.updateRead(MessageID, UserID);
-      return res.status(201).json({ success: true, data: updateMessage });
+      return res.status(201).json(updateMessage);
     } catch (error) {
       console.error(error);
       return res.status(error.status || 500).json({ error: error.message });
