@@ -45,11 +45,12 @@ router.post(
   Authorization.decryption,
   DataFiturController.post
 );
-router.delete("/data/:dataFiturID", Authorization.decryption, DataFiturController.delete);
+router.delete("/data/:DataFiturID", Authorization.decryption, DataFiturController.delete);
 
 // ###############################################################################
 //                              MESSAGE ASPIRASI
 router.get("/aspirasi/:Tipe", Authorization.decryption, MessageController.getAll);
+router.get("/aspirasi/:PesanID", Authorization.decryption, DataFiturController.getOne);
 router.post(
   "/aspirasi",
   upload.fields([{ name: "PesanFile", maxCount: 10 }]),

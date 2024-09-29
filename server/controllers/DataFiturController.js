@@ -49,10 +49,9 @@ class DataFiturController {
 
   static async getOne(req, res) {
     const DataFiturID = req.params.DataFiturID;
-    const UserID = req.dataSession.UserID;
 
     try {
-      const readOneDataFitur = await DataFiturRepository.readOne(UserID, DataFiturID);
+      const readOneDataFitur = await DataFiturRepository.readOne(DataFiturID);
 
       return res.status(200).json(readOneDataFitur);
     } catch (error) {
@@ -138,7 +137,7 @@ class DataFiturController {
 
   static async delete(req, res) {
     try {
-      const deleteDataFitur = await DataFiturRepository.delete(req.params.dataFiturID);
+      const deleteDataFitur = await DataFiturRepository.delete(req.params.DataFiturID);
 
       res.status(201).json({ success: true });
     } catch (error) {

@@ -110,7 +110,7 @@ class DataFiturRepository {
     }
   }
 
-  static async readOne(userID, dataFiturID) {
+  static async readOne(dataFiturID) {
     try {
       let findDataFitur;
 

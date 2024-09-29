@@ -27,6 +27,20 @@ class MessageController {
     }
   }
 
+  static async getOne(req, res) {
+    const PesanID = req.params.PesanID;
+    const UserID = req.dataSession.UserID;
+
+    try {
+      const readOneMessage = await MessageRepository.readOne(UserID, PesanID);
+
+      return res.status(200).json(readOneMessage);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
   static async post(req, res) {
     const { body, files } = req;
     // console.log(body, files);

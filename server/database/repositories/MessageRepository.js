@@ -61,6 +61,38 @@ class MessageRepository {
     }
   }
 
+  static async readOne(userID, messageID) {
+    try {
+      let findMessage = await MessageModel.findOne({
+        where: { messageID: messageID },
+        include: [
+          { model: UserModel, required: true },
+          { model: MessageTujuanModel, where: { penerimaID: userID }, required: true },
+        ],
+      });
+      // console.log(findMessage);
+
+      if (!findMessage) {
+        const newError = new Error("Data tidak ditemukan.");
+        newError.status = 404;
+        throw newError;
+      }
+
+      const transformedData = {
+        Judul: findMessage.judul,
+        TglDibuat: findMessage.tglDibuat,
+        DibuatOleh: findMessage.User.nama,
+        Pesan: findMessage.messageText,
+        IsRead: findMessage.message_tujuans[0].isRead,
+        File: findMessage.fileFolder,
+      };
+
+      return transformedData;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async create(dataInsert) {
     const transaction = await jarrdinDB.transaction();
 

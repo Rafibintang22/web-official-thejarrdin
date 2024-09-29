@@ -16,15 +16,21 @@ function ModalDetail({ judulDetail }) {
   axios.defaults.withCredentials = true;
   useEffect(() => {
     const fetchOneData = async () => {
+      setLoading(true);
       const headers = {
         headers: {
           authorization: userSession?.AuthKey,
         },
       };
-      setLoading(true);
       try {
-        const response = await axios.get(`${urlServer}/data/${oneDataID}`, headers);
-        const responseData = response.data;
+        const response = await axios.get(
+          `${urlServer}/${isDetailOpen === "Aspirasi" ? "aspirasi" : "data"}/${oneDataID}`,
+          headers
+        );
+
+        console.log(response);
+
+        const responseData = response?.data;
         console.log(responseData);
 
         let transformedFile = [];
@@ -38,9 +44,10 @@ function ModalDetail({ judulDetail }) {
           ...responseData,
           File: transformedFile, // Menambahkan transformedFile ke dalam responseData
         });
-        setLoading(false);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
 
