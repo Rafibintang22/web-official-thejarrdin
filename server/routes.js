@@ -32,7 +32,12 @@ router.get("/role", Authorization.decryption, UserRoleController.getAllByUserID)
 
 // ###############################################################################
 //                              DATA FITUR
-router.get("/data/:FiturID/:Tipe", Authorization.decryption, DataFiturController.getAll);
+router.get(
+  // "/data/:FiturID/:Tipe/:CurrPage/:PageSize",
+  "/data/:FiturID/:Tipe",
+  Authorization.decryption,
+  DataFiturController.getAll
+);
 router.get("/data/:DataFiturID", Authorization.decryption, DataFiturController.getOne);
 router.post(
   "/data",

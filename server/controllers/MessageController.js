@@ -12,9 +12,10 @@ class MessageController {
     const UserID = req.dataSession.UserID;
 
     try {
-      // if(Tipe === "untukUser"){
-
-      // }
+      if (Tipe === "untukUser") {
+        const readAspirasi = await MessageRepository.readAllByPenerimaID(UserID);
+        return res.status(200).json(readAspirasi);
+      }
 
       if (Tipe === "dibuatUser") {
         const readAspirasi = await MessageRepository.readAllByPengirimID(UserID);

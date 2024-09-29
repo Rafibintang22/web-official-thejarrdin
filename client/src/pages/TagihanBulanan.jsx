@@ -36,6 +36,10 @@ function TagihanBulanan() {
   const [dataTable, setDataTable] = useState([]);
   const [modalInsert, setModalInsert] = useState(false);
   const [currTipeData, setCurrTipeData] = useState("untukSaya");
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 5,
+  });
 
   axios.defaults.withCredentials = true;
   useEffect(() => {
@@ -55,14 +59,25 @@ function TagihanBulanan() {
         );
         console.log(response);
         setDataTable(response.data);
-        setLoading(false);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
   }, [currTipeData]);
+
+  const handleTableChange = (pagination) => {
+    setPagination((prev) => ({
+      ...prev,
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+    }));
+    // fetchData(); // Fetch data after changing pagination
+  };
+
   return (
     <>
       <div className="container-main w-100 d-flex">
@@ -87,6 +102,8 @@ function TagihanBulanan() {
             <Table
               loading={loading}
               dataSource={dataTable}
+              onChange={handleTableChange}
+              pagination={pagination}
               columns={columns(fieldDetail, setDetailOpen)}
             />
           </div>

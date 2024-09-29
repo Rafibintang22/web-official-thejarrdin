@@ -10,6 +10,13 @@ class DataFiturController {
   static async getAll(req, res) {
     const FiturID = req.params.FiturID;
     const Tipe = req.params.Tipe;
+    // // PAGINATION SERVER
+    // const CurrPage = req.params.CurrPage;
+    // const PageSize = req.params.PageSize;
+    // const offset = (CurrPage - 1) * PageSize; // Hitung offset berdasarkan current page
+    // const limit = parseInt(PageSize, 10); // Batasi jumlah data yang diambil berdasarkan pageSize
+    // //END PAGINATION SERVER
+
     const UserID = req.dataSession.UserID;
 
     // console.log(tipe);
@@ -19,6 +26,8 @@ class DataFiturController {
         const readFiturUntukuser = await DataFiturRepository.readAllByFiturIdUntukUser(
           UserID,
           FiturID
+          // offset,
+          // limit
         );
         return res.status(200).json(readFiturUntukuser);
       }
@@ -27,6 +36,8 @@ class DataFiturController {
         const readFiturDibuatUser = await DataFiturRepository.readAllByFiturIdDibuatUser(
           UserID,
           FiturID
+          // offset,
+          // limit
         );
         return res.status(200).json(readFiturDibuatUser);
       }

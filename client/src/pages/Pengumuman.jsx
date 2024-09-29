@@ -1,14 +1,14 @@
-import HeaderKonten from "../components/HeaderKonten";
-import Sidebar from "../components/Sidebar";
-import { Menu, Table } from "antd";
-import FilterTable from "../components/Filter/FilterTable";
-import ModalInsert from "../components/ModalInsert";
 import { useEffect, useState } from "react";
+import { Menu, Table } from "antd";
 import axios from "axios";
 import { urlServer } from "../utils/endpoint";
 import { Fitur } from "../models/FiturModel";
 import UseSessionCheck from "../utils/useSessionCheck";
 import columns from "../constaints/columnsTable";
+import Sidebar from "../components/Sidebar";
+import HeaderKonten from "../components/HeaderKonten";
+import FilterTable from "../components/Filter/FilterTable";
+import ModalInsert from "../components/ModalInsert";
 import DetailDataController from "../utils/detailDataController";
 import ModalDetail from "../components/ModalDetail";
 import HakAkses from "../utils/hakAkses";
@@ -18,57 +18,67 @@ function Pengumuman() {
   const [loading, setLoading] = useState(false);
   const { isDetailOpen, setDetailOpen } = DetailDataController();
   const fieldDetail = "Pengumuman";
-
   const userSession = JSON.parse(localStorage.getItem("userSession"));
   const { hasPengurus } = HakAkses();
-  // console.log(hasPengurus);
 
   const menuInsert = [
-    {
-      label: "Untuk saya",
-      key: "untukSaya",
-    },
+    { label: "Untuk saya", key: "untukSaya" },
+    ...(hasPengurus ? [{ label: "Data diunggah", key: "dataDiunggah" }] : []),
   ];
-  // Jika hasPengurus true, tambahkan "Data diunggah" ke dalam menu
-  if (hasPengurus) {
-    menuInsert.push({
-      label: "Data diunggah",
-      key: "dataDiunggah",
-    });
-  }
 
   const [dataTable, setDataTable] = useState([]);
   const [modalInsert, setModalInsert] = useState(false);
   const [currTipeData, setCurrTipeData] = useState("untukSaya");
-
-  console.log(currTipeData);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 5,
+  });
 
   axios.defaults.withCredentials = true;
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const headers = {
-        headers: {
-          authorization: userSession?.AuthKey,
-        },
-      };
-      try {
-        const response = await axios.get(
-          `${urlServer}/data/${Fitur["Pengumuman"]}/${
-            currTipeData === "untukSaya" ? "untukUser" : "dibuatUser"
-          }`,
-          headers
-        );
-        console.log(response);
-        setDataTable(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    };
 
+  const fetchData = async () => {
+    setLoading(true);
+    const headers = {
+      headers: {
+        authorization: userSession?.AuthKey,
+      },
+    };
+    try {
+      const response = await axios.get(
+        `${urlServer}/data/${Fitur["Pengumuman"]}/${
+          currTipeData === "untukSaya" ? "untukUser" : "dibuatUser"
+        }`,
+        headers
+      );
+      setDataTable(response.data);
+      setPagination((prev) => ({
+        ...prev,
+        total: response.data.length,
+      }));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
-  }, [currTipeData]);
+  }, [
+    currTipeData,
+    // pagination.current,
+    // pagination.pageSize
+  ]);
+
+  const handleTableChange = (pagination) => {
+    setPagination((prev) => ({
+      ...prev,
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+    }));
+    // fetchData(); // Fetch data after changing pagination
+  };
+
   return (
     <>
       <div className="container-main w-100 d-flex">
@@ -76,7 +86,7 @@ function Pengumuman() {
         <div className="container-content w-100 h-100 d-flex flex-column bg-light">
           <HeaderKonten
             judul={"Data Pengumuman"}
-            isInsert={hasPengurus ? true : false}
+            isInsert={hasPengurus}
             nameInsert={"Tambah Pengumuman"}
             setInsertBtn={setModalInsert}
           />
@@ -93,6 +103,8 @@ function Pengumuman() {
             <Table
               loading={loading}
               dataSource={dataTable}
+              onChange={handleTableChange}
+              pagination={pagination}
               columns={columns(fieldDetail, setDetailOpen)}
             />
           </div>
@@ -105,7 +117,6 @@ function Pengumuman() {
           judulInsert={"Tambah Pengumuman"}
         />
       )}
-
       {isDetailOpen === "Pengumuman" && <ModalDetail judulDetail={"Detail Pengumuman"} />}
     </>
   );

@@ -37,6 +37,10 @@ function Laporan() {
   const [dataTable, setDataTable] = useState([]);
   const [modalInsert, setModalInsert] = useState(false);
   const [currTipeData, setCurrTipeData] = useState("untukSaya");
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 5,
+  });
 
   axios.defaults.withCredentials = true;
   useEffect(() => {
@@ -56,9 +60,10 @@ function Laporan() {
         );
         console.log(response);
         setDataTable(response.data);
-        setLoading(false);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -66,6 +71,14 @@ function Laporan() {
   }, [currTipeData]);
 
   // console.log(dataTable);
+  const handleTableChange = (pagination) => {
+    setPagination((prev) => ({
+      ...prev,
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+    }));
+    // fetchData(); // Fetch data after changing pagination
+  };
 
   return (
     <>
@@ -91,6 +104,8 @@ function Laporan() {
             <Table
               loading={loading}
               dataSource={dataTable}
+              onChange={handleTableChange}
+              pagination={pagination}
               columns={columns(fieldDetail, setDetailOpen)}
             />
           </div>

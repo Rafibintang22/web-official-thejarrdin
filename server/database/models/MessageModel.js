@@ -33,7 +33,7 @@ const MessageModel = jarrdinDB.define(
       allowNull: true,
     },
     tglDibuat: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       defaultValue: DataTypes.NOW,
     },
   },

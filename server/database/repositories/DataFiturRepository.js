@@ -80,6 +80,30 @@ class DataFiturRepository {
 
       return transformedData;
 
+      // PAGINATION SERVER
+      // // Dapatkan DataFiturs dari hasil query
+      // const dataFiturs = findDataFitur[0]?.DataFiturs || [];
+
+      // // Sorting berdasarkan tglDibuat (dari terbaru ke terlama)
+      // const sortedData = dataFiturs.sort((a, b) => new Date(b.tglDibuat) - new Date(a.tglDibuat));
+
+      // const lengthData = sortedData.length;
+      // // Manual pagination di sini
+      // const paginatedData = sortedData.slice(offset, offset + limit); // Lakukan pagination manual pada sortedData
+
+      // const transformedData = {
+      //   total: lengthData,
+      //   row: paginatedData.map((data) => ({
+      //     Id: data.dataFiturID,
+      //     Judul: data.judul,
+      //     DibuatOleh: data.User.nama,
+      //     TglDibuat: data.tglDibuat,
+      //   })),
+      // };
+
+      // return transformedData;
+      // END PAGINATION SERVER
+
       // return findDataFitur;
     } catch (error) {
       throw error;
