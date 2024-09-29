@@ -91,6 +91,7 @@ const DataAspirasi = Joi.object({
   PesanFile: Joi.array().messages({
     "array.base": "FileFolder harus berupa array",
   }),
+  UserTujuanID: Joi.number(),
 });
 
 const validateData = (data, schema) => {

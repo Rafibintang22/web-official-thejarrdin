@@ -31,15 +31,15 @@ class MessageController {
     const PesanID = req.params.PesanID;
     const UserID = req.dataSession.UserID;
 
-    console.log("Fetching message with ID:", PesanID, "for user:", UserID);
+    // console.log("Fetching message with ID:", PesanID, "for user:", UserID);
 
     try {
       const readOneMessage = await MessageRepository.readOne(UserID, PesanID);
-      console.log("Fetched message:", readOneMessage);
+      // console.log("Fetched message:", readOneMessage);
 
       return res.status(200).json(readOneMessage);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      // console.error("Error fetching data:", error);
       return res
         .status(error.status || 500)
         .json({ error: error.message || "Internal server error" });
@@ -50,17 +50,30 @@ class MessageController {
     const { body, files } = req;
     // console.log(body, files);
 
+    const isReply = body.UserTujuanID ? true : false;
     let dataMessage = {
       ...body,
+      UserTujuanID: Number(body.UserTujuanID),
       TglDibuat: Number(body.TglDibuat),
-      UserID_dibuat: Number(body.UserID_dibuat),
+      UserID_dibuat: req.dataSession.UserID,
     };
 
-    let userIds = await UserRoleRepository.readAllPengurusID();
+    console.log(dataMessage, isReply);
+
+    let userIds = [];
+    // KALAU BUKAN REPLY, maka ambil semua idPengurus
+    if (!isReply) {
+      userIds = await UserRoleRepository.readAllPengurusID();
+    } else {
+      // KALAU REPLY, maka yg di push adalah id user tujuan saja
+      userIds.push({ userID: dataMessage.UserTujuanID });
+    }
     userIds.push({ userID: dataMessage.UserID_dibuat }); //menambah juga userID untuk user yg membuat data
     const judul = dataMessage.Judul;
     let linkFiles = ""; //berupa string
     console.log(files);
+
+    console.log(userIds);
 
     // // JIKA post terdapat files
     if (files && files.PesanFile) {
@@ -69,6 +82,8 @@ class MessageController {
       try {
         arrEmailUser = await Promise.all(
           userIds.map(async (user) => {
+            console.log(user);
+
             const readUser = await UserRepository.readOne(user.userID);
             return readUser ? readUser.email : null; // Assuming user has an 'email' field
           })
@@ -104,13 +119,17 @@ class MessageController {
       };
     }
 
+    // Menghapus atribut UserTujuanID
+    const { UserTujuanID, ...newDataMessage } = dataMessage;
+
+    // Tambahkan AllPengurusID ke dalam objek baru tanpa UserTujuanID
     dataMessage = {
-      ...dataMessage,
+      ...newDataMessage,
       AllPengurusID: userIds,
     };
 
     // Validasi data dari request body yang ingin di create
-    let { error } = Validator.createMessage(dataMessage);
+    let { error } = Validator.createMessage(dataMessage, isReply);
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }

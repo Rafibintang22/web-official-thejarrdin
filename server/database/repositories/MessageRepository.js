@@ -23,6 +23,7 @@ class MessageRepository {
         Judul: msg.Message.judul,
         DibuatOleh: msg.Message.User.nama,
         TglDibuat: msg.Message.tglDibuat,
+        IsRead: msg.isRead,
       }));
 
       // return findMessage;
@@ -52,6 +53,7 @@ class MessageRepository {
         Judul: msg.judul,
         DibuatOleh: msg.User.nama,
         TglDibuat: msg.tglDibuat,
+        // IsRead: msg.isRead,
       }));
 
       // return findMessage;
@@ -82,7 +84,7 @@ class MessageRepository {
         Id: findMessage.messageID,
         Judul: findMessage.judul,
         TglDibuat: findMessage.tglDibuat,
-        DibuatOleh: findMessage.User.nama,
+        DibuatOleh: { UserID: findMessage.User.userID, Nama: findMessage.User.nama },
         Pesan: findMessage.messageText,
         IsRead: findMessage.message_tujuans[0].isRead,
         File: findMessage.messageFile,
@@ -94,7 +96,47 @@ class MessageRepository {
     }
   }
 
-  static async create(dataInsert) {
+  // static async readOneWithReplies(messageID) {
+  //   try {
+  //     const findMessage = await MessageModel.findOne({
+  //       where: { messageID },
+  //       include: [
+  //         {
+  //           model: MessageModel,
+  //           as: "replies", // Self-referencing association
+  //           include: {
+  //             model: UserModel,
+  //           },
+  //         },
+  //         { model: UserModel },
+  //       ],
+  //     });
+
+  //     if (!findMessage) {
+  //       const newError = new Error("Data tidak ditemukan.");
+  //       newError.status = 404;
+  //       throw newError;
+  //     }
+
+  //     const transformedData = {
+  //       Id: findMessage.messageID,
+  //       Judul: findMessage.judul,
+  //       TglDibuat: findMessage.tglDibuat,
+  //       DibuatOleh: findMessage.User.nama,
+  //       Pesan: findMessage.messageText,
+  //       // IsRead: findMessage.message_tujuans[0].isRead,
+  //       File: findMessage.messageFile,
+  //     };
+
+  //     return transformedData;
+
+  //     // return findMessage;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
+
+  static async create(dataInsert, isReply) {
     const transaction = await jarrdinDB.transaction();
 
     try {
@@ -133,6 +175,62 @@ class MessageRepository {
       await transaction.commit();
 
       return newMessage;
+    } catch (error) {
+      await transaction.rollback();
+      console.error("Error creating Message:", error);
+      throw error;
+    }
+  }
+
+  static async replyMessage(dataMessage) {
+    const transaction = await jarrdinDB.transaction();
+    try {
+      const { OriginalMessageID, Judul, TglDibuat, Pesan, UserID_dibuat, PesanFile } = dataMessage;
+      if (!Judul || !TglDibuat || !Pesan) {
+        throw new Error("Data yang diperlukan tidak lengkap.");
+      }
+
+      // Create the reply message
+      const replyMessage = await MessageModel.create({
+        fiturID: 8, //8 adalah ID Fitur Aspirasi
+        pengirimID: UserID_dibuat, // ID of the user replying
+        parentMessageID: OriginalMessageID, // ID of the original message
+        judul: "RE: " + dataMessage.Judul, // Prefix with "RE:" to indicate a reply
+        messageText: dataMessage.Pesan,
+        messageFile: dataMessage.PesanFile,
+        tglDibuat: new Date(TglDibuat),
+      });
+
+      // BUAT MESSAGE ISREAD MENJADI DIBACA
+      let messageTujuan = await MessageTujuanModel.findOne({
+        where: { messageID: OriginalMessageID, penerimaID: UserID_dibuat },
+        raw: true,
+      });
+
+      let responseUpdate;
+      //jika isRead True
+      if (messageTujuan.isRead === 1) {
+        responseUpdate = await MessageTujuanModel.update(
+          { isRead: false, tglDibaca: null },
+          { where: { messageID: OriginalMessageID, penerimaID: UserID_dibuat } }
+        );
+      } else {
+        //Jika isread false
+        responseUpdate = await MessageTujuanModel.update(
+          { isRead: true, tglDibaca: new Date() },
+          { where: { messageID: OriginalMessageID, penerimaID: UserID_dibuat } }
+        );
+      }
+
+      if (!responseUpdate) {
+        const newError = new Error("Error update isRead");
+        newError.status = 500;
+        throw newError;
+      }
+
+      await transaction.commit();
+
+      return replyMessage;
     } catch (error) {
       await transaction.rollback();
       console.error("Error creating Message:", error);

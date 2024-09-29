@@ -8,9 +8,9 @@ import { urlServer } from "../utils/endpoint";
 import UseSessionCheck from "../utils/useSessionCheck";
 import columns from "../constaints/columnsTable";
 import DetailDataController from "../utils/detailDataController";
-import ModalDetail from "../components/ModalDetail";
 import HakAkses from "../utils/hakAkses";
 import ModalInsertAspirasi from "../components/ModalInsertAspirasi";
+import ModalDetailAspirasi from "../components/ModalDetailAspirasi";
 
 function MasukanAspirasi() {
   UseSessionCheck();
@@ -101,7 +101,7 @@ function MasukanAspirasi() {
               dataSource={dataTable}
               onChange={handleTableChange}
               pagination={pagination}
-              columns={columns(fieldDetail, setDetailOpen)}
+              columns={columns(fieldDetail, setDetailOpen, currTipeData)}
             />
           </div>
         </div>
@@ -114,7 +114,9 @@ function MasukanAspirasi() {
         />
       )}
 
-      {isDetailOpen === "Aspirasi" && <ModalDetail judulDetail={"Detail Masukan & Aspirasi"} />}
+      {isDetailOpen === "Aspirasi" && (
+        <ModalDetailAspirasi judulDetail={"Detail Masukan & Aspirasi"} />
+      )}
     </>
   );
 }

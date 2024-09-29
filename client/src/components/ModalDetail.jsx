@@ -4,8 +4,7 @@ import DetailDataController from "../utils/detailDataController";
 import axios from "axios";
 import { urlServer } from "../utils/endpoint";
 import formatDate from "../utils/formatDate";
-import { CheckOutlined, FileOutlined } from "@ant-design/icons";
-import TextArea from "antd/es/input/TextArea";
+import { FileOutlined } from "@ant-design/icons";
 
 // eslint-disable-next-line react/prop-types
 function ModalDetail({ judulDetail }) {
@@ -24,10 +23,7 @@ function ModalDetail({ judulDetail }) {
         },
       };
       try {
-        const response = await axios.get(
-          `${urlServer}/${isDetailOpen === "Aspirasi" ? "aspirasi/detail" : "data"}/${oneDataID}`,
-          headers
-        );
+        const response = await axios.get(`${urlServer}/data/${oneDataID}`, headers);
 
         console.log(response);
 
@@ -58,29 +54,6 @@ function ModalDetail({ judulDetail }) {
     fetchOneData();
   }, [isDetailOpen]);
 
-  const updateIsRead = async () => {
-    const body = {
-      MessageID: dataOne.Id,
-    };
-    const headers = {
-      headers: {
-        authorization: userSession?.AuthKey,
-      },
-    };
-    try {
-      const response = await axios.patch(`${urlServer}/aspirasi`, body, headers);
-      const resultIsRead = response.data.IsRead;
-
-      // Jika berhasil, langsung update dataOne untuk mengubah IsRead
-      setDataOne((prevData) => ({
-        ...prevData,
-        IsRead: resultIsRead, // Mengubah status pesan
-      }));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <Modal
       title={judulDetail}
@@ -88,24 +61,22 @@ function ModalDetail({ judulDetail }) {
       centered
       width={1000}
       open={isDetailOpen}
-      onOk={() => setDetailOpen(null, null)}
-      onCancel={() => setDetailOpen(null, null)}
+      onOk={() => {
+        setDetailOpen(null, null);
+      }}
+      onCancel={() => {
+        setDetailOpen(null, null);
+      }}
       footer={[
-        <>
-          <div className="d-flex w-100 justify-content-between">
-            <Button
-              key="isRead"
-              type={dataOne?.IsRead ? "primary" : ""}
-              icon={dataOne?.IsRead ? <CheckOutlined /> : false}
-              onClick={() => updateIsRead()}
-            >
-              {dataOne?.IsRead ? "Dibaca" : "Tandai untuk dibaca"}
-            </Button>
-            <Button key="tutup" type="primary" onClick={() => setDetailOpen(null, null)}>
-              Tutup
-            </Button>
-          </div>
-        </>,
+        <Button
+          key="tutup"
+          type="primary"
+          onClick={() => {
+            setDetailOpen(null, null);
+          }}
+        >
+          Tutup
+        </Button>,
       ]}
     >
       <div className="d-flex flex-column gap-3">
@@ -130,14 +101,12 @@ function ModalDetail({ judulDetail }) {
           <Input style={{ color: "#616161" }} value={dataOne?.DibuatOleh} disabled />
         </div>
 
-        {isDetailOpen !== "Aspirasi" && (
-          <div className="form-input text d-flex align-items-center">
-            <label htmlFor="" className="w-25">
-              Tujuan
-            </label>
-            <Input style={{ color: "#616161" }} value={dataOne?.UserTujuan} disabled />
-          </div>
-        )}
+        <div className="form-input text d-flex align-items-center">
+          <label htmlFor="" className="w-25">
+            Tujuan
+          </label>
+          <Input style={{ color: "#616161" }} value={dataOne?.UserTujuan} disabled />
+        </div>
 
         {dataOne?.File && dataOne?.File.length > 1 && (
           <div className="form-input text d-flex flex-column gap-3">
@@ -168,15 +137,6 @@ function ModalDetail({ judulDetail }) {
                 </Button>
               </div>
             )}
-          </div>
-        )}
-
-        {isDetailOpen === "Aspirasi" && (
-          <div className="form-input text d-flex align-items-start">
-            <label htmlFor="" className="d-flex w-25 gap-2">
-              Pesan
-            </label>
-            <TextArea style={{ color: "#616161" }} value={dataOne?.Pesan} disabled />
           </div>
         )}
       </div>

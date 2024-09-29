@@ -57,5 +57,6 @@ router.post(
   Authorization.decryption,
   MessageController.post
 );
+// router.post("/aspirasi/reply", Authorization.decryption, MessageController.reply);
 router.patch("/aspirasi", Authorization.decryption, MessageController.updateRead);
 module.exports = { router };

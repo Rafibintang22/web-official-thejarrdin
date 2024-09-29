@@ -66,7 +66,7 @@ class DataFiturController {
       ...body,
       FiturID: Number(body.FiturID),
       TglDibuat: Number(body.TglDibuat),
-      UserID_dibuat: Number(body.UserID_dibuat),
+      UserID_dibuat: req.dataSession.UserID,
       UserTujuan: body.UserTujuan.split(",").map((id) => Number(id)), // Convert IDs to numbers
       FileFolder: body.FileFolder || [],
     };
