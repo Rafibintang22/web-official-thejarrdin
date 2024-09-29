@@ -47,9 +47,7 @@ function MasukanAspirasi() {
       };
       try {
         const response = await axios.get(
-          `${urlServer}/data/${Fitur["Aspirasi"]}/${
-            currTipeData === "untukSaya" ? "untukUser" : "dibuatUser"
-          }`,
+          `${urlServer}/aspirasi/${currTipeData === "untukSaya" ? "untukUser" : "dibuatUser"}`,
           headers
         );
         console.log(response);

@@ -7,6 +7,25 @@ const { uploadFileGdrive, createFolder } = require("../utils/uploadFileGdrive");
 const { Validator } = require("../utils/validator");
 
 class MessageController {
+  static async getAll(req, res) {
+    const Tipe = req.params.Tipe;
+    const UserID = req.dataSession.UserID;
+
+    try {
+      // if(Tipe === "untukUser"){
+
+      // }
+
+      if (Tipe === "dibuatUser") {
+        const readAspirasi = await MessageRepository.readAllByPengirimID(UserID);
+        return res.status(200).json(readAspirasi);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
   static async post(req, res) {
     const { body, files } = req;
     // console.log(body, files);

@@ -3,6 +3,35 @@ const { MessageModel, UserRoleModel, UserModel, MessageTujuanModel } = require("
 const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
 
 class MessageRepository {
+  static async readAllByPengirimID(pengirimID) {
+    try {
+      const findMessage = await MessageModel.findAll({
+        where: { pengirimID: pengirimID },
+        include: [
+          { model: UserModel, required: true, raw: true },
+          {
+            model: MessageTujuanModel,
+            required: true,
+            raw: true,
+            include: [{ model: UserModel, required: true, raw: true }],
+          },
+        ],
+      });
+
+      const transformedData = findMessage.map((msg) => ({
+        Id: msg.messageID,
+        Judul: msg.judul,
+        DibuatOleh: msg.User.nama,
+        TglDibuat: msg.tglDibuat,
+      }));
+
+      // return findMessage;
+      return transformedData;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async create(dataInsert) {
     const transaction = await jarrdinDB.transaction();
 
