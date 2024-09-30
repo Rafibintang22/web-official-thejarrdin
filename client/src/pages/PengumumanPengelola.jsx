@@ -106,6 +106,7 @@ function PengumumanPengelola() {
 
           <div className="w-100 p-4">
             <Table
+              scroll={{ x: "max-content" }}
               loading={loading}
               dataSource={dataTable}
               onChange={handleTableChange}
