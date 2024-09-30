@@ -110,11 +110,11 @@ function ModalDetailAspirasi({ judulDetail, tipeDetail }) {
         open={isDetailOpen}
         onOk={() => {
           setDetailOpen(null, null);
-          window.location.reload();
+          tipeDetail === "untukSaya" ? window.location.reload() : {};
         }}
         onCancel={() => {
           setDetailOpen(null, null);
-          window.location.reload();
+          tipeDetail === "untukSaya" ? window.location.reload() : {};
         }}
         footer={[
           <>
@@ -139,7 +139,7 @@ function ModalDetailAspirasi({ judulDetail, tipeDetail }) {
                   type={tipeDetail === "untukSaya" ? "default" : "primary"}
                   onClick={() => {
                     setDetailOpen(null, null);
-                    window.location.reload();
+                    tipeDetail === "untukSaya" ? window.location.reload() : {};
                   }}
                 >
                   Tutup

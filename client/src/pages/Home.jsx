@@ -131,15 +131,26 @@ function Home() {
                   }}
                 >
                   {/* <FontAwesomeIcon icon={akses.icon} size="2xl" /> */}
-                  <img width={35} height={35} src={akses.icon} alt={`img-icon-${j}`} />
-                  <p className="text-center fw-medium">{akses.label}</p>
+                  <img
+                    className="icon-hexagon"
+                    width={35}
+                    height={35}
+                    src={akses.icon}
+                    alt={`img-icon-${j}`}
+                  />
+                  <p className="text-hexagon text-center fw-medium">{akses.label}</p>
                 </div>
               ))}
             </div>
           ))}
         </div>
         <div className="footer container d-flex w-100 justify-content-between">
-          <img src={threelogo} alt="3 logo" style={{ width: "250px", height: "50px" }} />
+          <img
+            className="img-threeLogo"
+            src={threelogo}
+            alt="3 logo"
+            style={{ width: "250px", height: "50px" }}
+          />
           <div
             className="d-flex btn-home-logout justify-content-center align-items-center rounded-circle border border-2"
             style={{ height: "45px", width: "45px", cursor: "pointer" }}

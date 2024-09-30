@@ -86,7 +86,11 @@ function MasukanAspirasi() {
             nameInsert={"Tambah Masukan & Aspirasi"}
             setInsertBtn={setModalInsert}
           />
-          <FilterTable />
+          <FilterTable
+            isInsert={hasPengurus || hasPemilikUnit ? true : false}
+            nameInsert={"Tambah Masukan & Aspirasi"}
+            setInsertBtn={setModalInsert}
+          />
           <Menu
             onClick={(e) => setCurrTipeData(e.key)}
             selectedKeys={[currTipeData]}

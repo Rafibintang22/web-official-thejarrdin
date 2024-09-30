@@ -90,7 +90,11 @@ function Pengumuman() {
             nameInsert={"Tambah Pengumuman"}
             setInsertBtn={setModalInsert}
           />
-          <FilterTable />
+          <FilterTable
+            isInsert={hasPengurus}
+            nameInsert={"Tambah Pengumuman"}
+            setInsertBtn={setModalInsert}
+          />
           <Menu
             onClick={(e) => setCurrTipeData(e.key)}
             selectedKeys={[currTipeData]}
@@ -101,6 +105,7 @@ function Pengumuman() {
 
           <div className="w-100 p-4">
             <Table
+              scroll={{ x: "max-content" }}
               loading={loading}
               dataSource={dataTable}
               onChange={handleTableChange}

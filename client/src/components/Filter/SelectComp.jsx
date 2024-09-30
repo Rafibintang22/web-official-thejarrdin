@@ -3,7 +3,7 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 function SelectComp() {
   return (
     <div>
-      <FormControl sx={{ m: 1, minWidth: 250 }} size="small">
+      <FormControl sx={{ m: 1, minWidth: 250 }} size="small" className="select-filter">
         <InputLabel id="demo-simple-select-autowidth-label">Sort: Berdasarkan</InputLabel>
         <Select
           labelId="demo-simple-select-autowidth-label"

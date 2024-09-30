@@ -91,7 +91,11 @@ function Laporan() {
             nameInsert={"Tambah Data Laporan"}
             setInsertBtn={setModalInsert}
           />
-          <FilterTable />
+          <FilterTable
+            isInsert={hasPengurus ? true : false}
+            nameInsert={"Tambah Data Laporan"}
+            setInsertBtn={setModalInsert}
+          />
           <Menu
             onClick={(e) => setCurrTipeData(e.key)}
             selectedKeys={[currTipeData]}

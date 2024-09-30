@@ -1,5 +1,5 @@
 import { PhoneOutlined, UserOutlined } from "@ant-design/icons";
-import { Alert, Button, ConfigProvider, Input, Menu, Modal, Result, Spin } from "antd";
+import { Alert, Button, ConfigProvider, Input, Menu, Modal, Result } from "antd";
 import { threelogo } from "../../public/assets/images";
 import { useEffect, useState } from "react";
 import { inputValidator } from "../utils/inputValidator";
@@ -136,8 +136,8 @@ function Login() {
   };
 
   const login = async (currIsActive) => {
+    setLoading(true); // Set loading ke true saat login dijalankan
     try {
-      setLoading(true); // Set loading ke true saat login dijalankan
       if (currIsActive === 1) {
         const validateFunction = inputValidator["Login"];
         validateFunction(dataLogin);
@@ -170,11 +170,12 @@ function Login() {
           // Simpan userSession di localStorage
           localStorage.setItem("userSession", JSON.stringify(userSession));
         }
-        setLoading(false);
         window.location.href = `${urlClient}/`; //enggunakan window.location.href karena agar me reload halaman tujuan;
         console.log(response);
+        setLoading(false);
       }
     } catch (error) {
+      setLoading(false);
       if (error?.response?.data?.error) {
         setValidationStatus(error.path, error.response.data.error);
       } else {
@@ -200,7 +201,7 @@ function Login() {
         </Modal>
       )}
       <div
-        className="container d-flex justify-content-center align-items-center flex-column flex-wrap h-100 w-25 gap-5"
+        className="container-form-login container d-flex justify-content-center align-items-center flex-column h-100 w-25 gap-5"
         style={{ zIndex: "99" }}
       >
         {otpFromServer && (

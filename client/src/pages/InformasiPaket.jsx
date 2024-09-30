@@ -93,7 +93,11 @@ function InformasiPaket() {
             nameInsert={"Tambah Informasi Paket"}
             setInsertBtn={setModalInsert}
           />
-          <FilterTable />
+          <FilterTable
+            isInsert={hasPengelola ? true : false}
+            nameInsert={"Tambah Informasi Paket"}
+            setInsertBtn={setModalInsert}
+          />
           <Menu
             onClick={(e) => setCurrTipeData(e.key)}
             selectedKeys={[currTipeData]}

@@ -109,12 +109,12 @@ function ModalDetail({ judulDetail }) {
         </div>
 
         {dataOne?.File && dataOne?.File.length > 1 && (
-          <div className="form-input text d-flex flex-column gap-3">
+          <div className="form-input text d-flex flex-column gap-3 ">
             <label htmlFor="" className="w-25">
               File/folder dokumen
             </label>
             {Array.isArray(dataOne?.File) ? (
-              <div className="d-flex gap-3">
+              <div className="d-flex gap-3 flex-wrap">
                 {dataOne?.File.map((url, i) => (
                   <Button
                     shape="rounded"

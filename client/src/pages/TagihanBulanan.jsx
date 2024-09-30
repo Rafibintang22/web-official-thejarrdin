@@ -89,7 +89,11 @@ function TagihanBulanan() {
             nameInsert={"Tambah Tagihan Bulanan"}
             setInsertBtn={setModalInsert}
           />
-          <FilterTable />
+          <FilterTable
+            isInsert={hasPengelola ? true : false}
+            nameInsert={"Tambah Tagihan Bulanan"}
+            setInsertBtn={setModalInsert}
+          />
           <Menu
             onClick={(e) => setCurrTipeData(e.key)}
             selectedKeys={[currTipeData]}

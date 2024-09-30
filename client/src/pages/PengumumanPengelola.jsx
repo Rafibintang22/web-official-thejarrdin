@@ -91,7 +91,11 @@ function PengumumanPengelola() {
             nameInsert={"Tambah Pengumuman Pengelola"}
             setInsertBtn={setModalInsert}
           />
-          <FilterTable />
+          <FilterTable
+            isInsert={hasPengelola ? true : false}
+            nameInsert={"Tambah Pengumuman Pengelola"}
+            setInsertBtn={setModalInsert}
+          />
           <Menu
             onClick={(e) => setCurrTipeData(e.key)}
             selectedKeys={[currTipeData]}
