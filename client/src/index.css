@@ -221,6 +221,13 @@ body {
   .btn-sidebar-mobile {
     display: block !important;
   }
+
+  .form-input {
+    flex-direction: column;
+  }
+  .form-input > label {
+    width: 100% !important;
+  }
 }
 
 /* Mobile Devices (Landscape) */
