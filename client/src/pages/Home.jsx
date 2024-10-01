@@ -20,7 +20,7 @@ function Home() {
 
   useEffect(() => {
     const transformedRole = () => {
-      const transformedData = dataUser.Role.map((data) => data.Nama.replace(/\s+/g, "")); // Menghapus semua spasi);
+      const transformedData = dataUser?.Role.map((data) => data.Nama.replace(/\s+/g, "")); // Menghapus semua spasi);
       const arr = multiRoleAkses(transformedData);
       const arr2 = bagiArrayAkses(arr);
 
@@ -85,7 +85,7 @@ function Home() {
             <List
               size="small"
               className="list-role text-light"
-              header={<div>Peran Anda saat ini sebagai </div>}
+              header={<div>Peran Anda saat ini sebagai :</div>}
               bordered
               dataSource={dataUser?.Role}
               renderItem={(item) => (

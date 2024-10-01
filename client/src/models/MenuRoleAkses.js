@@ -147,10 +147,10 @@ export function multiRoleAkses(roles) {
   };
 
   // Gabungkan akses dari semua role yang diberikan
-  const aksesGabungan = roles.flatMap((role) => roleAksesMapping[role] || []);
+  const aksesGabungan = roles?.flatMap((role) => roleAksesMapping[role] || []);
 
   // Hilangkan duplikasi berdasarkan label
-  const aksesUnik = aksesGabungan.reduce((acc, current) => {
+  const aksesUnik = aksesGabungan?.reduce((acc, current) => {
     const found = acc.find((item) => item.label === current.label);
     if (!found) {
       acc.push(current);
@@ -162,11 +162,11 @@ export function multiRoleAkses(roles) {
 }
 
 export const bagiArrayAkses = (listAkses) => {
-  const panjang = listAkses.length;
+  const panjang = listAkses?.length;
   const tengah = Math.ceil(panjang / 2);
 
-  const bagianPertama = listAkses.slice(0, tengah);
-  const bagianKedua = listAkses.slice(tengah);
+  const bagianPertama = listAkses?.slice(0, tengah);
+  const bagianKedua = listAkses?.slice(tengah);
 
   return [bagianPertama, bagianKedua];
 };

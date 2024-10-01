@@ -12,7 +12,7 @@ function Sidebar() {
   const [rolesUser, setRolesUser] = useState([]);
   useEffect(() => {
     const transformedRole = () => {
-      const transformedData = dataUser.Role.map((data) => data.Nama.replace(/\s+/g, "")); // Menghapus semua spasi);
+      const transformedData = dataUser?.Role.map((data) => data.Nama.replace(/\s+/g, "")); // Menghapus semua spasi);
       const arr = multiRoleAkses(transformedData);
 
       setRolesUser(arr);
