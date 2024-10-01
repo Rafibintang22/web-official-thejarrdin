@@ -78,30 +78,31 @@ function Home() {
   };
   return (
     <>
-      <div className="container-home d-flex w-100 h-100 flex-column">
-        <List
-          size="small"
-          className="list-role text-light position-absolute"
-          style={{ top: 100, left: 50 }}
-          header={<div>Peran Anda saat ini sebagai :</div>}
-          bordered
-          dataSource={dataUser?.Role}
-          renderItem={(item) => (
-            <>
-              <Popover
-                placement="right"
-                title={<span>Fitur yang dimiliki:</span>}
-                content={contentInfoRole(item.Nama)}
-              >
-                <List.Item style={{ cursor: "help" }} className="text-light ms-3">
-                  <p>({item.Nama})</p>
-                </List.Item>
-              </Popover>
-            </>
-          )}
-        />
-        <div className="header bg-theme shadow p-3 ps-5 pe-5 d-flex w-100 justify-content-between align-items-center">
-          <h5 className="text-light fw-medium">Selamat Datang, {dataUser?.Nama}</h5>
+      <div className="container-home d-flex w-100 h-100 flex-column p-4">
+        <div className="header container d-flex w-100 justify-content-between align-items-start">
+          <div className="d-flex flex-column gap-3">
+            <h5 className="text-light fw-medium">Selamat Datang, {dataUser?.Nama}</h5>
+            <List
+              size="small"
+              className="list-role text-light"
+              header={<div>Peran Anda saat ini sebagai :</div>}
+              bordered
+              dataSource={dataUser?.Role}
+              renderItem={(item) => (
+                <>
+                  <Popover
+                    placement="right"
+                    title={<span>Fitur yang dimiliki:</span>}
+                    content={contentInfoRole(item.Nama)}
+                  >
+                    <List.Item style={{ cursor: "help" }} className="text-light ms-3">
+                      <p>({item.Nama})</p>
+                    </List.Item>
+                  </Popover>
+                </>
+              )}
+            />
+          </div>
           <Badge count={0}>
             <Avatar
               style={{ cursor: "pointer" }}
@@ -143,7 +144,7 @@ function Home() {
             </div>
           ))}
         </div>
-        <div className="footer p-3 ps-5 pe-5 d-flex w-100 justify-content-between align-items-center">
+        <div className="footer container d-flex w-100 justify-content-between align-items-center">
           <img
             className="img-threeLogo"
             src={threelogo}
@@ -151,7 +152,7 @@ function Home() {
             style={{ width: "250px", height: "50px" }}
           />
           <div
-            className="d-flex border border-top btn-home-logout justify-content-center align-items-center rounded-circle border border-2"
+            className="d-flex btn-home-logout justify-content-center align-items-center rounded-circle border border-2"
             style={{ height: "45px", width: "45px", cursor: "pointer" }}
             onClick={() => navigate("/logout")}
           >

@@ -84,13 +84,16 @@ body {
   z-index: 1; /* Letakkan overlay di atas background */
 }
 
-.bg-theme2 {
-  background-color: var(--theme2);
-  transition: 0.5s;
+.bg-theme {
+  background-color: var(--theme);
 }
 
-.bg-theme2:hover {
-  background-color: var(--theme2Hover);
+.bg-themeTua {
+  background-color: var(--themeTua);
+}
+
+.bg-theme2 {
+  background-color: var(--theme2);
 }
 
 .container .hexagonArea.last {
@@ -237,6 +240,9 @@ body {
 
   .list-role {
     font-size: smaller;
+    /* UNTUK HOME BARU */
+    top: 6rem !important;
+    left: 2.5rem !important;
   }
 }
 
