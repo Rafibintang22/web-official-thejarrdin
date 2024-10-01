@@ -61,12 +61,65 @@ function ModalInsert({ currState, setState, judulInsert }) {
   const handleSelectChange = (value) => {
     if (value.includes("Pilih Semua")) {
       const allValuesExceptPilihSemua = opsiUser
-        .filter((option) => option.value !== "Pilih Semua") // Filter out "Pilih Semua"
+        .filter(
+          (option) =>
+            option.value !== "Pilih Semua" &&
+            option.value !== "Pilih Semua Pengurus" &&
+            option.value !== "Pilih Semua Pengelola" &&
+            option.value !== "Pilih Semua Pemilik Unit" &&
+            option.value !== "Pilih Semua Pelaku Komersil"
+        ) // Filter out "Pilih Semua"
         .map((option) => option.value); // Get all other values
 
       setFormData((prevData) => ({
         ...prevData,
         UserTujuan: allValuesExceptPilihSemua,
+      }));
+    } else if (value.includes("Pilih Semua Pengurus")) {
+      // Filter opsiUser yang memiliki role dengan nama "Pengurus"
+      const usersWithPengurusRole = opsiUser
+        .filter((option) => option.role && option.role.some((role) => role.Nama === "Pengurus"))
+        .map((option) => option.value); // Ambil nilai (user ID)
+
+      // Update UserTujuan dengan user yang memiliki role "Pengurus"
+      setFormData((prevData) => ({
+        ...prevData,
+        UserTujuan: usersWithPengurusRole,
+      }));
+    } else if (value.includes("Pilih Semua Pengelola")) {
+      // Filter opsiUser yang memiliki role dengan nama "Pengelola"
+      const usersWithPengelolaRole = opsiUser
+        .filter((option) => option.role && option.role.some((role) => role.Nama === "Pengelola"))
+        .map((option) => option.value);
+
+      // Update UserTujuan dengan user yang memiliki role "Pengelola"
+      setFormData((prevData) => ({
+        ...prevData,
+        UserTujuan: usersWithPengelolaRole,
+      }));
+    } else if (value.includes("Pilih Semua Pemilik Unit")) {
+      // Filter opsiUser yang memiliki role dengan nama "Pemilik Unit"
+      const usersWithPemilikUnitRole = opsiUser
+        .filter((option) => option.role && option.role.some((role) => role.Nama === "Pemilik Unit"))
+        .map((option) => option.value);
+
+      // Update UserTujuan dengan user yang memiliki role "Pemilik Unit"
+      setFormData((prevData) => ({
+        ...prevData,
+        UserTujuan: usersWithPemilikUnitRole,
+      }));
+    } else if (value.includes("Pilih Semua Pelaku Komersil")) {
+      // Filter opsiUser yang memiliki role dengan nama "Pelaku Komersil"
+      const usersWithPelakuKomersilRole = opsiUser
+        .filter(
+          (option) => option.role && option.role.some((role) => role.Nama === "Pelaku Komersil")
+        )
+        .map((option) => option.value);
+
+      // Update UserTujuan dengan user yang memiliki role "Pelaku Komersil"
+      setFormData((prevData) => ({
+        ...prevData,
+        UserTujuan: usersWithPelakuKomersilRole,
       }));
     } else {
       setFormData((prevData) => ({
@@ -99,19 +152,26 @@ function ModalInsert({ currState, setState, judulInsert }) {
       try {
         const response = await axios.get(`${urlServer}/user`, headers);
         const responseData = response.data;
-
         const currentUserID = userSession?.dataUser?.UserID;
 
         // Transform the data and filter out the current userID
         const transformedData = responseData
-          .filter((data) => data.userID !== currentUserID) // Exclude the current userID
+          .filter((data) => data.UserID !== currentUserID) // Exclude the current userID
           .map((data) => ({
-            value: data.userID,
-            label: data.nama,
+            value: data.UserID,
+            label: data.Nama,
+            role: data.Role,
           }));
 
         // Set the opsiUser state while keeping "Pilih Semua" as the first option
-        setOpsiUser([{ value: "Pilih Semua", label: "Pilih Semua" }, ...transformedData]);
+        setOpsiUser([
+          { value: "Pilih Semua", label: "Pilih Semua" },
+          { value: "Pilih Semua Pengurus", label: "Pilih Semua Pengurus" },
+          { value: "Pilih Semua Pengelola", label: "Pilih Semua Pengelola" },
+          { value: "Pilih Semua Pemilik Unit", label: "Pilih Semua Pemilik Unit" },
+          { value: "Pilih Semua Pelaku Komersil", label: "Pilih Semua Pelaku Komersil" },
+          ...transformedData,
+        ]);
       } catch (error) {
         console.log(error);
       }

@@ -3,9 +3,26 @@ const { UserModel, RoleModel, UserRoleModel } = require("../models");
 class UserRepository {
   static async readAll() {
     try {
-      const findUser = await UserModel.findAll();
+      const findUser = await UserModel.findAll({
+        include: {
+          model: UserRoleModel,
+          required: true,
+          include: { model: RoleModel, requred: true },
+        },
+      });
 
-      return findUser;
+      const transformedData = findUser.map((user) => ({
+        UserID: user.userID,
+        Nama: user.nama,
+        Email: user.email,
+        NoTelp: user.noTelp,
+        Role: user.user_roles.map((role) => ({
+          Nama: role.Role.nama,
+          RoleID: role.Role.roleID,
+        })),
+      }));
+
+      return transformedData;
     } catch (error) {
       throw error;
     }

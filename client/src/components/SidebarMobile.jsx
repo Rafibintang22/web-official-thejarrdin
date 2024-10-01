@@ -1,4 +1,4 @@
-import { Button, ConfigProvider, Drawer, Menu } from "antd";
+import { Button, ConfigProvider, Menu } from "antd";
 import { multiRoleAkses } from "../models/menuRoleAkses";
 import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
@@ -46,7 +46,7 @@ function SidebarMobile() {
   console.log(isSidebarMobileOpen, "SIDEBARMOBILE");
 
   return (
-    <div className="sidebar-mobile h-100 pt-3 pb-3 d-flex flex-column justify-content-between gap-3 bg-transparent w-100">
+    <div className="sidebar-mobile h-100 pt-3 pb-3 d-flex flex-column justify-content-between gap-3 w-100">
       <ConfigProvider
         theme={{
           token: {
