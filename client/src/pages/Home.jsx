@@ -79,12 +79,12 @@ function Home() {
   return (
     <>
       <div className="container-home d-flex w-100 h-100 flex-column p-4">
-        <div className="header container d-flex w-100 justify-content-between">
+        <div className="header container d-flex w-100 justify-content-between align-items-start">
           <div className="d-flex flex-column gap-3">
             <h5 className="text-light fw-medium">Selamat Datang, {dataUser?.Nama}</h5>
             <List
               size="small"
-              className="text-light"
+              className="list-role text-light"
               header={<div>Peran Anda saat ini sebagai </div>}
               bordered
               dataSource={dataUser?.Role}
@@ -144,7 +144,7 @@ function Home() {
             </div>
           ))}
         </div>
-        <div className="footer container d-flex w-100 justify-content-between">
+        <div className="footer container d-flex w-100 justify-content-between align-items-center">
           <img
             className="img-threeLogo"
             src={threelogo}

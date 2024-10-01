@@ -12,6 +12,8 @@ import columns from "../constaints/columnsTable";
 import DetailDataController from "../utils/detailDataController";
 import ModalDetail from "../components/ModalDetail";
 import HakAkses from "../utils/hakAkses";
+import toogleSidebarMobile from "../utils/toogleSidebarMobile";
+import SidebarMobile from "../components/SidebarMobile";
 
 function PengumumanPengelola() {
   UseSessionCheck();
@@ -20,6 +22,7 @@ function PengumumanPengelola() {
   const fieldDetail = "PengumumanPengelola";
   const userSession = JSON.parse(localStorage.getItem("userSession"));
   const { hasPengelola } = HakAkses();
+  const { isSidebarMobileOpen } = toogleSidebarMobile();
   console.log(hasPengelola);
 
   const menuInsert = [
@@ -82,50 +85,55 @@ function PengumumanPengelola() {
 
   return (
     <>
-      <div className="container-main w-100 d-flex">
-        <Sidebar />
-        <div className="container-content w-100 h-100 d-flex flex-column bg-light">
-          <HeaderKonten
-            judul={"Data Pengumuman Pengelola"}
-            isInsert={hasPengelola ? true : false}
-            nameInsert={"Tambah Pengumuman Pengelola"}
-            setInsertBtn={setModalInsert}
-          />
-          <FilterTable
-            isInsert={hasPengelola ? true : false}
-            nameInsert={"Tambah Pengumuman Pengelola"}
-            setInsertBtn={setModalInsert}
-          />
-          <Menu
-            onClick={(e) => setCurrTipeData(e.key)}
-            selectedKeys={[currTipeData]}
-            mode="horizontal"
-            items={menuInsert}
-            className="d-flex w-100 justify-content-start"
-          />
+      {!isSidebarMobileOpen && (
+        <>
+          <div className="container-main w-100 d-flex">
+            <Sidebar />
+            <div className="container-content w-100 h-100 d-flex flex-column bg-light">
+              <HeaderKonten
+                judul={"Data Pengumuman Pengelola"}
+                isInsert={hasPengelola ? true : false}
+                nameInsert={"Tambah Pengumuman Pengelola"}
+                setInsertBtn={setModalInsert}
+              />
+              <FilterTable
+                isInsert={hasPengelola ? true : false}
+                nameInsert={"Tambah Pengumuman Pengelola"}
+                setInsertBtn={setModalInsert}
+              />
+              <Menu
+                onClick={(e) => setCurrTipeData(e.key)}
+                selectedKeys={[currTipeData]}
+                mode="horizontal"
+                items={menuInsert}
+                className="d-flex w-100 justify-content-start"
+              />
 
-          <div className="w-100 p-4">
-            <Table
-              scroll={{ x: "max-content" }}
-              loading={loading}
-              dataSource={dataTable}
-              onChange={handleTableChange}
-              pagination={pagination}
-              columns={columns(fieldDetail, setDetailOpen)}
-            />
+              <div className="w-100 p-4">
+                <Table
+                  scroll={{ x: "max-content" }}
+                  loading={loading}
+                  dataSource={dataTable}
+                  onChange={handleTableChange}
+                  pagination={pagination}
+                  columns={columns(fieldDetail, setDetailOpen)}
+                />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      {modalInsert && (
-        <ModalInsert
-          currState={modalInsert}
-          setState={setModalInsert}
-          judulInsert={"Tambah Pengumuman Pengelola"}
-        />
+          {modalInsert && (
+            <ModalInsert
+              currState={modalInsert}
+              setState={setModalInsert}
+              judulInsert={"Tambah Pengumuman Pengelola"}
+            />
+          )}
+          {isDetailOpen === "PengumumanPengelola" && (
+            <ModalDetail judulDetail={"Detail Pengumuman Pengelola"} />
+          )}
+        </>
       )}
-      {isDetailOpen === "PengumumanPengelola" && (
-        <ModalDetail judulDetail={"Detail Pengumuman Pengelola"} />
-      )}
+      {isSidebarMobileOpen && <SidebarMobile />}
     </>
   );
 }

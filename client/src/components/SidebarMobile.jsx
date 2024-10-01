@@ -1,4 +1,4 @@
-import { Button, ConfigProvider } from "antd";
+import { Button, ConfigProvider, Drawer, Menu } from "antd";
 import { multiRoleAkses } from "../models/menuRoleAkses";
 import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
@@ -43,34 +43,41 @@ function SidebarMobile() {
     setIsSidebarMobileOpen(isSidebarMobileOpen);
   };
 
+  console.log(isSidebarMobileOpen, "SIDEBARMOBILE");
+
   return (
-    <div
-      className="sidebar h-100 pt-3 pb-3 d-flex flex-column justify-content-between gap-3 w-100"
-      style={{
-        backgroundColor: "#F1F6F2",
-      }}
-    >
+    <div className="sidebar-mobile h-100 pt-3 pb-3 d-flex flex-column justify-content-between gap-3 bg-transparent w-100">
       <ConfigProvider
         theme={{
           token: {
-            colorBgContainer: "#F1F6F2",
-            controlItemBgActive: "#ffffff",
+            colorBgContainer: "#FFFFFF",
+            controlItemBgActive: "#F1F6F2",
           },
         }}
       >
         <div className="head-sidebar ps-4 pe-3 d-flex flex-column gap-4">
-          <div className="d-flex justify-content-between">
-            {!isSidebarMobileOpen && (
-              <div className="d-flex flex-column">
-                <p>Selamat datang,</p>
-                <p className="fw-semibold">{dataUser?.Nama}</p>
-              </div>
-            )}
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="d-flex flex-column text-dark">
+              <p>Selamat datang,</p>
+              <p className="fw-semibold">{dataUser?.Nama}</p>
+            </div>
             <Button type="primary" onClick={toggleisSidebarMobileOpen}>
               {isSidebarMobileOpen ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             </Button>
           </div>
         </div>
+        <Menu
+          className="h-100 d-flex flex-column gap-3"
+          mode="inline"
+          theme="light"
+          inlineisSidebarOpen={isSidebarMobileOpen}
+          items={itemsMenu}
+          defaultSelectedKeys={[window.location.pathname]}
+          onClick={({ key }) => {
+            toggleisSidebarMobileOpen();
+            navigate(key);
+          }}
+        />
         <Button
           className="ms-4 me-3"
           type="primary"
@@ -79,7 +86,7 @@ function SidebarMobile() {
           onClick={() => navigate("/logout")}
         >
           <LogoutOutlined />
-          {!isSidebarMobileOpen && "Keluar"}
+          Keluar
         </Button>{" "}
       </ConfigProvider>
     </div>

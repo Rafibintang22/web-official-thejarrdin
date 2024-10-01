@@ -181,10 +181,11 @@ body {
   }
 
   .img-threeLogo {
-    width: 150px; /* Adjust the width for mobile */
-    height: 30px; /* Adjust the height for mobile */
+    width: 200px !important; /* Adjust the width for mobile */
+    height: 40px !important; /* Adjust the height for mobile */
   }
 
+  /* MAIN CONTENT */
   .filter-content {
     flex-direction: column;
     justify-content: start;
@@ -228,6 +229,15 @@ body {
   .form-input > label {
     width: 100% !important;
   }
+  /* END MAIN CONTENT */
+
+  h5 {
+    font-size: medium;
+  }
+
+  .list-role {
+    font-size: smaller;
+  }
 }
 
 /* Mobile Devices (Landscape) */
@@ -245,6 +255,52 @@ body {
   .container-form-login {
     width: 50% !important;
   }
+
+  /* MAIN CONTENT */
+  .filter-content {
+    flex-direction: column;
+    justify-content: start;
+  }
+
+  .css-op7nof-MuiFormControl-root {
+    margin: 0 !important;
+  }
+
+  .container-form-login {
+    width: 100% !important;
+  }
+
+  .header-content {
+    justify-content: start !important;
+    gap: 0.5rem;
+  }
+  .header-item {
+    display: none !important;
+  }
+  .filter-item.btn-insert {
+    display: block !important;
+  }
+  .input-dateRangePicker {
+    width: 100% !important;
+  }
+  .select-filter {
+    width: 100%;
+  }
+
+  .sidebar {
+    display: none !important;
+  }
+  .btn-sidebar-mobile {
+    display: block !important;
+  }
+
+  .form-input {
+    flex-direction: column;
+  }
+  .form-input > label {
+    width: 100% !important;
+  }
+  /* END MAIN CONTENt */
 }
 
 /* END MEDIA VERSION */

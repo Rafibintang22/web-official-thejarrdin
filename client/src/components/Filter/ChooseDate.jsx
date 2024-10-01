@@ -3,14 +3,14 @@ import { DateRangePicker } from "react-date-range";
 import format from "date-fns/format";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
-import { addDays } from "date-fns";
+import { addYears } from "date-fns";
 
 const ChooseDate = () => {
-  // Date state
+  // Date state for one year range
   const [range, setRange] = useState([
     {
-      startDate: addDays(new Date(), -7),
-      endDate: addDays(new Date(), -1),
+      startDate: addYears(new Date(), -1), // One year ago from today
+      endDate: new Date(), // Today's date
       key: "selection",
     },
   ]);
@@ -31,6 +31,28 @@ const ChooseDate = () => {
     return () => {
       document.removeEventListener("keydown", hideOnEscape, true);
       document.removeEventListener("click", hideOnClickOutside, true);
+    };
+  }, []);
+
+  const [direction, setDirection] = useState("horizontal"); // Default to horizontal
+
+  // Check window size and adjust layout direction
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setDirection("vertical"); // Use vertical layout for mobile
+      } else {
+        setDirection("horizontal"); // Use horizontal layout for larger screens
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    // Initial check on component mount
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -79,7 +101,7 @@ const ChooseDate = () => {
 
         <div
           className="position-absolute shadow rounded"
-          style={{ zIndex: "999", right: 0 }}
+          style={{ zIndex: "999", right: 25 }}
           ref={refOne} // Set the reference to the calendar wrapper
         >
           {open && (
@@ -89,7 +111,7 @@ const ChooseDate = () => {
               moveRangeOnFirstSelection={false}
               ranges={range}
               months={2}
-              direction="horizontal"
+              direction={direction}
               className="calendarElement"
               rangeColors={["#399051", "#0a7e66"]}
             />
