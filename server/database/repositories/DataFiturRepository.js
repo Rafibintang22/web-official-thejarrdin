@@ -3,6 +3,52 @@ const { DatabaseManager } = require("../../config/DatabaseManager");
 const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
 
 class DataFiturRepository {
+  static async readAllUntukUser(userID) {
+    try {
+      let findDataFitur;
+      findDataFitur = await UserModel.findAll({
+        where: { userID: userID },
+        include: [
+          {
+            model: UserTujuanModel,
+            required: true,
+            include: [
+              {
+                model: DataFiturModel,
+                required: true,
+                include: [
+                  {
+                    model: UserModel,
+                    required: true,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+
+      if (!findDataFitur || !findDataFitur.length === 0 || !findDataFitur[0]?.user_tujuans) {
+        return [];
+      }
+
+      const transformedData = findDataFitur[0]?.user_tujuans.map((data) => ({
+        Id: data.DataFitur.dataFiturID,
+        FiturID: data.DataFitur.fiturID,
+        Judul: data.DataFitur.judul,
+        DibuatOleh: data.DataFitur.User.nama,
+        TglDibuat: data.DataFitur.tglDibuat,
+        IsRead: data.isRead,
+      }));
+
+      return transformedData;
+
+      // return findDataFitur;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async readAllByFiturIdUntukUser(userID, fiturID) {
     try {
       let findDataFitur;
@@ -236,6 +282,20 @@ class DataFiturRepository {
     } catch (error) {
       await transaction.rollback();
       console.error("Error deleting DataFitur:", error);
+      throw error;
+    }
+  }
+
+  static async updateIsRead(userID, dataFiturID) {
+    try {
+      await UserTujuanModel.update(
+        {
+          isRead: true,
+        },
+        { where: { userID: userID, dataFiturID: dataFiturID } }
+      );
+      return { IsRead: true };
+    } catch (error) {
       throw error;
     }
   }

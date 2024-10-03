@@ -6,7 +6,12 @@ import { threelogo } from "../../public/assets/images/index";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import UseSessionCheck from "../utils/useSessionCheck";
-import { Avatar, Badge, List, Popover } from "antd";
+import { Avatar, Badge, Empty, List, Modal, Popover } from "antd";
+import axios from "axios";
+import { urlServer } from "../utils/endpoint";
+import { fiturMaping2 } from "../utils/mappingFiturID";
+import formatString from "../utils/formatString";
+import DetailDataController from "../utils/detailDataController";
 
 function Home() {
   UseSessionCheck();
@@ -14,6 +19,13 @@ function Home() {
   const dataUser = userSession?.dataUser;
   const [rolesUser, setRolesUser] = useState([]);
   const navigate = useNavigate();
+  const [isNotifOpen, setNotif] = useState(false);
+  const handleModalNotif = () => {
+    setNotif(!isNotifOpen);
+  };
+  const [dataNotif, setDataNotif] = useState(null);
+  const [totalUnread, setTotalUnread] = useState(0);
+  const { setDetailOpen } = DetailDataController();
 
   // console.log(dataUser);
   // console.log(rolesUser);
@@ -27,7 +39,25 @@ function Home() {
       setRolesUser(arr2);
     };
 
+    const fetchNotif = async () => {
+      const headers = {
+        headers: {
+          authorization: userSession?.AuthKey,
+        },
+      };
+      try {
+        const response = await axios.get(`${urlServer}/notif`, headers);
+        console.log(response);
+
+        setDataNotif(response.data.Notif);
+        setTotalUnread(response.data.TotalUnRead);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     transformedRole();
+    fetchNotif();
   }, []);
 
   const contentInfoRole = (role) => {
@@ -76,6 +106,28 @@ function Home() {
         );
     }
   };
+
+  const handleNotifOpen = async (id, fiturId, tipe) => {
+    const url = formatString(fiturMaping2[fiturId]);
+    const body = {
+      Id: id,
+      Tipe: tipe,
+    };
+    const headers = {
+      headers: {
+        authorization: userSession?.AuthKey,
+      },
+    };
+
+    try {
+      const response = await axios.patch(`${urlServer}/notif`, body, headers);
+      console.log(response);
+      setDetailOpen(fiturMaping2[fiturId], id);
+      navigate(`/${url}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
       <div className="container-home d-flex w-100 h-100 flex-column">
@@ -101,14 +153,17 @@ function Home() {
           )}
         />
         <div className="header bg-theme shadow p-3 ps-5 pe-5 d-flex w-100 justify-content-between align-items-center">
-          <h5 className="text-light fw-medium">Selamat Datang, {dataUser?.Nama}</h5>
-          <Badge count={0}>
+          <h5 className="text-light fw-medium" style={{ fontSize: "15px" }}>
+            Selamat Datang, {dataUser?.Nama}
+          </h5>
+          <Badge count={totalUnread}>
             <Avatar
+              onClick={handleModalNotif}
               style={{ cursor: "pointer" }}
               shape="circle"
               size={"large"}
               className="bg-theme2"
-              icon={<FontAwesomeIcon size="sm" icon={faBell} color="#024332" />}
+              icon={<FontAwesomeIcon size="xs" icon={faBell} color="#024332" />}
             />
           </Badge>
         </div>
@@ -159,6 +214,31 @@ function Home() {
           </div>
         </div>
       </div>
+
+      <Modal title="Notifikasi" open={isNotifOpen} onCancel={handleModalNotif} footer={false}>
+        {dataNotif && dataNotif.length > 0 ? (
+          <div className="d-flex flex-column gap-3">
+            {dataNotif.map((notif, i) => (
+              <div
+                key={i}
+                className={`${
+                  !notif.IsRead ? "btn-theme text-light" : "btn-white border"
+                } p-3 rounded`}
+                style={{ cursor: "pointer" }}
+                onClick={() => handleNotifOpen(notif.Id, notif.FiturID, notif.Tipe)}
+              >
+                <div className="d-flex justify-content-between">
+                  <p className="fw-semibold">{fiturMaping2[notif.FiturID]}</p>
+                  <p>{notif.TglDibuat}</p>
+                </div>
+                {notif.Judul}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <Empty description="Tidak ada notifikasi terbaru" />
+        )}
+      </Modal>
     </>
   );
 }

@@ -20,6 +20,7 @@ class MessageRepository {
 
       const transformedData = findMessage.map((msg) => ({
         Id: msg.messageID,
+        FiturID: 8, //no fiturID untuk masukan & aspirasi
         Judul: msg.Message.judul,
         DibuatOleh: msg.Message.User.nama,
         TglDibuat: msg.Message.tglDibuat,
@@ -303,6 +304,20 @@ class MessageRepository {
 
         return { IsRead: true };
       }
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async updateRead2(messageID, userID) {
+    // console.log(messageID, userID);
+
+    try {
+      await MessageTujuanModel.update(
+        { isRead: true, tglDibaca: new Date() },
+        { where: { messageID: messageID, penerimaID: userID } }
+      );
+
+      return { IsRead: true };
     } catch (error) {
       throw error;
     }

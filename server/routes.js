@@ -5,6 +5,7 @@ const {
   UserRoleController,
   UserController,
   MessageController,
+  NotifikasiController,
 } = require("./controllers");
 const { Authorization } = require("./utils/Authorization");
 const multer = require("multer");
@@ -59,3 +60,7 @@ router.post(
 );
 router.patch("/aspirasi", Authorization.decryption, MessageController.updateRead);
 module.exports = { router };
+// ###############################################################################
+//                              NOTIFIKASI
+router.get("/notif", Authorization.decryption, NotifikasiController.getAll);
+router.patch("/notif", Authorization.decryption, NotifikasiController.updateIsRead);

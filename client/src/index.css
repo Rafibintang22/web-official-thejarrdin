@@ -11,6 +11,7 @@
   --black: #000;
   --white: #fff;
   --theme: #399051;
+  --themeHover: #2e8546;
   --themeTua: #0a7e66;
   --theme2: #daaf15;
   --theme2Hover: #caa007;
@@ -37,6 +38,13 @@ h6 {
 
 .bg-light {
   background-color: white !important;
+}
+.btn-white {
+  background-color: white;
+}
+.btn-white:hover {
+  background-color: rgb(235, 235, 235);
+  transition: ease-in-out 0.2s;
 }
 
 body {
@@ -87,6 +95,13 @@ body {
 .bg-theme {
   background-color: var(--theme);
 }
+.btn-theme {
+  background-color: var(--theme);
+}
+.btn-theme:hover {
+  background-color: var(--themeHover);
+  transition: ease-in-out 0.2s;
+}
 
 .bg-themeTua {
   background-color: var(--themeTua);
@@ -94,6 +109,13 @@ body {
 
 .bg-theme2 {
   background-color: var(--theme2);
+}
+.btn-theme2 {
+  background-color: var(--theme2);
+}
+.btn-theme2:hover {
+  background-color: var(--theme2Hover);
+  transition: ease-in-out 0.5s;
 }
 
 .container .hexagonArea.last {
@@ -139,8 +161,8 @@ body {
 /* Mobile Devices (Portrait) */
 @media only screen and (max-width: 480px) {
   .hexagon {
-    width: 80px;
-    height: 120px;
+    width: 85px;
+    height: 110px;
     background-color: var(--theme2);
     position: relative;
     margin: 5px auto; /* Adds space around the hexagon */

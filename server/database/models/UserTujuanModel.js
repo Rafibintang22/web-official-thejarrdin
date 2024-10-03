@@ -16,6 +16,11 @@ const UserTujuanModel = jarrdinDB.define(
       primaryKey: true,
       allowNull: false,
     },
+    isRead: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false, // By default, the message is unread
+    },
   },
   {
     tableName: "user_tujuan",
