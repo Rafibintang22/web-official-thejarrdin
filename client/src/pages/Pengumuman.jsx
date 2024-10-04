@@ -14,6 +14,7 @@ import ModalDetail from "../components/ModalDetail";
 import HakAkses from "../utils/hakAkses";
 import toogleSidebarMobile from "../utils/toogleSidebarMobile";
 import SidebarMobile from "../components/SidebarMobile";
+import { sortDataTable, sortDataController } from "../utils/filterTable";
 
 function Pengumuman() {
   UseSessionCheck();
@@ -21,8 +22,9 @@ function Pengumuman() {
   const { isDetailOpen, setDetailOpen } = DetailDataController();
   const fieldDetail = "Pengumuman";
   const userSession = JSON.parse(localStorage.getItem("userSession"));
-  const { hasPengurus } = HakAkses();
+  const { hasPengurus, hasPelakuKomersil } = HakAkses();
   const { isSidebarMobileOpen } = toogleSidebarMobile();
+  const { currSort, setCurrSort } = sortDataController();
 
   const menuInsert = [
     { label: "Untuk saya", key: "untukSaya" },
@@ -65,6 +67,24 @@ function Pengumuman() {
     }
   };
 
+  const handleSortData = (event) => {
+    const valueSort = event.target.value;
+    setLoading(true);
+    if (valueSort === "Judul") {
+      setCurrSort(valueSort);
+      setDataTable(sortDataTable(dataTable, "Judul", true)); // Sort by Judul ascending
+    } else if (valueSort === "DibuatOleh") {
+      setCurrSort(valueSort);
+      setDataTable(sortDataTable(dataTable, "DibuatOleh", true)); // Sort by DibuatOleh ascending
+    } else if (valueSort === "TglDibuat") {
+      setCurrSort(valueSort);
+      setDataTable(sortDataTable(dataTable, "TglDibuat", false)); // Sort by TglDibuat descending
+    } else {
+      fetchData();
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     fetchData();
   }, [
@@ -72,6 +92,8 @@ function Pengumuman() {
     // pagination.current,
     // pagination.pageSize
   ]);
+
+  // console.log(dataTable);
 
   const handleTableChange = (pagination) => {
     setPagination((prev) => ({
@@ -91,7 +113,7 @@ function Pengumuman() {
             <div className="container-content w-100 h-100 d-flex flex-column bg-light">
               <HeaderKonten
                 judul={"Data Pengumuman"}
-                isInsert={hasPengurus}
+                isInsert={hasPengurus || hasPelakuKomersil}
                 nameInsert={"Tambah Pengumuman"}
                 setInsertBtn={setModalInsert}
               />
@@ -99,6 +121,8 @@ function Pengumuman() {
                 isInsert={hasPengurus}
                 nameInsert={"Tambah Pengumuman"}
                 setInsertBtn={setModalInsert}
+                currSort={currSort}
+                handleSort={handleSortData}
               />
               <Menu
                 onClick={(e) => setCurrTipeData(e.key)}

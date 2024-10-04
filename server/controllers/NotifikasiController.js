@@ -54,7 +54,7 @@ class NotifikasiController {
     const UserID = req.dataSession.UserID;
     const { Tipe, Id } = req.body;
 
-    console.log(UserID, Tipe, Id);
+    // console.log(UserID, Tipe, Id);
 
     try {
       let updateRespon;

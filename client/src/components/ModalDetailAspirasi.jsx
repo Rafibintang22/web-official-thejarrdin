@@ -34,10 +34,10 @@ function ModalDetailAspirasi({ judulDetail, tipeDetail }) {
           headers
         );
 
-        console.log(response);
+        // console.log(response);
 
         const responseData = response?.data;
-        console.log(responseData);
+        // console.log(responseData);
 
         if (responseData.File) {
           let transformedFile = [];
@@ -98,7 +98,7 @@ function ModalDetailAspirasi({ judulDetail, tipeDetail }) {
     }
   };
 
-  console.log(tipeDetail);
+  // console.log(tipeDetail);
 
   return (
     <>

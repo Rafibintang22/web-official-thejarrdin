@@ -14,6 +14,7 @@ import ModalDetail from "../components/ModalDetail";
 import HakAkses from "../utils/hakAkses";
 import toogleSidebarMobile from "../utils/toogleSidebarMobile";
 import SidebarMobile from "../components/SidebarMobile";
+import { sortDataController, sortDataTable } from "../utils/filterTable";
 
 function PengumumanPengelola() {
   UseSessionCheck();
@@ -23,7 +24,8 @@ function PengumumanPengelola() {
   const userSession = JSON.parse(localStorage.getItem("userSession"));
   const { hasPengelola } = HakAkses();
   const { isSidebarMobileOpen } = toogleSidebarMobile();
-  console.log(hasPengelola);
+  const { currSort, setCurrSort } = sortDataController();
+  // console.log(hasPengelola);
 
   const menuInsert = [
     {
@@ -62,7 +64,7 @@ function PengumumanPengelola() {
           }`,
           headers
         );
-        console.log(response);
+        // console.log(response);
         setDataTable(response.data);
       } catch (error) {
         console.log(error);
@@ -73,6 +75,22 @@ function PengumumanPengelola() {
 
     fetchData();
   }, [currTipeData]);
+
+  const handleSortData = (event) => {
+    const valueSort = event?.target?.value;
+    setLoading(true);
+    if (valueSort === "Judul") {
+      setCurrSort(valueSort);
+      setDataTable(sortDataTable(dataTable, "Judul", true)); // Sort by Judul ascending
+    } else if (valueSort === "DibuatOleh") {
+      setCurrSort(valueSort);
+      setDataTable(sortDataTable(dataTable, "DibuatOleh", true)); // Sort by DibuatOleh ascending
+    } else if (valueSort === "TglDibuat") {
+      setCurrSort(valueSort);
+      setDataTable(sortDataTable(dataTable, "TglDibuat", false)); // Sort by TglDibuat descending
+    }
+    setLoading(false);
+  };
 
   const handleTableChange = (pagination) => {
     setPagination((prev) => ({
@@ -100,6 +118,8 @@ function PengumumanPengelola() {
                 isInsert={hasPengelola ? true : false}
                 nameInsert={"Tambah Pengumuman Pengelola"}
                 setInsertBtn={setModalInsert}
+                currSort={currSort}
+                handleSort={handleSortData}
               />
               <Menu
                 onClick={(e) => setCurrTipeData(e.key)}

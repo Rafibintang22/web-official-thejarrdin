@@ -17,7 +17,7 @@ function ModalInsertAspirasi({ currState, setState, judulInsert, dataOne = null 
     dataOne ? dataOne : { Judul: "", Pesan: "", PesanFile: [] }
   );
   const [loading, setLoading] = useState(false); // Tambahkan state loading
-  console.log(formData, "FORMDATA");
+  // console.log(formData, "FORMDATA");
 
   const handleFormDataChange = (tipe, value) => {
     setFormData((prevData) => ({

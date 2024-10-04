@@ -13,15 +13,17 @@ import ModalInsertAspirasi from "../components/ModalInsertAspirasi";
 import ModalDetailAspirasi from "../components/ModalDetailAspirasi";
 import toogleSidebarMobile from "../utils/toogleSidebarMobile";
 import SidebarMobile from "../components/SidebarMobile";
+import { sortDataController, sortDataTable } from "../utils/filterTable";
 
 function MasukanAspirasi() {
   UseSessionCheck();
   const [loading, setLoading] = useState(false);
   const { isDetailOpen, setDetailOpen } = DetailDataController();
-  const fieldDetail = "Aspirasi";
+  const fieldDetail = "Masukan & Aspirasi";
   const userSession = JSON.parse(localStorage.getItem("userSession"));
   const { hasPengurus, hasPemilikUnit } = HakAkses();
   const { isSidebarMobileOpen } = toogleSidebarMobile();
+  const { currSort, setCurrSort } = sortDataController();
   const menuInsert = [
     {
       label: "Untuk saya",
@@ -57,7 +59,7 @@ function MasukanAspirasi() {
           `${urlServer}/aspirasi/${currTipeData === "untukSaya" ? "untukUser" : "dibuatUser"}`,
           headers
         );
-        console.log(response);
+        // console.log(response);
         setDataTable(response.data);
       } catch (error) {
         console.log(error);
@@ -68,7 +70,23 @@ function MasukanAspirasi() {
 
     fetchData();
   }, [currTipeData]);
-  console.log(loading);
+  // console.log(loading);
+
+  const handleSortData = (event) => {
+    const valueSort = event?.target?.value;
+    setLoading(true);
+    if (valueSort === "Judul") {
+      setCurrSort(valueSort);
+      setDataTable(sortDataTable(dataTable, "Judul", true)); // Sort by Judul ascending
+    } else if (valueSort === "DibuatOleh") {
+      setCurrSort(valueSort);
+      setDataTable(sortDataTable(dataTable, "DibuatOleh", true)); // Sort by DibuatOleh ascending
+    } else if (valueSort === "TglDibuat") {
+      setCurrSort(valueSort);
+      setDataTable(sortDataTable(dataTable, "TglDibuat", false)); // Sort by TglDibuat descending
+    }
+    setLoading(false);
+  };
 
   const handleTableChange = (pagination) => {
     setPagination((prev) => ({
@@ -95,6 +113,8 @@ function MasukanAspirasi() {
                 isInsert={hasPengurus || hasPemilikUnit ? true : false}
                 nameInsert={"Tambah Masukan & Aspirasi"}
                 setInsertBtn={setModalInsert}
+                currSort={currSort}
+                handleSort={handleSortData}
               />
               <Menu
                 onClick={(e) => setCurrTipeData(e.key)}
@@ -124,7 +144,7 @@ function MasukanAspirasi() {
             />
           )}
 
-          {isDetailOpen === "Aspirasi" && (
+          {isDetailOpen === "Masukan & Aspirasi" && (
             <ModalDetailAspirasi
               judulDetail={"Detail Masukan & Aspirasi"}
               tipeDetail={currTipeData}

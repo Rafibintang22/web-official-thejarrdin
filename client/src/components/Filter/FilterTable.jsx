@@ -3,10 +3,10 @@ import ChooseDate from "./ChooseDate";
 import SelectComp from "./SelectComp";
 
 // eslint-disable-next-line react/prop-types
-function FilterTable({ isInsert, nameInsert, setInsertBtn }) {
+function FilterTable({ isInsert, nameInsert, setInsertBtn, currSort, handleSort }) {
   return (
     <div className="filter-content w-100 d-flex justify-content-end p-4 gap-3">
-      <SelectComp />
+      <SelectComp value={currSort} handleChange={handleSort} />
       <ChooseDate />
 
       {isInsert && (

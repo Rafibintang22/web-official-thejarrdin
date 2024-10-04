@@ -47,7 +47,7 @@ function Home() {
       };
       try {
         const response = await axios.get(`${urlServer}/notif`, headers);
-        console.log(response);
+        // console.log(response);
 
         setDataNotif(response.data.Notif);
         setTotalUnread(response.data.TotalUnRead);
@@ -120,8 +120,8 @@ function Home() {
     };
 
     try {
-      const response = await axios.patch(`${urlServer}/notif`, body, headers);
-      console.log(response);
+      await axios.patch(`${urlServer}/notif`, body, headers);
+      // console.log(response);
       setDetailOpen(fiturMaping2[fiturId], id);
       navigate(`/${url}`);
     } catch (error) {

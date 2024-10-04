@@ -39,7 +39,7 @@ const columns = (isDetailOpen, setDetailOpen, tipeAspirasi = "") => [
     key: "TglDibuat",
     defaultSortOrder: "descend",
   },
-  isDetailOpen === "Aspirasi" && tipeAspirasi === "untukSaya"
+  isDetailOpen === "Masukan & Aspirasi" && tipeAspirasi === "untukSaya"
     ? {
         title: "Status",
         dataIndex: "IsRead",

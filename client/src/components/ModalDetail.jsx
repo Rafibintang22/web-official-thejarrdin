@@ -25,10 +25,10 @@ function ModalDetail({ judulDetail }) {
       try {
         const response = await axios.get(`${urlServer}/data/${oneDataID}`, headers);
 
-        console.log(response);
+        // console.log(response);
 
         const responseData = response?.data;
-        console.log(responseData);
+        // console.log(responseData);
 
         if (responseData.File) {
           let transformedFile = [];

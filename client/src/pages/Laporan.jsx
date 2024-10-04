@@ -14,6 +14,7 @@ import ModalDetail from "../components/ModalDetail";
 import HakAkses from "../utils/hakAkses";
 import toogleSidebarMobile from "../utils/toogleSidebarMobile";
 import SidebarMobile from "../components/SidebarMobile";
+import { sortDataController, sortDataTable } from "../utils/filterTable";
 
 function Laporan() {
   UseSessionCheck();
@@ -24,6 +25,7 @@ function Laporan() {
   const userSession = JSON.parse(localStorage.getItem("userSession"));
   const { hasPengurus } = HakAkses();
   const { isSidebarMobileOpen } = toogleSidebarMobile();
+  const { currSort, setCurrSort } = sortDataController();
   const menuInsert = [
     {
       label: "Untuk saya",
@@ -61,7 +63,7 @@ function Laporan() {
           }`,
           headers
         );
-        console.log(response);
+        // console.log(response.data);
         setDataTable(response.data);
       } catch (error) {
         console.log(error);
@@ -72,6 +74,22 @@ function Laporan() {
 
     fetchData();
   }, [currTipeData]);
+
+  const handleSortData = (event) => {
+    const valueSort = event?.target?.value;
+    setLoading(true);
+    if (valueSort === "Judul") {
+      setCurrSort(valueSort);
+      setDataTable(sortDataTable(dataTable, "Judul", true)); // Sort by Judul ascending
+    } else if (valueSort === "DibuatOleh") {
+      setCurrSort(valueSort);
+      setDataTable(sortDataTable(dataTable, "DibuatOleh", true)); // Sort by DibuatOleh ascending
+    } else if (valueSort === "TglDibuat") {
+      setCurrSort(valueSort);
+      setDataTable(sortDataTable(dataTable, "TglDibuat", false)); // Sort by TglDibuat descending
+    }
+    setLoading(false);
+  };
 
   // console.log(dataTable);
   const handleTableChange = (pagination) => {
@@ -100,6 +118,8 @@ function Laporan() {
                 isInsert={hasPengurus ? true : false}
                 nameInsert={"Tambah Data Laporan"}
                 setInsertBtn={setModalInsert}
+                currSort={currSort}
+                handleSort={handleSortData}
               />
               <Menu
                 onClick={(e) => setCurrTipeData(e.key)}

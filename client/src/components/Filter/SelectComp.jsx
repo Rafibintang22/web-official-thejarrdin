@@ -1,6 +1,7 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
-function SelectComp() {
+// eslint-disable-next-line react/prop-types
+function SelectComp({ value, handleChange }) {
   return (
     <div>
       <FormControl sx={{ m: 1, minWidth: 250 }} size="small" className="select-filter">
@@ -8,8 +9,8 @@ function SelectComp() {
         <Select
           labelId="demo-simple-select-autowidth-label"
           id="demo-simple-select-autowidth"
-          // value={Sort: Berdasarkan}
-          // onChange={handleChange}
+          value={value}
+          onChange={handleChange}
           autoWidth
           label="Sort: Berdasarkan"
           MenuProps={{
@@ -24,8 +25,8 @@ function SelectComp() {
             <em>Tidak ada</em>
           </MenuItem>
           <MenuItem value={"Judul"}>Judul</MenuItem>
-          <MenuItem value={"Dibuat oleh"}>Dibuat oleh</MenuItem>
-          <MenuItem value={"Tanggal dibuat"}>Tanggal dibuat</MenuItem>
+          <MenuItem value={"DibuatOleh"}>Dibuat oleh</MenuItem>
+          <MenuItem value={"TglDibuat"}>Tanggal dibuat</MenuItem>
         </Select>
       </FormControl>
     </div>

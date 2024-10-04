@@ -17,7 +17,7 @@ function ModalInsert({ currState, setState, judulInsert }) {
   const { ValidationStatus, setValidationStatus, setCloseAlert } = useValidator();
   const [formData, setFormData] = useState({ Judul: "", UserTujuan: [], FileFolder: [] });
   const [loading, setLoading] = useState(false); // Tambahkan state loading
-  console.log(formData, "FORMDATA");
+  // console.log(formData, "FORMDATA");
 
   const menuInsert = [
     {
@@ -296,7 +296,7 @@ function ModalInsert({ currState, setState, judulInsert }) {
       const formattedFormData = formatFormData(formData);
 
       const normalizedData = normalizeFileFolder(formToJSON(formattedFormData)); // Normalisasi file folder untuk validasi
-      console.log(normalizedData, "TEST");
+      // console.log(normalizedData, "TEST");
 
       // Lakukan validasi menggunakan Joi
       const validateFunction = inputValidator["DataFitur"];
@@ -307,7 +307,7 @@ function ModalInsert({ currState, setState, judulInsert }) {
       setLoading(false);
       setValidationStatus("Berhasil", "Data berhasil ditambahkan");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       setLoading(false);
       if (error?.response?.data?.error) {
         setValidationStatus(error.path, error.response.data.error);
