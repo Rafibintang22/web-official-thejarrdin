@@ -11,6 +11,7 @@
   --black: #000;
   --white: #fff;
   --theme: #399051;
+  --themeSubtle: #f1f6f2
   --themeHover: #2e8546;
   --themeTua: #0a7e66;
   --theme2: #daaf15;
@@ -101,6 +102,10 @@ body {
 .btn-theme:hover {
   background-color: var(--themeHover);
   transition: ease-in-out 0.2s;
+}
+
+.bg-theme-subtle {
+  background-color: var(--themeSubtle);
 }
 
 .bg-themeTua {

@@ -106,6 +106,7 @@ const ChooseDate = () => {
         >
           {open && (
             <DateRangePicker
+              maxDate={new Date()}
               onChange={(item) => setRange([item.selection])}
               editableDateInputs={true}
               moveRangeOnFirstSelection={false}
