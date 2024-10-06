@@ -41,8 +41,16 @@ class DataFiturRepository {
         IsRead: data.isRead,
       }));
 
-      // Mengurutkan berdasarkan TglDibuat terbaru
-      transformedData.sort((a, b) => new Date(b.TglDibuat) - new Date(a.TglDibuat));
+      // Mengurutkan berdasarkan isRead dan TglDibuat
+      transformedData.sort((a, b) => {
+        // Urutkan berdasarkan isRead, 1 (dibaca) akan muncul sebelum 0 (belum dibaca)
+        if (a.IsRead === b.IsRead) {
+          // Jika isRead sama, urutkan berdasarkan TglDibuat terbaru
+          return new Date(b.TglDibuat) - new Date(a.TglDibuat);
+        }
+        return a.IsRead - b.IsRead; // Mengurutkan berdasarkan isRead, 1 lebih besar dari 0
+      });
+
       return transformedData;
 
       // return findDataFitur;

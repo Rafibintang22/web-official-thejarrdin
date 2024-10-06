@@ -37,6 +37,9 @@ function TagihanBulanan() {
       key: "dataDiunggah",
     });
   }
+
+  const [searchValue, setSearchValue] = useState("");
+  const [filteredDataTable, setFilteredDataTable] = useState([]);
   const [dataTable, setDataTable] = useState([]);
   const [modalInsert, setModalInsert] = useState(false);
   const [currTipeData, setCurrTipeData] = useState("untukSaya");
@@ -76,6 +79,18 @@ function TagihanBulanan() {
     fetchData();
   }, [currTipeData]);
 
+  const handleSearch = (event) => {
+    const value = event.target.value;
+    setSearchValue(value);
+    const searchTerm = value.toLowerCase();
+    const filtered = dataTable.filter(
+      (item) =>
+        item.Judul.toLowerCase().includes(searchTerm) ||
+        item.DibuatOleh.toLowerCase().includes(searchTerm)
+    );
+    setFilteredDataTable(filtered);
+  };
+
   const handleTableChange = (pagination) => {
     setPagination((prev) => ({
       ...prev,
@@ -97,6 +112,8 @@ function TagihanBulanan() {
                 isInsert={hasPengelola ? true : false}
                 nameInsert={"Tambah Tagihan Bulanan"}
                 setInsertBtn={setModalInsert}
+                searchValue={searchValue}
+                onChangeSearch={handleSearch}
               />
               <FilterTable
                 isInsert={hasPengelola ? true : false}
@@ -115,7 +132,9 @@ function TagihanBulanan() {
                 <Table
                   scroll={{ x: "max-content" }}
                   loading={loading}
-                  dataSource={dataTable}
+                  dataSource={
+                    searchValue === "" || null || undefined ? dataTable : filteredDataTable
+                  }
                   onChange={handleTableChange}
                   pagination={pagination}
                   columns={columns(fieldDetail, setDetailOpen)}

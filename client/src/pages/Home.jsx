@@ -224,6 +224,7 @@ function Home() {
             {dataNotif.map((notif, i) => (
               <Popconfirm
                 key={i}
+                icon={false}
                 title="Lihat Notifikasi?"
                 onConfirm={() => handleNotifOpen(notif.Id, notif.FiturID, notif.Tipe)}
                 okText="Lihat"

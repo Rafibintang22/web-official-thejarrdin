@@ -3,7 +3,7 @@ import { Button, Input } from "antd";
 import { MenuUnfoldOutlined, SearchOutlined } from "@ant-design/icons";
 import toogleSidebarMobile from "../utils/toogleSidebarMobile";
 // eslint-disable-next-line react/prop-types
-function HeaderKonten({ judul, isInsert, nameInsert, setInsertBtn }) {
+function HeaderKonten({ judul, isInsert, nameInsert, setInsertBtn, searchValue, onChangeSearch }) {
   const { isSidebarMobileOpen, setIsSidebarMobileOpen } = toogleSidebarMobile();
   const toggleisSidebarMobileOpen = () => {
     setIsSidebarMobileOpen(isSidebarMobileOpen);
@@ -23,6 +23,8 @@ function HeaderKonten({ judul, isInsert, nameInsert, setInsertBtn }) {
           <Input
             className="header-item search-input"
             placeholder="Cari.."
+            value={searchValue}
+            onChange={onChangeSearch}
             prefix={<SearchOutlined />}
           />
           {isInsert && (
