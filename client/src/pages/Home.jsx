@@ -6,12 +6,13 @@ import { threelogo } from "../../public/assets/images/index";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import UseSessionCheck from "../utils/useSessionCheck";
-import { Avatar, Badge, Empty, List, Modal, Popover } from "antd";
+import { Avatar, Badge, Empty, List, Modal, Popconfirm, Popover } from "antd";
 import axios from "axios";
 import { urlServer } from "../utils/endpoint";
 import { fiturMaping2 } from "../utils/mappingFiturID";
 import formatString from "../utils/formatString";
 import DetailDataController from "../utils/detailDataController";
+import { formatDate } from "../utils/formatDate";
 
 function Home() {
   UseSessionCheck();
@@ -138,7 +139,7 @@ function Home() {
           header={<div>Peran Anda saat ini sebagai :</div>}
           bordered
           dataSource={dataUser?.Role}
-          renderItem={(item) => (
+          renderItem={(item, i) => (
             <>
               <Popover
                 placement="right"
@@ -146,7 +147,9 @@ function Home() {
                 content={contentInfoRole(item.Nama)}
               >
                 <List.Item style={{ cursor: "help" }} className="text-light ms-3">
-                  <p>({item.Nama})</p>
+                  <p>
+                    {i + 1 + ". "} ({item.Nama})
+                  </p>
                 </List.Item>
               </Popover>
             </>
@@ -203,7 +206,7 @@ function Home() {
             className="img-threeLogo"
             src={threelogo}
             alt="3 logo"
-            style={{ width: "250px", height: "50px" }}
+            style={{ width: "350px", height: "75px" }}
           />
           <div
             className="d-flex border border-top btn-home-logout justify-content-center align-items-center rounded-circle border border-2"
@@ -219,20 +222,25 @@ function Home() {
         {dataNotif && dataNotif.length > 0 ? (
           <div className="d-flex flex-column gap-3">
             {dataNotif.map((notif, i) => (
-              <div
+              <Popconfirm
                 key={i}
-                className={`${
-                  !notif.IsRead ? "btn-theme text-light" : "btn-white border"
-                } p-3 rounded`}
-                style={{ cursor: "pointer" }}
-                onClick={() => handleNotifOpen(notif.Id, notif.FiturID, notif.Tipe)}
+                title="Lihat Notifikasi?"
+                onConfirm={() => handleNotifOpen(notif.Id, notif.FiturID, notif.Tipe)}
+                okText="Lihat"
+                cancelText="Tutup"
               >
-                <div className="d-flex justify-content-between">
-                  <p className="fw-semibold">{fiturMaping2[notif.FiturID]}</p>
-                  <p>{notif.TglDibuat}</p>
+                <div
+                  className={`${!notif.IsRead ? "btn-theme2" : "btn-white border"} p-3 rounded`}
+                  style={{ cursor: "pointer" }}
+                  // onClick={() => handleNotifOpen(notif.Id, notif.FiturID, notif.Tipe)}
+                >
+                  <div className="d-flex justify-content-between">
+                    <p className="fw-semibold">{fiturMaping2[notif.FiturID]}</p>
+                    <p>{formatDate(notif.TglDibuat)}</p>
+                  </div>
+                  {notif.Judul}
                 </div>
-                {notif.Judul}
-              </div>
+              </Popconfirm>
             ))}
           </div>
         ) : (

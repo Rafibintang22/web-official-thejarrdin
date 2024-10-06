@@ -14,17 +14,16 @@ import ModalDetail from "../components/ModalDetail";
 import HakAkses from "../utils/hakAkses";
 import toogleSidebarMobile from "../utils/toogleSidebarMobile";
 import SidebarMobile from "../components/SidebarMobile";
-import { sortDataController, sortDataTable } from "../utils/filterTable";
+import { formatDate } from "../utils/formatDate";
 
 function BuletinKegiatan() {
   UseSessionCheck();
   const [loading, setLoading] = useState(false);
   const { isDetailOpen, setDetailOpen } = DetailDataController();
-  const fieldDetail = "BuletinKegiatan";
+  const fieldDetail = "Buletin Kegiatan";
   const userSession = JSON.parse(localStorage.getItem("userSession"));
   const { hasPengelola } = HakAkses();
   const { isSidebarMobileOpen } = toogleSidebarMobile();
-  const { currSort, setCurrSort } = sortDataController();
   const menuInsert = [
     {
       label: "Untuk saya",
@@ -63,8 +62,11 @@ function BuletinKegiatan() {
           }`,
           headers
         );
-        // console.log(response);
-        setDataTable(response.data);
+        const transformedData = response.data.map((data) => ({
+          ...data,
+          TglDibuat: formatDate(data.TglDibuat),
+        }));
+        setDataTable(transformedData);
         setPagination((prev) => ({
           ...prev,
           total: response.data.length,
@@ -78,22 +80,6 @@ function BuletinKegiatan() {
 
     fetchData();
   }, [currTipeData]);
-
-  const handleSortData = (event) => {
-    const valueSort = event?.target?.value;
-    setLoading(true);
-    if (valueSort === "Judul") {
-      setCurrSort(valueSort);
-      setDataTable(sortDataTable(dataTable, "Judul", true)); // Sort by Judul ascending
-    } else if (valueSort === "DibuatOleh") {
-      setCurrSort(valueSort);
-      setDataTable(sortDataTable(dataTable, "DibuatOleh", true)); // Sort by DibuatOleh ascending
-    } else if (valueSort === "TglDibuat") {
-      setCurrSort(valueSort);
-      setDataTable(sortDataTable(dataTable, "TglDibuat", false)); // Sort by TglDibuat descending
-    }
-    setLoading(false);
-  };
 
   const handleTableChange = (pagination) => {
     setPagination((prev) => ({
@@ -120,8 +106,6 @@ function BuletinKegiatan() {
                 isInsert={hasPengelola ? true : false}
                 nameInsert={"Tambah Buletin Kegiatan"}
                 setInsertBtn={setModalInsert}
-                currSort={currSort}
-                handleSort={handleSortData}
               />
               <Menu
                 onClick={(e) => setCurrTipeData(e.key)}
@@ -151,7 +135,7 @@ function BuletinKegiatan() {
             />
           )}
 
-          {isDetailOpen === "BuletinKegiatan" && (
+          {isDetailOpen === "Buletin Kegiatan" && (
             <ModalDetail judulDetail={"Detail Buletin Kegiatan"} />
           )}
         </>

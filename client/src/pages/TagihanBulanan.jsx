@@ -14,17 +14,16 @@ import ModalDetail from "../components/ModalDetail";
 import HakAkses from "../utils/hakAkses";
 import toogleSidebarMobile from "../utils/toogleSidebarMobile";
 import SidebarMobile from "../components/SidebarMobile";
-import { sortDataController, sortDataTable } from "../utils/filterTable";
+import { formatDate } from "../utils/formatDate";
 
 function TagihanBulanan() {
   UseSessionCheck();
   const [loading, setLoading] = useState(false);
   const { isDetailOpen, setDetailOpen } = DetailDataController();
-  const fieldDetail = "TagihanBulanan";
+  const fieldDetail = "Tagihan Bulanan";
   const userSession = JSON.parse(localStorage.getItem("userSession"));
   const { hasPengelola } = HakAkses();
   const { isSidebarMobileOpen } = toogleSidebarMobile();
-  const { currSort, setCurrSort } = sortDataController();
   const menuInsert = [
     {
       label: "Untuk saya",
@@ -62,8 +61,11 @@ function TagihanBulanan() {
           }`,
           headers
         );
-        // console.log(response);
-        setDataTable(response.data);
+        const transformedData = response.data.map((data) => ({
+          ...data,
+          TglDibuat: formatDate(data.TglDibuat),
+        }));
+        setDataTable(transformedData);
       } catch (error) {
         console.log(error);
       } finally {
@@ -73,22 +75,6 @@ function TagihanBulanan() {
 
     fetchData();
   }, [currTipeData]);
-
-  const handleSortData = (event) => {
-    const valueSort = event?.target?.value;
-    setLoading(true);
-    if (valueSort === "Judul") {
-      setCurrSort(valueSort);
-      setDataTable(sortDataTable(dataTable, "Judul", true)); // Sort by Judul ascending
-    } else if (valueSort === "DibuatOleh") {
-      setCurrSort(valueSort);
-      setDataTable(sortDataTable(dataTable, "DibuatOleh", true)); // Sort by DibuatOleh ascending
-    } else if (valueSort === "TglDibuat") {
-      setCurrSort(valueSort);
-      setDataTable(sortDataTable(dataTable, "TglDibuat", false)); // Sort by TglDibuat descending
-    }
-    setLoading(false);
-  };
 
   const handleTableChange = (pagination) => {
     setPagination((prev) => ({
@@ -116,8 +102,6 @@ function TagihanBulanan() {
                 isInsert={hasPengelola ? true : false}
                 nameInsert={"Tambah Tagihan Bulanan"}
                 setInsertBtn={setModalInsert}
-                currSort={currSort}
-                handleSort={handleSortData}
               />
               <Menu
                 onClick={(e) => setCurrTipeData(e.key)}
@@ -146,7 +130,7 @@ function TagihanBulanan() {
               judulInsert={"Tambah Tagihan Bulanan"}
             />
           )}
-          {isDetailOpen === "TagihanBulanan" && (
+          {isDetailOpen === "Tagihan Bulanan" && (
             <ModalDetail judulDetail={"Detail Tagihan Bulanan"} />
           )}
         </>

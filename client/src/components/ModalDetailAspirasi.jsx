@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import DetailDataController from "../utils/detailDataController";
 import axios from "axios";
 import { urlServer } from "../utils/endpoint";
-import formatDate from "../utils/formatDate";
+import { formatDate } from "../utils/formatDate";
 import { CheckOutlined, FileOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 import ModalInsertAspirasi from "./ModalInsertAspirasi";

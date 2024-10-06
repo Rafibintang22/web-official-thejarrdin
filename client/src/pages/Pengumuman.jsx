@@ -14,7 +14,7 @@ import ModalDetail from "../components/ModalDetail";
 import HakAkses from "../utils/hakAkses";
 import toogleSidebarMobile from "../utils/toogleSidebarMobile";
 import SidebarMobile from "../components/SidebarMobile";
-import { sortDataTable, sortDataController } from "../utils/filterTable";
+import { formatDate } from "../utils/formatDate";
 
 function Pengumuman() {
   UseSessionCheck();
@@ -24,7 +24,6 @@ function Pengumuman() {
   const userSession = JSON.parse(localStorage.getItem("userSession"));
   const { hasPengurus, hasPelakuKomersil } = HakAkses();
   const { isSidebarMobileOpen } = toogleSidebarMobile();
-  const { currSort, setCurrSort } = sortDataController();
 
   const menuInsert = [
     { label: "Untuk saya", key: "untukSaya" },
@@ -55,7 +54,11 @@ function Pengumuman() {
         }`,
         headers
       );
-      setDataTable(response.data);
+      const transformedData = response.data.map((data) => ({
+        ...data,
+        TglDibuat: formatDate(data.TglDibuat),
+      }));
+      setDataTable(transformedData);
       setPagination((prev) => ({
         ...prev,
         total: response.data.length,
@@ -65,24 +68,6 @@ function Pengumuman() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSortData = (event) => {
-    const valueSort = event.target.value;
-    setLoading(true);
-    if (valueSort === "Judul") {
-      setCurrSort(valueSort);
-      setDataTable(sortDataTable(dataTable, "Judul", true)); // Sort by Judul ascending
-    } else if (valueSort === "DibuatOleh") {
-      setCurrSort(valueSort);
-      setDataTable(sortDataTable(dataTable, "DibuatOleh", true)); // Sort by DibuatOleh ascending
-    } else if (valueSort === "TglDibuat") {
-      setCurrSort(valueSort);
-      setDataTable(sortDataTable(dataTable, "TglDibuat", false)); // Sort by TglDibuat descending
-    } else {
-      fetchData();
-    }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -121,8 +106,6 @@ function Pengumuman() {
                 isInsert={hasPengurus}
                 nameInsert={"Tambah Pengumuman"}
                 setInsertBtn={setModalInsert}
-                currSort={currSort}
-                handleSort={handleSortData}
               />
               <Menu
                 onClick={(e) => setCurrTipeData(e.key)}

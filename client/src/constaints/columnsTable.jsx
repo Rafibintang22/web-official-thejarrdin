@@ -3,6 +3,7 @@ import { CheckOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import { urlServer } from "../utils/endpoint";
 import axios from "axios";
+import { revertDate } from "../utils/formatDate";
 
 const userSession = JSON.parse(localStorage.getItem("userSession"));
 axios.defaults.withCredentials = true;
@@ -27,17 +28,24 @@ const columns = (isDetailOpen, setDetailOpen, tipeAspirasi = "") => [
     title: "Judul",
     dataIndex: "Judul",
     key: "Judul",
+    sorter: (a, b) => a.Judul.localeCompare(b.Judul),
   },
   {
     title: "Diunggah oleh",
     dataIndex: "DibuatOleh",
     key: "DibuatOleh",
+    sorter: (a, b) => a.DibuatOleh.localeCompare(b.DibuatOleh),
   },
   {
     title: "Tanggal dibuat",
     dataIndex: "TglDibuat",
     key: "TglDibuat",
-    defaultSortOrder: "descend",
+    sorter: (a, b) => {
+      const dateA = new Date(revertDate(a.TglDibuat));
+      const dateB = new Date(revertDate(b.TglDibuat));
+
+      return dateA - dateB;
+    },
   },
   isDetailOpen === "Masukan & Aspirasi" && tipeAspirasi === "untukSaya"
     ? {

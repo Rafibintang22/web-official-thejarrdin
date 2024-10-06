@@ -41,6 +41,8 @@ class DataFiturRepository {
         IsRead: data.isRead,
       }));
 
+      // Mengurutkan berdasarkan TglDibuat terbaru
+      transformedData.sort((a, b) => new Date(b.TglDibuat) - new Date(a.TglDibuat));
       return transformedData;
 
       // return findDataFitur;
@@ -48,7 +50,6 @@ class DataFiturRepository {
       throw error;
     }
   }
-
   static async readAllByFiturIdUntukUser(userID, fiturID) {
     try {
       let findDataFitur;
@@ -86,6 +87,8 @@ class DataFiturRepository {
         TglDibuat: data.DataFitur.tglDibuat,
       }));
 
+      // Mengurutkan berdasarkan TglDibuat terbaru
+      transformedData.sort((a, b) => new Date(b.TglDibuat) - new Date(a.TglDibuat));
       return transformedData;
 
       // return findDataFitur;
@@ -123,6 +126,9 @@ class DataFiturRepository {
         DibuatOleh: data.User.nama,
         TglDibuat: data.tglDibuat,
       }));
+
+      // Mengurutkan berdasarkan TglDibuat terbaru
+      transformedData.sort((a, b) => new Date(b.TglDibuat) - new Date(a.TglDibuat));
 
       return transformedData;
 

@@ -3,13 +3,15 @@ import { useEffect, useState } from "react";
 import DetailDataController from "../utils/detailDataController";
 import axios from "axios";
 import { urlServer } from "../utils/endpoint";
-import formatDate from "../utils/formatDate";
+import { formatDate } from "../utils/formatDate";
 import { FileOutlined } from "@ant-design/icons";
 
 // eslint-disable-next-line react/prop-types
 function ModalDetail({ judulDetail }) {
   const userSession = JSON.parse(localStorage.getItem("userSession"));
   const { isDetailOpen, oneDataID, setDetailOpen } = DetailDataController();
+  // console.log(isDetailOpen, oneDataID);
+
   const [dataOne, setDataOne] = useState(null);
   const [loading, setLoading] = useState(false); // Tambahkan state loading
 
