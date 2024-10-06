@@ -58,7 +58,7 @@ class DataFiturRepository {
       throw error;
     }
   }
-  static async readAllByFiturIdUntukUser(userID, fiturID) {
+  static async readAllByFiturIdUntukUser(userID, fiturID, startDate, endDate) {
     try {
       let findDataFitur;
       findDataFitur = await UserModel.findAll({
@@ -95,16 +95,23 @@ class DataFiturRepository {
         TglDibuat: data.DataFitur.tglDibuat,
       }));
 
+      // Filter transformedData berdasarkan startDate dan endDate
+      const filteredData = transformedData.filter((item) => {
+        const itemDate = new Date(item.TglDibuat).getTime(); // Konversi TglDibuat ke epoch
+        return itemDate >= startDate && itemDate <= endDate;
+      });
+
       // Mengurutkan berdasarkan TglDibuat terbaru
-      transformedData.sort((a, b) => new Date(b.TglDibuat) - new Date(a.TglDibuat));
-      return transformedData;
+      filteredData.sort((a, b) => new Date(b.TglDibuat) - new Date(a.TglDibuat));
+
+      return filteredData;
 
       // return findDataFitur;
     } catch (error) {
       throw error;
     }
   }
-  static async readAllByFiturIdDibuatUser(userID, fiturID) {
+  static async readAllByFiturIdDibuatUser(userID, fiturID, startDate, endDate) {
     try {
       let findDataFitur;
       findDataFitur = await UserModel.findAll({
@@ -135,10 +142,16 @@ class DataFiturRepository {
         TglDibuat: data.tglDibuat,
       }));
 
-      // Mengurutkan berdasarkan TglDibuat terbaru
-      transformedData.sort((a, b) => new Date(b.TglDibuat) - new Date(a.TglDibuat));
+      // Filter transformedData berdasarkan startDate dan endDate
+      const filteredData = transformedData.filter((item) => {
+        const itemDate = new Date(item.TglDibuat).getTime(); // Konversi TglDibuat ke epoch
+        return itemDate >= startDate && itemDate <= endDate;
+      });
 
-      return transformedData;
+      // Mengurutkan berdasarkan TglDibuat terbaru
+      filteredData.sort((a, b) => new Date(b.TglDibuat) - new Date(a.TglDibuat));
+
+      return filteredData;
 
       // PAGINATION SERVER
       // // Dapatkan DataFiturs dari hasil query

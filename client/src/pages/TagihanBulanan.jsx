@@ -15,9 +15,18 @@ import HakAkses from "../utils/hakAkses";
 import toogleSidebarMobile from "../utils/toogleSidebarMobile";
 import SidebarMobile from "../components/SidebarMobile";
 import { formatDate } from "../utils/formatDate";
+import { addYears } from "date-fns";
 
 function TagihanBulanan() {
   UseSessionCheck();
+  // Date state for one year range
+  const [range, setRange] = useState([
+    {
+      startDate: addYears(new Date(), -1), // One year ago from today
+      endDate: new Date(), // Today's date
+      key: "selection",
+    },
+  ]);
   const [loading, setLoading] = useState(false);
   const { isDetailOpen, setDetailOpen } = DetailDataController();
   const fieldDetail = "Tagihan Bulanan";
@@ -61,7 +70,7 @@ function TagihanBulanan() {
         const response = await axios.get(
           `${urlServer}/data/${Fitur["TagihanBulanan"]}/${
             currTipeData === "untukSaya" ? "untukUser" : "dibuatUser"
-          }`,
+          }/${range[0].startDate.getTime()}/${range[0].endDate.getTime()}`,
           headers
         );
         const transformedData = response.data.map((data) => ({
@@ -77,7 +86,7 @@ function TagihanBulanan() {
     };
 
     fetchData();
-  }, [currTipeData]);
+  }, [currTipeData, range]);
 
   const handleSearch = (event) => {
     const value = event.target.value;
@@ -119,6 +128,8 @@ function TagihanBulanan() {
                 isInsert={hasPengelola ? true : false}
                 nameInsert={"Tambah Tagihan Bulanan"}
                 setInsertBtn={setModalInsert}
+                range={range}
+                setRange={setRange}
               />
               <Menu
                 onClick={(e) => setCurrTipeData(e.key)}

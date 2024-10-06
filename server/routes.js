@@ -35,7 +35,8 @@ router.get("/role", Authorization.decryption, UserRoleController.getAllByUserID)
 //                              DATA FITUR
 router.get(
   // "/data/:FiturID/:Tipe/:CurrPage/:PageSize",
-  "/data/:FiturID/:Tipe",
+  "/data/:FiturID/:Tipe/:StartDate/:EndDate",
+
   Authorization.decryption,
   DataFiturController.getAll
 );

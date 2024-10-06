@@ -3,17 +3,17 @@ import { DateRangePicker } from "react-date-range";
 import format from "date-fns/format";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
-import { addYears } from "date-fns";
 
-const ChooseDate = () => {
+// eslint-disable-next-line react/prop-types
+const ChooseDate = ({ range, setRange }) => {
   // Date state for one year range
-  const [range, setRange] = useState([
-    {
-      startDate: addYears(new Date(), -1), // One year ago from today
-      endDate: new Date(), // Today's date
-      key: "selection",
-    },
-  ]);
+  // const [range, setRange] = useState([
+  //   {
+  //     startDate: addYears(new Date(), -1), // One year ago from today
+  //     endDate: new Date(), // Today's date
+  //     key: "selection",
+  //   },
+  // ]);
 
   // Open close state
   const [open, setOpen] = useState(false);

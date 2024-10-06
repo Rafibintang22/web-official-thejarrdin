@@ -8,8 +8,7 @@ const { Validator } = require("../utils/validator");
 
 class DataFiturController {
   static async getAll(req, res) {
-    const FiturID = req.params.FiturID;
-    const Tipe = req.params.Tipe;
+    const { FiturID, Tipe, StartDate, EndDate } = req.params;
     // // PAGINATION SERVER
     // const CurrPage = req.params.CurrPage;
     // const PageSize = req.params.PageSize;
@@ -25,7 +24,9 @@ class DataFiturController {
       if (Tipe === "untukUser") {
         const readFiturUntukuser = await DataFiturRepository.readAllByFiturIdUntukUser(
           UserID,
-          FiturID
+          FiturID,
+          StartDate,
+          EndDate
           // offset,
           // limit
         );
@@ -35,7 +36,9 @@ class DataFiturController {
       if (Tipe === "dibuatUser") {
         const readFiturDibuatUser = await DataFiturRepository.readAllByFiturIdDibuatUser(
           UserID,
-          FiturID
+          FiturID,
+          StartDate,
+          EndDate
           // offset,
           // limit
         );
