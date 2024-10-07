@@ -192,7 +192,7 @@ class DataFiturRepository {
         include: [
           {
             model: UserModel, // Include untuk user pembuat data
-            attributes: ["nama"], // Ambil hanya nama pembuat
+            attributes: ["nama", "userID"], // Ambil hanya nama, dan userID pembuat
           },
           {
             model: UserTujuanModel, // Include untuk user tujuan
@@ -216,7 +216,7 @@ class DataFiturRepository {
       const transformedData = {
         Judul: findDataFitur.judul,
         TglDibuat: findDataFitur.tglDibuat,
-        DibuatOleh: findDataFitur.User.nama,
+        DibuatOleh: { UserID: findDataFitur.User.userID, Nama: findDataFitur.User.nama },
         UserTujuan: findDataFitur.user_tujuans.map((tujuan) => tujuan.User.nama),
         File: findDataFitur.fileFolder,
       };

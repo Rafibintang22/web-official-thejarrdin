@@ -77,7 +77,6 @@ function Sidebar() {
           className="h-100 d-flex flex-column gap-3"
           mode="inline"
           theme="light"
-          inlineisSidebarOpen={isSidebarOpen}
           inlineCollapsed={isSidebarOpen}
           items={itemsMenu}
           defaultSelectedKeys={[window.location.pathname]}

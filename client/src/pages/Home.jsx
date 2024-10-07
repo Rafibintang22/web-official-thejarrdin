@@ -226,6 +226,7 @@ function Home() {
                 key={i}
                 icon={false}
                 title="Lihat Notifikasi?"
+                description={notif.IsRead ? "" : "Lihat untuk tandai notif menjadi dibaca"}
                 onConfirm={() => handleNotifOpen(notif.Id, notif.FiturID, notif.Tipe)}
                 okText="Lihat"
                 cancelText="Tutup"

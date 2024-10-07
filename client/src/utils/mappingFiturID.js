@@ -4,6 +4,7 @@ const fiturMaping = {
   PengumumanUsaha: 3,
   "Tambah Data Laporan": 4,
   "Tambah Tagihan Bulanan": 5,
+  "Unggah Kwitansi Tagihan": 5,
   "Tambah Buletin Kegiatan": 6,
   "Tambah Informasi Paket": 7,
   "Tambah Masukan & Aspirasi": 8,

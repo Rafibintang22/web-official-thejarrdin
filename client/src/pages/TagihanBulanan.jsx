@@ -38,14 +38,11 @@ function TagihanBulanan() {
       label: "Untuk saya",
       key: "untukSaya",
     },
-  ];
-  // Jika hasPengelola true, tambahkan "Data diunggah" ke dalam menu
-  if (hasPengelola) {
-    menuInsert.push({
+    {
       label: "Data diunggah",
       key: "dataDiunggah",
-    });
-  }
+    },
+  ];
 
   const [searchValue, setSearchValue] = useState("");
   const [filteredDataTable, setFilteredDataTable] = useState([]);
@@ -161,7 +158,7 @@ function TagihanBulanan() {
             />
           )}
           {isDetailOpen === "Tagihan Bulanan" && (
-            <ModalDetail judulDetail={"Detail Tagihan Bulanan"} />
+            <ModalDetail judulDetail={"Detail Tagihan Bulanan"} tipeDetail={currTipeData} />
           )}
         </>
       )}

@@ -9,13 +9,15 @@ import { inputValidator } from "../utils/inputValidator";
 import { fiturMaping } from "../utils/mappingFiturID";
 
 // eslint-disable-next-line react/prop-types
-function ModalInsert({ currState, setState, judulInsert }) {
+function ModalInsert({ currState, setState, judulInsert, dataOne = null }) {
   const userSession = JSON.parse(localStorage.getItem("userSession"));
   // console.log(userSession);
 
   // const [uploadProgress, setUploadProgress] = useState(0); // State untuk melacak progress upload
   const { ValidationStatus, setValidationStatus, setCloseAlert } = useValidator();
-  const [formData, setFormData] = useState({ Judul: "", UserTujuan: [], FileFolder: [] });
+  const [formData, setFormData] = useState(
+    dataOne ? dataOne : { Judul: "", UserTujuan: [], FileFolder: [] }
+  );
   const [loading, setLoading] = useState(false); // Tambahkan state loading
   // console.log(formData, "FORMDATA");
 
@@ -55,8 +57,13 @@ function ModalInsert({ currState, setState, judulInsert }) {
   };
 
   const handleCurrentMenu = (value) => {
-    setFormData({ Judul: "", UserTujuan: [], FileFolder: "" });
-    setCurrent(value);
+    if (dataOne) {
+      setFormData({ ...formData, FileFolder: "" });
+      setCurrent(value);
+    } else {
+      setFormData({ Judul: "", UserTujuan: [], FileFolder: "" });
+      setCurrent(value);
+    }
   };
   const handleSelectChange = (value) => {
     if (value.includes("Pilih Semua")) {
@@ -177,7 +184,9 @@ function ModalInsert({ currState, setState, judulInsert }) {
       }
     };
 
-    fetchDataUser();
+    if (!dataOne) {
+      fetchDataUser();
+    }
   }, []);
 
   const form = () => {
@@ -192,24 +201,28 @@ function ModalInsert({ currState, setState, judulInsert }) {
             value={formData["Judul"]}
             placeholder="Masukkan judul dokumen"
             onChange={(e) => handleFormDataChange("Judul", e.target.value)}
+            style={{ color: "#616161" }}
+            disabled={dataOne ? true : false}
           />
         </div>
-        <div className="form-input select d-flex align-items-start">
-          <label htmlFor="" className="d-flex w-25 gap-2">
-            <p className="text-danger">*</p>
-            Dibuat untuk
-          </label>
-          <Select
-            className="w-100"
-            mode="multiple"
-            allowClear
-            placeholder="Pilih..."
-            value={formData["UserTujuan"]}
-            onChange={(value) => handleFormDataChange("UserTujuan", value)}
-            optionFilterProp="label"
-            options={opsiUser}
-          />
-        </div>
+        {!dataOne && (
+          <div className="form-input select d-flex align-items-start">
+            <label htmlFor="" className="d-flex w-25 gap-2">
+              <p className="text-danger">*</p>
+              Dibuat untuk
+            </label>
+            <Select
+              className="w-100"
+              mode="multiple"
+              allowClear
+              placeholder="Pilih..."
+              value={formData["UserTujuan"]}
+              onChange={(value) => handleFormDataChange("UserTujuan", value)}
+              optionFilterProp="label"
+              options={opsiUser}
+            />
+          </div>
+        )}
         {current === "unggah" && (
           <div className="form-input file">
             <Dragger height={250} {...propsUploadImg}>
@@ -282,6 +295,8 @@ function ModalInsert({ currState, setState, judulInsert }) {
   };
 
   // console.log(uploadProgress);
+
+  console.log(formData);
 
   const insertFormData = async () => {
     setLoading(true); // Set loading ke true saat login dijalankan
