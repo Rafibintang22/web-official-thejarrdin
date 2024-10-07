@@ -3,7 +3,7 @@ const { MessageModel, UserModel, MessageTujuanModel } = require("../models");
 const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
 
 class MessageRepository {
-  static async readAllByPenerimaID(penerimaID) {
+  static async readAllByPenerimaID(penerimaID, startDate, endDate) {
     try {
       const findMessage = await MessageTujuanModel.findAll({
         where: { penerimaID: penerimaID },
@@ -27,14 +27,22 @@ class MessageRepository {
         IsRead: msg.isRead,
       }));
 
-      // return findMessage;
-      return transformedData;
+      // Filter transformedData berdasarkan startDate dan endDate
+      const filteredData = transformedData.filter((item) => {
+        const itemDate = new Date(item.TglDibuat).getTime(); // Konversi TglDibuat ke epoch
+        return itemDate >= startDate && itemDate <= endDate;
+      });
+
+      // Mengurutkan berdasarkan TglDibuat terbaru
+      filteredData.sort((a, b) => new Date(b.TglDibuat) - new Date(a.TglDibuat));
+
+      return filteredData;
     } catch (error) {
       throw error;
     }
   }
 
-  static async readAllByPengirimID(pengirimID) {
+  static async readAllByPengirimID(pengirimID, startDate, endDate) {
     try {
       const findMessage = await MessageModel.findAll({
         where: { pengirimID: pengirimID },
@@ -57,8 +65,16 @@ class MessageRepository {
         // IsRead: msg.isRead,
       }));
 
-      // return findMessage;
-      return transformedData;
+      // Filter transformedData berdasarkan startDate dan endDate
+      const filteredData = transformedData.filter((item) => {
+        const itemDate = new Date(item.TglDibuat).getTime(); // Konversi TglDibuat ke epoch
+        return itemDate >= startDate && itemDate <= endDate;
+      });
+
+      // Mengurutkan berdasarkan TglDibuat terbaru
+      filteredData.sort((a, b) => new Date(b.TglDibuat) - new Date(a.TglDibuat));
+
+      return filteredData;
     } catch (error) {
       throw error;
     }

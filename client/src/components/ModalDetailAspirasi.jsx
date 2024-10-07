@@ -28,13 +28,12 @@ function ModalDetailAspirasi({ judulDetail, tipeDetail }) {
       };
       try {
         const response = await axios.get(
-          `${urlServer}/aspirasi/detail/${oneDataID}/${
+          `${urlServer}/aspirasidetail/${oneDataID}/${
             tipeDetail === "untukSaya" ? "untukUser" : "dibuatUser"
           }`,
           headers
         );
-
-        // console.log(response);
+        console.log(response);
 
         const responseData = response?.data;
         // console.log(responseData);

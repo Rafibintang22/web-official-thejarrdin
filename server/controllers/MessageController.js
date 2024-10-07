@@ -9,16 +9,26 @@ const { Validator } = require("../utils/validator");
 class MessageController {
   static async getAll(req, res) {
     const Tipe = req.params.Tipe;
+    const StartDate = req.params.StartDate;
+    const EndDate = req.params.EndDate;
     const UserID = req.dataSession.UserID;
 
     try {
       if (Tipe === "untukUser") {
-        const readAspirasi = await MessageRepository.readAllByPenerimaID(UserID);
+        const readAspirasi = await MessageRepository.readAllByPenerimaID(
+          UserID,
+          StartDate,
+          EndDate
+        );
         return res.status(200).json(readAspirasi);
       }
 
       if (Tipe === "dibuatUser") {
-        const readAspirasi = await MessageRepository.readAllByPengirimID(UserID);
+        const readAspirasi = await MessageRepository.readAllByPengirimID(
+          UserID,
+          StartDate,
+          EndDate
+        );
         return res.status(200).json(readAspirasi);
       }
     } catch (error) {
@@ -32,7 +42,7 @@ class MessageController {
     const Tipe = req.params.Tipe;
     const UserID = req.dataSession.UserID;
 
-    // console.log("Fetching message with ID:", PesanID, "for user:", UserID);
+    console.log("Fetching message with ID:", PesanID, "for user:", UserID);
 
     try {
       const readOneMessage = await MessageRepository.readOne(UserID, PesanID, Tipe);

@@ -51,8 +51,12 @@ router.delete("/data/:DataFiturID", Authorization.decryption, DataFiturControlle
 
 // ###############################################################################
 //                              MESSAGE ASPIRASI
-router.get("/aspirasi/:Tipe", Authorization.decryption, MessageController.getAll);
-router.get("/aspirasi/detail/:PesanID/:Tipe", Authorization.decryption, MessageController.getOne);
+router.get(
+  "/aspirasi/:Tipe/:StartDate/:EndDate",
+  Authorization.decryption,
+  MessageController.getAll
+);
+router.get("/aspirasidetail/:PesanID/:Tipe", Authorization.decryption, MessageController.getOne);
 router.post(
   "/aspirasi",
   upload.fields([{ name: "PesanFile", maxCount: 10 }]),
