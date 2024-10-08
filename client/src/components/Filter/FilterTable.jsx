@@ -1,12 +1,28 @@
-import { Button } from "antd";
+/* eslint-disable react/prop-types */
+import { Button, Input } from "antd";
 import ChooseDate from "./ChooseDate";
+import { SearchOutlined } from "@ant-design/icons";
 // import SelectComp from "./SelectComp";
 
-// eslint-disable-next-line react/prop-types
-function FilterTable({ isInsert, nameInsert, setInsertBtn, range, setRange }) {
+function FilterTable({
+  isInsert,
+  nameInsert,
+  setInsertBtn,
+  range,
+  setRange,
+  searchValue,
+  onChangeSearch,
+}) {
   return (
     <div className="filter-content w-100 d-flex justify-content-end p-4 gap-3">
       {/* <SelectComp value={currSort} handleChange={handleSort} /> */}
+      <Input
+        className="filter-item search-input d-none"
+        placeholder="Cari.."
+        value={searchValue}
+        onChange={onChangeSearch}
+        prefix={<SearchOutlined />}
+      />
       <ChooseDate range={range} setRange={setRange} />
 
       {isInsert && (

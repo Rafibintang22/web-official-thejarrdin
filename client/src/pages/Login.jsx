@@ -255,7 +255,12 @@ function Login() {
       </div>
 
       <div className="footer container d-flex w-100 justify-content-center" style={{ zIndex: 99 }}>
-        <img src={threelogo} alt="3 logo" style={{ width: "250px", height: "50px" }} />
+        <img
+          className="img-threeLogo"
+          src={threelogo}
+          alt="3 logo"
+          style={{ width: "350px", height: "75px" }}
+        />
       </div>
     </div>
   );

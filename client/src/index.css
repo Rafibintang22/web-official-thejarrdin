@@ -211,8 +211,8 @@ body {
   }
 
   .img-threeLogo {
-    width: 200px !important; /* Adjust the width for mobile */
-    height: 40px !important; /* Adjust the height for mobile */
+    width: 250px !important; /* Adjust the width for mobile */
+    height: 50px !important; /* Adjust the height for mobile */
   }
 
   /* MAIN CONTENT */
@@ -244,6 +244,9 @@ body {
   }
   .select-filter {
     width: 100%;
+  }
+  .filter-item.search-input {
+    display: flex !important;
   }
 
   .sidebar {
@@ -280,6 +283,9 @@ body {
   }
   .container-form-login {
     width: 50% !important;
+  }
+  .filter-item.search-input {
+    display: flex !important;
   }
 }
 
@@ -318,6 +324,9 @@ body {
   }
   .select-filter {
     width: 100%;
+  }
+  .filter-item.search-input {
+    display: flex !important;
   }
 
   .sidebar {
