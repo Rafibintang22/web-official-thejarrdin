@@ -14,17 +14,29 @@ const UserModel = jarrdinDB.define(
       allowNull: false,
       autoIncrement: true,
     },
+    kode_user: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
     nama: {
       type: DataTypes.STRING(255),
       allowNull: false,
     },
-    email: {
-      type: DataTypes.STRING(200),
-      allowNull: true,
-      unique: true,
+    no_unit: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+    alamat: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
     },
     noTelp: {
       type: DataTypes.STRING(20),
+      allowNull: true,
+      unique: true,
+    },
+    email: {
+      type: DataTypes.STRING(200),
       allowNull: true,
       unique: true,
     },

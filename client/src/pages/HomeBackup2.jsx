@@ -131,7 +131,30 @@ function Home() {
   };
   return (
     <>
-      <div className="bg-theme-subtle d-flex w-100 h-100 flex-column">
+      <div className="container-home d-flex w-100 h-100 flex-column">
+        <List
+          size="small"
+          className="list-role text-light position-absolute"
+          style={{ top: 100, left: 50 }}
+          header={<div>Peran Anda saat ini sebagai :</div>}
+          bordered
+          dataSource={dataUser?.Role}
+          renderItem={(item, i) => (
+            <>
+              <Popover
+                placement="right"
+                title={<span>Fitur yang dimiliki:</span>}
+                content={contentInfoRole(item.Nama)}
+              >
+                <List.Item style={{ cursor: "help" }} className="text-light ms-3">
+                  <p>
+                    {i + 1 + ". "} ({item.Nama})
+                  </p>
+                </List.Item>
+              </Popover>
+            </>
+          )}
+        />
         <div className="header bg-theme shadow p-3 ps-5 pe-5 d-flex w-100 justify-content-between align-items-center">
           <h5 className="text-light fw-medium" style={{ fontSize: "15px" }}>
             Selamat Datang, {dataUser?.Nama}
@@ -148,47 +171,25 @@ function Home() {
           </Badge>
         </div>
 
-        <div
-          className="container container-menu-v3 d-flex justify-content-center align-items-center flex-column flex-wrap h-100 gap-3"
-          style={{ marginTop: "10rem" }}
-        >
-          <List
-            size="small"
-            className="list-role text-dark position-absolute"
-            style={{ top: 100, left: 50 }}
-            header={<div>Peran Anda saat ini sebagai :</div>}
-            bordered
-            dataSource={dataUser?.Role}
-            renderItem={(item, i) => (
-              <>
-                <Popover
-                  placement="right"
-                  title={<span>Fitur yang dimiliki:</span>}
-                  content={contentInfoRole(item.Nama)}
-                >
-                  <List.Item style={{ cursor: "help" }} className="ms-3">
-                    <p>
-                      {i + 1 + ". "} ({item.Nama})
-                    </p>
-                  </List.Item>
-                </Popover>
-              </>
-            )}
-          />
+        <div className="container d-flex justify-content-center align-items-center flex-column flex-wrap h-100">
           {rolesUser.map((arrAkses, i) => (
-            <div key={i} className={`gap-3 d-flex `}>
+            <div
+              key={i}
+              className={`hexagonArea d-flex ${i === 0 ? "first" : "last"} ${
+                arrAkses.length % 2 === 0 && i !== 0 ? "genap" : ""
+              }`}
+            >
               {arrAkses.map((akses, j) => (
                 <div
                   key={j}
-                  className="menu-v3 btn-theme-gradient d-flex shadow rounded flex-column justify-content-center align-items-center p-5"
-                  style={{ cursor: "pointer", height: "10rem" }}
+                  className="hexagon p-2 shadow shadow-lg"
                   onClick={() => {
                     navigate(akses.key);
                   }}
                 >
                   {/* <FontAwesomeIcon icon={akses.icon} size="2xl" /> */}
                   <img
-                    className="text-light"
+                    className="icon-hexagon"
                     width={35}
                     height={35}
                     src={akses.icon}
@@ -208,11 +209,11 @@ function Home() {
             style={{ width: "350px", height: "75px" }}
           />
           <div
-            className="d-flex border border-top btn btn-danger justify-content-center align-items-center rounded-circle border-1"
+            className="d-flex border border-top btn-home-logout justify-content-center align-items-center rounded-circle border border-2"
             style={{ height: "45px", width: "45px", cursor: "pointer" }}
             onClick={() => navigate("/logout")}
           >
-            <FontAwesomeIcon size="sm" icon={faArrowRightFromBracket} />
+            <FontAwesomeIcon size="sm" icon={faArrowRightFromBracket} color="#FFFFFF" />
           </div>
         </div>
       </div>
