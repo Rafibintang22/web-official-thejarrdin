@@ -156,9 +156,6 @@ body {
   transform: scale(0.95);
 }
 
-.menu-v3 {
-  z-index: 99;
-}
 .menu-v3:hover {
   transform: scale(0.95);
   transition: 0.5s;
@@ -178,12 +175,6 @@ body {
 
 /* Mobile Devices (Portrait) */
 @media only screen and (max-width: 480px) {
-  .container-menu-v3 {
-    margin-top: 10rem;
-    padding-right: 2rem;
-    padding-left: 2rem;
-  }
-
   .menu-v3 {
     height: 6rem !important;
     padding: 10px !important;
@@ -295,8 +286,11 @@ body {
   .list-role {
     font-size: smaller;
     /* UNTUK HOME BARU */
-    top: 6rem !important;
-    left: 2.5rem !important;
+    /* top: 6rem !important;
+    left: 2.5rem !important; */
+
+    /* UNTUK HOME LEBIH BARU */
+    width: 50% !important;
   }
 }
 
@@ -316,11 +310,11 @@ body {
 /* Tablets (Portrait and Landscape) */
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
   .container-menu-v3 {
-    margin-top: 10rem;
-    padding-right: 2rem;
-    padding-left: 2rem;
+    gap: 7rem !important;
   }
-
+  .list-role {
+    width: 50% !important;
+  }
   .menu-v3 {
     width: 10rem;
     padding: 10px !important;

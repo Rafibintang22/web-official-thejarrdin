@@ -148,57 +148,57 @@ function Home() {
           </Badge>
         </div>
 
-        <div
-          className="container container-menu-v3 d-flex justify-content-center align-items-center flex-column flex-wrap h-100 gap-3"
-          style={{ marginTop: "10rem" }}
-        >
-          <List
-            size="small"
-            className="list-role text-dark position-absolute"
-            style={{ top: 100, left: 50 }}
-            header={<div>Peran Anda saat ini sebagai :</div>}
-            bordered
-            dataSource={dataUser?.Role}
-            renderItem={(item, i) => (
-              <>
-                <Popover
-                  placement="right"
-                  title={<span>Fitur yang dimiliki:</span>}
-                  content={contentInfoRole(item.Nama)}
-                >
-                  <List.Item style={{ cursor: "help" }} className="ms-3">
-                    <p>
-                      {i + 1 + ". "} ({item.Nama})
-                    </p>
-                  </List.Item>
-                </Popover>
-              </>
-            )}
-          />
-          {rolesUser.map((arrAkses, i) => (
-            <div key={i} className={`gap-3 d-flex `}>
-              {arrAkses.map((akses, j) => (
-                <div
-                  key={j}
-                  className="menu-v3 btn-theme-gradient d-flex shadow rounded flex-column justify-content-center align-items-center p-5"
-                  style={{ cursor: "pointer", height: "10rem" }}
-                  onClick={() => {
-                    navigate(akses.key);
-                  }}
-                >
-                  {/* <FontAwesomeIcon icon={akses.icon} size="2xl" /> */}
-                  <img
-                    className="text-light"
-                    width={35}
-                    height={35}
-                    src={akses.icon}
-                    alt={`img-icon-${j}`}
-                  />
-                  <p className="text-hexagon text-center fw-medium">{akses.label}</p>
-                </div>
-              ))}
-            </div>
-          ))}
+        <div className="container container-menu-v3 d-flex mt-5 gap-4 align-items-center flex-column h-100 ps-3 pe-3">
+          <div className="w-100">
+            <List
+              size="small"
+              className="w-25 list-role text-dark"
+              header={<div>Peran Anda saat ini sebagai :</div>}
+              bordered
+              dataSource={dataUser?.Role}
+              renderItem={(item, i) => (
+                <>
+                  <Popover
+                    placement="right"
+                    title={<span>Fitur yang dimiliki:</span>}
+                    content={contentInfoRole(item.Nama)}
+                  >
+                    <List.Item style={{ cursor: "help" }} className="ms-3">
+                      <p>
+                        {i + 1 + ". "} ({item.Nama})
+                      </p>
+                    </List.Item>
+                  </Popover>
+                </>
+              )}
+            />
+          </div>
+          <div className="d-flex flex-column align-items-center gap-3">
+            {rolesUser.map((arrAkses, i) => (
+              <div key={i} className={`gap-3 d-flex `}>
+                {arrAkses.map((akses, j) => (
+                  <div
+                    key={j}
+                    className="menu-v3 btn-theme-gradient d-flex shadow rounded flex-column justify-content-center align-items-center p-5"
+                    style={{ cursor: "pointer", height: "10rem" }}
+                    onClick={() => {
+                      navigate(akses.key);
+                    }}
+                  >
+                    {/* <FontAwesomeIcon icon={akses.icon} size="2xl" /> */}
+                    <img
+                      className="text-light"
+                      width={35}
+                      height={35}
+                      src={akses.icon}
+                      alt={`img-icon-${j}`}
+                    />
+                    <p className="text-hexagon text-center fw-medium">{akses.label}</p>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
         <div className="footer p-3 ps-5 pe-5 d-flex w-100 justify-content-between align-items-center">
           <img
