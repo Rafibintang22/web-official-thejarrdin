@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { urlServer } from "./endpoint";
 
 const UseSessionCheck = () => {
@@ -12,7 +12,15 @@ const UseSessionCheck = () => {
     // console.log(userSession);
 
     if (!userSession || !userSession?.AuthKey) {
-      navigate("/login");
+      if (location.pathname !== "/login") {
+        navigate("/login");
+      }
+      return;
+    }
+
+    // Redirect to homepage if user is on the login page and already logged in
+    if (location.pathname === "/login") {
+      navigate("/");
       return;
     }
 

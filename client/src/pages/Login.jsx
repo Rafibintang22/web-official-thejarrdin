@@ -8,8 +8,10 @@ import axios from "axios";
 import { urlClient, urlServer } from "../utils/endpoint";
 // import { useNavigate } from "react-router-dom";
 import formatTime from "../utils/FormatTime";
+import UseSessionCheck from "../utils/useSessionCheck";
 
 function Login() {
+  UseSessionCheck();
   // const navigate = useNavigate();
   const [dataLogin, setDataLogin] = useState({});
   const { ValidationStatus, setValidationStatus, setCloseAlert } = useValidator();

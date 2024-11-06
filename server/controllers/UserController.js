@@ -3,6 +3,7 @@ const { LoginSessionRepository } = require("../database/repositories/LoginSessio
 const { Authorization } = require("../utils/Authorization");
 const { generateOtp } = require("../utils/generateOtp");
 const { sendOtpToEmail } = require("../utils/sendEmail");
+const { sendOtpToWa } = require("../utils/sendWa");
 const { Validator } = require("../utils/validator");
 const OTP_EXPIRATION_TIME = 300000; // 5 menit (300.000 ms)
 
@@ -58,6 +59,10 @@ class UserController {
       });
       if (loginSession && readUser.Email && User.Email) {
         await sendOtpToEmail(readUser.Email, otp);
+      }
+
+      if (loginSession && readUser.NoTelp && User.NoTelp) {
+        await sendOtpToWa(readUser.NoTelp, otp);
       }
 
       res.status(200).json({
