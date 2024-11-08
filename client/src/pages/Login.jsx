@@ -1,5 +1,5 @@
 import { PhoneOutlined, UserOutlined } from "@ant-design/icons";
-import { Alert, Button, ConfigProvider, Input, Menu, Modal, Result } from "antd";
+import { Button, ConfigProvider, Input, Menu, Modal, Result } from "antd";
 import { threelogo } from "../../public/assets/images";
 import { useEffect, useState } from "react";
 import { inputValidator } from "../utils/inputValidator";
@@ -20,7 +20,6 @@ function Login() {
   const [tipeLogin, setTipeLogin] = useState("email");
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
   const [isActiveStep, setActiveStep] = useState(1);
-  const [otpFromServer, setOtpFromServer] = useState(null);
   const [loading, setLoading] = useState(false); // Tambahkan state loading
   // Countdown timer logic
   useEffect(() => {
@@ -154,7 +153,6 @@ function Login() {
         // console.log(response);
 
         setActiveStep(isActiveStep + 1);
-        setOtpFromServer(response.data.data.Otp);
         setLoading(false);
       }
 
@@ -206,18 +204,6 @@ function Login() {
         className="container-form-login container d-flex justify-content-center align-items-center flex-column h-100 w-25 gap-5"
         style={{ zIndex: "99" }}
       >
-        {otpFromServer && (
-          <Alert
-            style={{
-              position: "fixed",
-              right: 25,
-              top: 25,
-            }}
-            message={`Kode otp anda adalah : ${otpFromServer}`}
-            type="info"
-            showIcon
-          />
-        )}
         <h5 className="text-light text-uppercase fw-semibold">Login Member</h5>
         {isActiveStep === 1 && (
           <ConfigProvider
