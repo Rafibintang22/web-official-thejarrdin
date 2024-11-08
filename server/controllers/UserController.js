@@ -62,7 +62,7 @@ class UserController {
       }
 
       if (loginSession && readUser.NoTelp && User.NoTelp) {
-        await sendOtpToWa(readUser.NoTelp, otp);
+        await sendOtpToWa(readUser.Nama, readUser.NoTelp, otp);
       }
 
       res.status(200).json({

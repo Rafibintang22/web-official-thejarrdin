@@ -7,7 +7,7 @@ class UserRepository {
         include: {
           model: UserRoleModel,
           required: true,
-          include: { model: RoleModel, requred: true },
+          include: { model: RoleModel, required: true },
         },
       });
 

@@ -173,10 +173,10 @@ function ModalInsert({ currState, setState, judulInsert, dataOne = null }) {
         // Set the opsiUser state while keeping "Pilih Semua" as the first option
         setOpsiUser([
           { value: "Pilih Semua", label: "Pilih Semua" },
-          { value: "Pilih Semua Pengurus", label: "Pilih Semua Pengurus" },
-          { value: "Pilih Semua Pengelola", label: "Pilih Semua Pengelola" },
-          { value: "Pilih Semua Pemilik Unit", label: "Pilih Semua Pemilik Unit" },
-          { value: "Pilih Semua Pelaku Komersil", label: "Pilih Semua Pelaku Komersil" },
+          { value: "Pengurus", label: "Pilih Semua Pengurus" },
+          { value: "Pengelola", label: "Pilih Semua Pengelola" },
+          { value: "Pemilik Unit", label: "Pilih Semua Pemilik Unit" },
+          { value: "Pelaku Komersil", label: "Pilih Semua Pelaku Komersil" },
           ...transformedData,
         ]);
       } catch (error) {
