@@ -16,7 +16,7 @@ function ModalInsert({ currState, setState, judulInsert, dataOne = null }) {
   // const [uploadProgress, setUploadProgress] = useState(0); // State untuk melacak progress upload
   const { ValidationStatus, setValidationStatus, setCloseAlert } = useValidator();
   const [formData, setFormData] = useState(
-    dataOne ? dataOne : { Judul: "", UserTujuan: [], FileFolder: [] }
+    dataOne ? dataOne : { Judul: "", UserTujuan: [], FileFolder: [], TipeTujuan: "individu" }
   );
   const [loading, setLoading] = useState(false); // Tambahkan state loading
   // console.log(formData, "FORMDATA");
@@ -32,7 +32,6 @@ function ModalInsert({ currState, setState, judulInsert, dataOne = null }) {
     },
   ];
   const [current, setCurrent] = useState("unggah");
-  const [currentTipeDibuat, setCurrentTipeDibuat] = useState("Individu");
 
   const [opsiUser, setOpsiUser] = useState([]);
 
@@ -62,7 +61,12 @@ function ModalInsert({ currState, setState, judulInsert, dataOne = null }) {
       setFormData({ ...formData, FileFolder: "" });
       setCurrent(value);
     } else {
-      setFormData({ Judul: "", UserTujuan: [], FileFolder: "" });
+      setFormData((prevFormData) => ({
+        Judul: "",
+        UserTujuan: [],
+        FileFolder: "",
+        TipeTujuan: prevFormData.TipeTujuan,
+      }));
       setCurrent(value);
     }
   };
@@ -124,22 +128,22 @@ function ModalInsert({ currState, setState, judulInsert, dataOne = null }) {
       }
     };
 
-    if (!dataOne && currentTipeDibuat === "Individu") {
+    if (!dataOne && formData.TipeTujuan === "individu") {
       handleFormDataChange("UserTujuan", []); //menghapus pilihan dari UserTujuan yg sudah terpilih
       fetchDataUser();
     }
 
-    if (!dataOne && currentTipeDibuat === "Group") {
+    if (!dataOne && formData.TipeTujuan === "group") {
       handleFormDataChange("UserTujuan", []); //menghapus pilihan dari UserTujuan yg sudah terpilih
       setOpsiUser([
         { value: "Pilih Semua", label: "Pilih Semua" },
-        { value: "Pengurus", label: "Pengurus" },
-        { value: "Pengelola", label: "Pengelola" },
-        { value: "Pemilik Unit", label: "Pemilik Unit" },
-        { value: "Pelaku Komersil", label: "Pelaku Komersil" },
+        { value: 1, label: "Pengurus" },
+        { value: 2, label: "Pengelola" },
+        { value: 3, label: "Pemilik Unit" },
+        { value: 4, label: "Pelaku Komersil" },
       ]);
     }
-  }, [currentTipeDibuat]);
+  }, [formData.TipeTujuan]);
 
   const form = () => {
     return (
@@ -167,11 +171,11 @@ function ModalInsert({ currState, setState, judulInsert, dataOne = null }) {
               <Radio.Group
                 block
                 options={[
-                  { label: "Individu", value: "Individu" },
-                  { label: "Group", value: "Group" },
+                  { label: "Individu", value: "individu" },
+                  { label: "Group", value: "group" },
                 ]}
-                value={currentTipeDibuat}
-                onChange={(e) => setCurrentTipeDibuat(e.target.value)}
+                value={formData["TipeTujuan"]}
+                onChange={(e) => handleFormDataChange("TipeTujuan", e.target.value)}
                 optionType="button"
                 buttonStyle="solid"
               />

@@ -28,6 +28,42 @@ class UserRepository {
     }
   }
 
+  static async readAllUserByRole(roleID) {
+    try {
+      const users = await UserModel.findAll({
+        include: [
+          {
+            model: UserRoleModel,
+            required: true,
+            where: { roleID: roleID }, // Filter by roleID
+            include: [
+              {
+                model: RoleModel,
+                required: true,
+              },
+            ],
+          },
+        ],
+      });
+
+      // Transform the data into a simplified format
+      const transformedData = users.map((user) => ({
+        UserID: user.userID,
+        Nama: user.nama,
+        Email: user.email,
+        NoTelp: user.noTelp,
+        Role: user.user_roles.map((userRole) => ({
+          Nama: userRole.Role.nama,
+          RoleID: userRole.Role.roleID,
+        })),
+      }));
+
+      return transformedData;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async readOne(userID) {
     try {
       const findUser = await UserModel.findOne({

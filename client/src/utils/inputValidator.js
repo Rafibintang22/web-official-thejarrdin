@@ -72,6 +72,7 @@ const DataFitur = Joi.object({
     .messages({
       "any.required": "File wajib diisi",
     }),
+  TipeTujuan: Joi.string(),
   UserTujuan: Joi.array().items(Joi.number().integer().min(1)).min(1).required().messages({
     "array.min": "Minimal harus ada 1 user tujuan",
     "any.required": "User tujuan wajib diisi",

@@ -65,12 +65,35 @@ class DataFiturController {
 
   static async post(req, res) {
     const { body, files } = req;
+
+    // Determine UserTujuan based on TipeTujuan
+    let userTujuan;
+    if (body.TipeTujuan === "individu") {
+      // If individu, parse UserTujuan from body as individual IDs
+      userTujuan = body.UserTujuan.split(",").map((id) => Number(id));
+    } else if (body.TipeTujuan === "group") {
+      // If group, fetch user IDs by roles
+      const roleIds = body.UserTujuan.split(",").map((id) => Number(id));
+      try {
+        const usersByRole = await Promise.all(
+          roleIds.map(async (roleId) => {
+            const users = await UserRepository.readAllUserByRole(roleId);
+            return users.map((user) => user.UserID); // Assuming UserID is the identifier
+          })
+        );
+        // Flatten the nested arrays and remove duplicates
+        userTujuan = [...new Set(usersByRole.flat())];
+      } catch (error) {
+        return res.status(500).json({ error: "Error fetching users by role." });
+      }
+    }
+
     let dataFitur = {
-      ...body,
+      Judul: body.Judul,
       FiturID: Number(body.FiturID),
       TglDibuat: Number(body.TglDibuat),
       UserID_dibuat: req.dataSession.UserID,
-      UserTujuan: body.UserTujuan.split(",").map((id) => Number(id)), // Convert IDs to numbers
+      UserTujuan: userTujuan, // Set UserTujuan based on TipeTujuan
       FileFolder: body.FileFolder || [],
     };
     // console.log(dataFitur);
