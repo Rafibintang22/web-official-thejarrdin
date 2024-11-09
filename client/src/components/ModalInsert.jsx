@@ -1,5 +1,5 @@
 import { InboxOutlined, SaveTwoTone } from "@ant-design/icons";
-import { Button, Input, Menu, Modal, Popover, Result, Select } from "antd";
+import { Button, Input, Menu, Modal, Popover, Radio, Result, Select } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 import { useEffect, useState } from "react";
 import axios, { formToJSON } from "axios";
@@ -32,6 +32,7 @@ function ModalInsert({ currState, setState, judulInsert, dataOne = null }) {
     },
   ];
   const [current, setCurrent] = useState("unggah");
+  const [currentTipeDibuat, setCurrentTipeDibuat] = useState("Individu");
 
   const [opsiUser, setOpsiUser] = useState([]);
 
@@ -67,66 +68,13 @@ function ModalInsert({ currState, setState, judulInsert, dataOne = null }) {
   };
   const handleSelectChange = (value) => {
     if (value.includes("Pilih Semua")) {
-      const allValuesExceptPilihSemua = opsiUser
-        .filter(
-          (option) =>
-            option.value !== "Pilih Semua" &&
-            option.value !== "Pilih Semua Pengurus" &&
-            option.value !== "Pilih Semua Pengelola" &&
-            option.value !== "Pilih Semua Pemilik Unit" &&
-            option.value !== "Pilih Semua Pelaku Komersil"
-        ) // Filter out "Pilih Semua"
+      const allValues = opsiUser
+        .filter((option) => option.value !== "Pilih Semua") // Filter out "Pilih Semua"
         .map((option) => option.value); // Get all other values
 
       setFormData((prevData) => ({
         ...prevData,
-        UserTujuan: allValuesExceptPilihSemua,
-      }));
-    } else if (value.includes("Pilih Semua Pengurus")) {
-      // Filter opsiUser yang memiliki role dengan nama "Pengurus"
-      const usersWithPengurusRole = opsiUser
-        .filter((option) => option.role && option.role.some((role) => role.Nama === "Pengurus"))
-        .map((option) => option.value); // Ambil nilai (user ID)
-
-      // Update UserTujuan dengan user yang memiliki role "Pengurus"
-      setFormData((prevData) => ({
-        ...prevData,
-        UserTujuan: usersWithPengurusRole,
-      }));
-    } else if (value.includes("Pilih Semua Pengelola")) {
-      // Filter opsiUser yang memiliki role dengan nama "Pengelola"
-      const usersWithPengelolaRole = opsiUser
-        .filter((option) => option.role && option.role.some((role) => role.Nama === "Pengelola"))
-        .map((option) => option.value);
-
-      // Update UserTujuan dengan user yang memiliki role "Pengelola"
-      setFormData((prevData) => ({
-        ...prevData,
-        UserTujuan: usersWithPengelolaRole,
-      }));
-    } else if (value.includes("Pilih Semua Pemilik Unit")) {
-      // Filter opsiUser yang memiliki role dengan nama "Pemilik Unit"
-      const usersWithPemilikUnitRole = opsiUser
-        .filter((option) => option.role && option.role.some((role) => role.Nama === "Pemilik Unit"))
-        .map((option) => option.value);
-
-      // Update UserTujuan dengan user yang memiliki role "Pemilik Unit"
-      setFormData((prevData) => ({
-        ...prevData,
-        UserTujuan: usersWithPemilikUnitRole,
-      }));
-    } else if (value.includes("Pilih Semua Pelaku Komersil")) {
-      // Filter opsiUser yang memiliki role dengan nama "Pelaku Komersil"
-      const usersWithPelakuKomersilRole = opsiUser
-        .filter(
-          (option) => option.role && option.role.some((role) => role.Nama === "Pelaku Komersil")
-        )
-        .map((option) => option.value);
-
-      // Update UserTujuan dengan user yang memiliki role "Pelaku Komersil"
-      setFormData((prevData) => ({
-        ...prevData,
-        UserTujuan: usersWithPelakuKomersilRole,
+        UserTujuan: allValues,
       }));
     } else {
       setFormData((prevData) => ({
@@ -170,24 +118,28 @@ function ModalInsert({ currState, setState, judulInsert, dataOne = null }) {
             role: data.Role,
           }));
 
-        // Set the opsiUser state while keeping "Pilih Semua" as the first option
-        setOpsiUser([
-          { value: "Pilih Semua", label: "Pilih Semua" },
-          { value: "Pengurus", label: "Pilih Semua Pengurus" },
-          { value: "Pengelola", label: "Pilih Semua Pengelola" },
-          { value: "Pemilik Unit", label: "Pilih Semua Pemilik Unit" },
-          { value: "Pelaku Komersil", label: "Pilih Semua Pelaku Komersil" },
-          ...transformedData,
-        ]);
+        setOpsiUser([...transformedData]);
       } catch (error) {
         console.log(error);
       }
     };
 
-    if (!dataOne) {
+    if (!dataOne && currentTipeDibuat === "Individu") {
+      handleFormDataChange("UserTujuan", []); //menghapus pilihan dari UserTujuan yg sudah terpilih
       fetchDataUser();
     }
-  }, []);
+
+    if (!dataOne && currentTipeDibuat === "Group") {
+      handleFormDataChange("UserTujuan", []); //menghapus pilihan dari UserTujuan yg sudah terpilih
+      setOpsiUser([
+        { value: "Pilih Semua", label: "Pilih Semua" },
+        { value: "Pengurus", label: "Pengurus" },
+        { value: "Pengelola", label: "Pengelola" },
+        { value: "Pemilik Unit", label: "Pemilik Unit" },
+        { value: "Pelaku Komersil", label: "Pelaku Komersil" },
+      ]);
+    }
+  }, [currentTipeDibuat]);
 
   const form = () => {
     return (
@@ -211,16 +163,29 @@ function ModalInsert({ currState, setState, judulInsert, dataOne = null }) {
               <p className="text-danger">*</p>
               Dibuat untuk
             </label>
-            <Select
-              className="w-100"
-              mode="multiple"
-              allowClear
-              placeholder="Pilih..."
-              value={formData["UserTujuan"]}
-              onChange={(value) => handleFormDataChange("UserTujuan", value)}
-              optionFilterProp="label"
-              options={opsiUser}
-            />
+            <div className="d-flex flex-column w-100 gap-2">
+              <Radio.Group
+                block
+                options={[
+                  { label: "Individu", value: "Individu" },
+                  { label: "Group", value: "Group" },
+                ]}
+                value={currentTipeDibuat}
+                onChange={(e) => setCurrentTipeDibuat(e.target.value)}
+                optionType="button"
+                buttonStyle="solid"
+              />
+              <Select
+                className="w-100"
+                mode="multiple"
+                allowClear
+                placeholder="Pilih..."
+                value={formData["UserTujuan"]}
+                onChange={(value) => handleFormDataChange("UserTujuan", value)}
+                optionFilterProp="label"
+                options={opsiUser}
+              />
+            </div>
           </div>
         )}
         {current === "unggah" && (

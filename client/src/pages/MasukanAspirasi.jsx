@@ -14,7 +14,7 @@ import ModalDetailAspirasi from "../components/ModalDetailAspirasi";
 import toogleSidebarMobile from "../utils/toogleSidebarMobile";
 import SidebarMobile from "../components/SidebarMobile";
 import { formatDate } from "../utils/formatDate";
-import { addYears } from "date-fns";
+import { addDays, addYears } from "date-fns";
 
 function MasukanAspirasi() {
   UseSessionCheck();
@@ -22,7 +22,7 @@ function MasukanAspirasi() {
   const [range, setRange] = useState([
     {
       startDate: addYears(new Date(), -1), // One year ago from today
-      endDate: new Date(), // Today's date
+      endDate: addDays(new Date(), 1), // Tomorrow's date
       key: "selection",
     },
   ]);

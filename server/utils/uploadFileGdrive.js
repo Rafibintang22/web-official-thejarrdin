@@ -10,7 +10,7 @@ const auth = new google.auth.GoogleAuth({
   scopes: SCOPES,
 });
 
-const DEFAULT_PARENTSID = "1gyraMNa5P7Lp_dhKpW5e7vmNR3_JT_nE";
+const DEFAULT_PARENTSID = "1ac9IJQ0mjo3FuXGeMum6lO_wy9i-FvGK";
 // Create a folder on Google Drive
 // DEFAULT Parent folder ID adalah rootnya dari yg di gdrive
 async function createFolder(name, parentFolderId) {
@@ -32,9 +32,9 @@ async function createFolder(name, parentFolderId) {
 async function setFilePermissions(fileId, emailUser) {
   const drive = google.drive({ version: "v3", auth });
   const permissions = emailUser.map((email) => ({
-    type: "user",
+    type: email ? "user" : "anyone", //jika email tidak ada maka akses file pd Gdrive menjadi anyone
     role: "reader",
-    emailAddress: email,
+    ...(email && { emailAddress: email }), // Only add emailAddress if email is not null
   }));
 
   for (const permission of permissions) {

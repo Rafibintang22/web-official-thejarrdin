@@ -15,7 +15,7 @@ import HakAkses from "../utils/hakAkses";
 import toogleSidebarMobile from "../utils/toogleSidebarMobile";
 import SidebarMobile from "../components/SidebarMobile";
 import { formatDate } from "../utils/formatDate";
-import { addYears } from "date-fns";
+import { addDays, addYears } from "date-fns";
 
 function Laporan() {
   UseSessionCheck();
@@ -23,7 +23,7 @@ function Laporan() {
   const [range, setRange] = useState([
     {
       startDate: addYears(new Date(), -1), // One year ago from today
-      endDate: new Date(), // Today's date
+      endDate: addDays(new Date(), 1), // Tomorrow's date
       key: "selection",
     },
   ]);
@@ -74,6 +74,8 @@ function Laporan() {
           }/${range[0].startDate.getTime()}/${range[0].endDate.getTime()}`,
           headers
         );
+        console.log(response);
+
         const transformedData = response.data.map((data) => ({
           ...data,
           TglDibuat: formatDate(data.TglDibuat),

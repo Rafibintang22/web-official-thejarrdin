@@ -68,7 +68,7 @@ class UserController {
       res.status(200).json({
         success: true,
         // sebelum integrasi ke WA API (jika noTelp maka otp akan di kirim ke client)
-        data: User.Email ? { User: readUser } : { User: readUser, Otp: otp },
+        data: { User: readUser },
       });
     } catch (error) {
       console.error(error);
