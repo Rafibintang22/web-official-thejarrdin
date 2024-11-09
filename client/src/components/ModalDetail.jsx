@@ -6,6 +6,7 @@ import { urlServer } from "../utils/endpoint";
 import { formatDate } from "../utils/formatDate";
 import { FileOutlined } from "@ant-design/icons";
 import ModalInsert from "./ModalInsert";
+import TextArea from "antd/es/input/TextArea";
 
 // eslint-disable-next-line react/prop-types
 function ModalDetail({ judulDetail, tipeDetail }) {
@@ -17,6 +18,7 @@ function ModalDetail({ judulDetail, tipeDetail }) {
   const [formData, setFormData] = useState(null);
   const [modalInsert, setModalInsert] = useState(false);
   const [loading, setLoading] = useState(false); // Tambahkan state loading
+  console.log(dataOne);
 
   axios.defaults.withCredentials = true;
   useEffect(() => {
@@ -44,6 +46,7 @@ function ModalDetail({ judulDetail, tipeDetail }) {
           }
           setDataOne({
             ...responseData,
+            UserTujuan: responseData.UserTujuan.join(", "),
             File: transformedFile, // Menambahkan transformedFile ke dalam responseData
             DibuatOleh: responseData.DibuatOleh.Nama,
           });
@@ -53,7 +56,11 @@ function ModalDetail({ judulDetail, tipeDetail }) {
             FileFolder: [],
           });
         } else {
-          setDataOne({ ...responseData, DibuatOleh: responseData.DibuatOleh.Nama });
+          setDataOne({
+            ...responseData,
+            UserTujuan: responseData.UserTujuan.join(", "),
+            DibuatOleh: responseData.DibuatOleh.Nama,
+          });
           setFormData({
             Judul: "Kwitansi : " + responseData.Judul,
             UserTujuan: [responseData.DibuatOleh.UserID],
@@ -131,7 +138,15 @@ function ModalDetail({ judulDetail, tipeDetail }) {
             <label htmlFor="" className="w-25">
               Tujuan
             </label>
-            <Input style={{ color: "#616161" }} value={dataOne?.UserTujuan} disabled />
+            <TextArea
+              style={{ color: "#616161" }}
+              value={dataOne?.UserTujuan}
+              autoSize={{
+                minRows: 1,
+                maxRows: 6,
+              }}
+              disabled
+            />
           </div>
 
           {dataOne?.File && dataOne?.File.length > 1 && (
