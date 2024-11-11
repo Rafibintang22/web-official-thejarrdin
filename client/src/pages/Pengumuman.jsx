@@ -133,6 +133,8 @@ function Pengumuman() {
                 setInsertBtn={setModalInsert}
                 range={range}
                 setRange={setRange}
+                searchValue={searchValue}
+                onChangeSearch={handleSearch}
               />
               <Menu
                 onClick={(e) => setCurrTipeData(e.key)}

@@ -47,6 +47,7 @@ function ModalDetailAspirasi({ judulDetail, tipeDetail }) {
           }
           setDataOne({
             ...responseData,
+            UserTujuan: responseData.UserTujuan.join(", "),
             File: transformedFile, // Menambahkan transformedFile ke dalam responseData
           });
           setFormData(() => ({
@@ -56,7 +57,7 @@ function ModalDetailAspirasi({ judulDetail, tipeDetail }) {
             PesanFile: [],
           }));
         } else {
-          setDataOne(responseData);
+          setDataOne({ ...responseData, UserTujuan: responseData.UserTujuan.join(", ") });
           setFormData(() => ({
             Judul: "RE : " + response.data.Judul,
             Pesan: "",
@@ -181,7 +182,15 @@ function ModalDetailAspirasi({ judulDetail, tipeDetail }) {
               <label htmlFor="" className="w-25">
                 Tujuan
               </label>
-              <Input style={{ color: "#616161" }} value={dataOne?.UserTujuan} disabled />
+              <TextArea
+                style={{ color: "#616161" }}
+                value={dataOne?.UserTujuan}
+                autoSize={{
+                  minRows: 1,
+                  maxRows: 6,
+                }}
+                disabled
+              />
             </div>
           )}
           <div className="form-input text d-flex align-items-start">
