@@ -101,6 +101,12 @@ class UserRepository {
         raw: false, // Untuk mempertahankan struktur objek terkait
       });
 
+      if (!findUser) {
+        const newError = new Error("Email atau No telepon tidak terdaftar");
+        newError.status = 404;
+        throw newError;
+      }
+
       // console.log(findUser);
       // Transform the data
       const formattedData = {

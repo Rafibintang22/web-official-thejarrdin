@@ -53,7 +53,7 @@ function Home() {
         setDataNotif(response.data.Notif);
         setTotalUnread(response.data.TotalUnRead);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
 
@@ -126,7 +126,7 @@ function Home() {
       setDetailOpen(fiturMaping2[fiturId], id);
       navigate(`/${url}`);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
   return (

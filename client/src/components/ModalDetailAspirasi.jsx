@@ -47,7 +47,6 @@ function ModalDetailAspirasi({ judulDetail, tipeDetail }) {
           }
           setDataOne({
             ...responseData,
-            UserTujuan: responseData.UserTujuan.join(", "),
             File: transformedFile, // Menambahkan transformedFile ke dalam responseData
           });
           setFormData(() => ({
@@ -57,7 +56,7 @@ function ModalDetailAspirasi({ judulDetail, tipeDetail }) {
             PesanFile: [],
           }));
         } else {
-          setDataOne({ ...responseData, UserTujuan: responseData.UserTujuan.join(", ") });
+          setDataOne(responseData);
           setFormData(() => ({
             Judul: "RE : " + response.data.Judul,
             Pesan: "",

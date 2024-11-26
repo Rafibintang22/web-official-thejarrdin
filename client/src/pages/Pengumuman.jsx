@@ -76,7 +76,7 @@ function Pengumuman() {
         total: response.data.length,
       }));
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     } finally {
       setLoading(false);
     }

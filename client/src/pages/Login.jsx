@@ -31,7 +31,7 @@ function Login() {
     } else if (timeLeft === 0) {
       clearInterval(timer);
       // Handle when the time runs out, e.g., show alert or allow OTP resend
-      console.log("Time's up! Resend OTP or show alert.");
+      // console.log("Time's up! Resend OTP or show alert.");
     }
 
     return () => clearInterval(timer); // Cleanup on component unmount

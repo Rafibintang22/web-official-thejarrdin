@@ -74,7 +74,7 @@ function Laporan() {
           }/${range[0].startDate.getTime()}/${range[0].endDate.getTime()}`,
           headers
         );
-        console.log(response);
+        // console.log(response);
 
         const transformedData = response.data.map((data) => ({
           ...data,
@@ -82,7 +82,7 @@ function Laporan() {
         }));
         setDataTable(transformedData);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       } finally {
         setLoading(false);
       }

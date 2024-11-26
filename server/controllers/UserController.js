@@ -39,13 +39,13 @@ class UserController {
         throw newError;
       }
 
-      const readUser = await UserRepository.readExisting(User.Email ? User.Email : User.NoTelp);
+      const readUser = await UserRepository.readExisting(User.Email || User.NoTelp);
       if (!readUser) {
         //JIka user tidak ditemukan
         return res.status(401).json({ error: "email atau no telepon yang dimasukan salah" });
       }
 
-      const identifier = readUser.Email ? readUser.Email : readUser.NoTelp;
+      const identifier = readUser.Email || readUser.NoTelp;
       const otp = generateOtp(identifier);
       // Simpan session login di database
 
@@ -81,7 +81,7 @@ class UserController {
       const { Otp, Email, NoTelp } = req.body; // Klien mengirimkan EMail, MoTelp, dan OTP
 
       if ((!Email && !NoTelp) || !Otp) {
-        return res.status(400).json({ error: "OTP are required OR Email & No Telepon undefined" });
+        return res.status(400).json({ error: "Isi OTP terlebih dahulu" });
       }
 
       // Temukan session login berdasarkan otp,email,noTelp
@@ -105,7 +105,7 @@ class UserController {
         return res.status(401).json({ error: "Invalid OTP" });
       }
 
-      const readUser = await UserRepository.readExisting(loginSession.email);
+      const readUser = await UserRepository.readExisting(loginSession.email || loginSession.noTelp);
 
       const payload = {
         UserID: readUser.UserID,

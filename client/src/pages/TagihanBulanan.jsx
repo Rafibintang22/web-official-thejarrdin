@@ -76,7 +76,7 @@ function TagihanBulanan() {
         }));
         setDataTable(transformedData);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       } finally {
         setLoading(false);
       }
