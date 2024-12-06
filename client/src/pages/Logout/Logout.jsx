@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { urlServer } from "../utils/endpoint";
+import { urlServer } from "../../utils/endpoint";
 
 function Logout() {
   const navigate = useNavigate();

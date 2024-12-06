@@ -24,7 +24,7 @@ class Authorization {
       // console.log(token);
 
       if (!token) {
-        return res.status(401).json({ message: "Unauthorized", header: req.headers });
+        return res.status(401).json({ message: "Unauthorized" });
       }
 
       const secretKey = process.env.SECRET_KEY;
