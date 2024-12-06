@@ -1,11 +1,11 @@
 const Fitur = {
   Pengumuman: 1,
-  PengumumanPengelola: 2,
-  PengumumanUsaha: 3,
+  "Pengumuman Pengelola": 2,
+  "Pengumuman Usaha": 3,
   Laporan: 4,
-  TagihanBulanan: 5,
-  BuletinKegiatan: 6,
-  InformasiPaket: 7,
-  Aspirasi: 8,
+  "Tagihan Bulanan": 5,
+  "Buletin Kegiatan": 6,
+  "Informasi Paket": 7,
+  "Masukan & Aspirasi": 8,
 };
 export { Fitur };

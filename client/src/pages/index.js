@@ -1,23 +1,6 @@
-import BuletinKegiatan from "./BuletinKegiatan";
-import Home from "./Home";
-import InformasiPaket from "./InformasiPaket";
-import Laporan from "./Laporan";
-import Login from "./Login";
-import Logout from "./Logout";
-import MasukanAspirasi from "./MasukanAspirasi";
-import Pengumuman from "./Pengumuman";
-import PengumumanPengelola from "./PengumumanPengelola";
-import TagihanBulanan from "./TagihanBulanan";
+import Home from "./Home/Home";
+import DataFitur from "./DataFitur/DataFitur";
+import Login from "./Login/Login";
+import Logout from "./Logout/Logout";
 
-export {
-  Home,
-  Laporan,
-  MasukanAspirasi,
-  Pengumuman,
-  TagihanBulanan,
-  PengumumanPengelola,
-  InformasiPaket,
-  BuletinKegiatan,
-  Login,
-  Logout,
-};
+export { Home, DataFitur, Login, Logout };

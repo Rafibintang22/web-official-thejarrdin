@@ -1,14 +1,14 @@
 import { PhoneOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, ConfigProvider, Input, Menu, Modal, Result } from "antd";
-import { threelogo } from "../../public/assets/images";
+import { threelogo } from "../../../public/assets/images";
 import { useEffect, useState } from "react";
-import { inputValidator } from "../utils/inputValidator";
-import useValidator from "../constaints/FormValidation";
+import { inputValidator } from "../../utils/inputValidator";
+import useValidator from "../../constaints/FormValidation";
 import axios from "axios";
-import { urlClient, urlServer } from "../utils/endpoint";
+import { urlClient, urlServer } from "../../utils/endpoint";
 // import { useNavigate } from "react-router-dom";
-import formatTime from "../utils/FormatTime";
-import UseSessionCheck from "../utils/useSessionCheck";
+import formatTime from "../../utils/FormatTime";
+import UseSessionCheck from "../../utils/useSessionCheck";
 
 function Login() {
   UseSessionCheck();
@@ -150,7 +150,7 @@ function Login() {
           Email: responseData.Email,
           NoTelp: responseData.NoTelp,
         }));
-        // console.log(response);
+        console.log(response);
 
         setActiveStep(isActiveStep + 1);
         setLoading(false);

@@ -32,7 +32,7 @@ app.use(
   })
 );
 
-// DatabaseManager.synchronize(process.env.DB_NAME, false);
+DatabaseManager.synchronize(process.env.DB_NAME, false);
 
 const { router } = require("./routes");
 app.use("/", router);

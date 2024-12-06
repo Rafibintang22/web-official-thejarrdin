@@ -1,11 +1,11 @@
 import { faBell } from "@fortawesome/free-regular-svg-icons";
-import { multiRoleAkses, bagiArrayAkses } from "../models/menuRoleAkses";
+import { multiRoleAkses, bagiArrayAkses } from "../../models/menuRoleAkses";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons/faArrowRightFromBracket";
-import { threelogo } from "../../public/assets/images/index";
+import { threelogo } from "../../../public/assets/images/index";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import UseSessionCheck from "../utils/useSessionCheck";
+import UseSessionCheck from "../../utils/useSessionCheck";
 import { Avatar, Badge, List, Popover } from "antd";
 
 function Home() {

@@ -280,7 +280,7 @@ function ModalInsert({ currState, setState, judulInsert, dataOne = null }) {
       const formattedFormData = formatFormData(formData);
 
       const normalizedData = normalizeFileFolder(formToJSON(formattedFormData)); // Normalisasi file folder untuk validasi
-      // console.log(normalizedData, "TEST");
+      console.log(normalizedData, "TEST");
 
       // Lakukan validasi menggunakan Joi
       const validateFunction = inputValidator["DataFitur"];
