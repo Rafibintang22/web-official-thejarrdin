@@ -27,7 +27,7 @@ function App() {
             <Route path="/laporan" element={<DataFitur active={"Laporan"} />}></Route>
             {/* <Route path="/laporantest" element={<DataFitur />}></Route> */}
             <Route
-              path="/masukan&Aspirasi"
+              path="/masukan&aspirasi"
               element={<DataFitur active={"Masukan & Aspirasi"} />}
             ></Route>
             <Route path="/pengumuman" element={<DataFitur active={"Pengumuman"} />}></Route>

@@ -3,6 +3,7 @@ const {
   PenggunaRoleRepository,
   PenggunaRepository,
 } = require("../database/repositories");
+const { sendNotifToWa } = require("../utils/sendWa");
 const { uploadFileGdrive, createFolder } = require("../utils/uploadFileGdrive");
 const { Validator } = require("../utils/validator");
 
@@ -140,6 +141,7 @@ class PesanController {
 
     try {
       const createMessage = await PesanRepository.create(dataMessage);
+      // await sendNotifToWa(readUser.Nama, readUser.NoTelp, otp);
       return res.status(201).json({ success: true, data: createMessage });
     } catch (error) {
       console.error(error);

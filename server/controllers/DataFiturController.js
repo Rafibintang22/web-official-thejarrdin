@@ -3,6 +3,7 @@ const {
   FiturRepository,
   PenggunaRepository,
 } = require("../database/repositories");
+const { sendNotifToWa } = require("../utils/sendWa");
 const { uploadFileGdrive, createFolder } = require("../utils/uploadFileGdrive");
 const { Validator } = require("../utils/validator");
 
@@ -154,6 +155,7 @@ class DataFiturController {
 
     try {
       const createDataFitur = await DataFiturRepository.create(dataFitur);
+      // await sendNotifToWa(readUser.Nama, readUser.NoTelp, otp);
       return res.status(201).json({ success: true, data: createDataFitur });
     } catch (error) {
       console.error(error);

@@ -7,7 +7,7 @@ export const PengurusAkses = [
   },
   {
     label: "Masukan & Aspirasi",
-    key: "/masukan&Aspirasi",
+    key: "/masukan&aspirasi",
     icon: "https://img.icons8.com/ios/100/mailbox-closed-flag-down--v1.png",
     iconColor: "https://img.icons8.com/color/100/mailbox-opened-flag-down.png",
   },
@@ -61,7 +61,7 @@ export const PemilikUnitAkses = [
   },
   {
     label: "Masukan & Aspirasi",
-    key: "/masukan&Aspirasi",
+    key: "/masukan&aspirasi",
     icon: "https://img.icons8.com/ios/100/mailbox-closed-flag-down--v1.png",
     iconColor: "https://img.icons8.com/color/100/mailbox-opened-flag-down.png",
   },
@@ -106,7 +106,7 @@ export const PelakuKomersilAkses = [
   },
   {
     label: "Masukan & Aspirasi",
-    key: "/masukan&Aspirasi",
+    key: "/masukan&aspirasi",
     icon: "https://img.icons8.com/ios/100/mailbox-closed-flag-down--v1.png",
     iconColor: "https://img.icons8.com/color/100/mailbox-opened-flag-down.png",
   },
