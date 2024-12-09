@@ -1,7 +1,7 @@
 const {
   DataFiturRepository,
   FiturRepository,
-  UserRepository,
+  PenggunaRepository,
 } = require("../database/repositories");
 const { uploadFileGdrive, createFolder } = require("../utils/uploadFileGdrive");
 const { Validator } = require("../utils/validator");
@@ -77,7 +77,7 @@ class DataFiturController {
       try {
         const usersByRole = await Promise.all(
           roleIds.map(async (roleId) => {
-            const users = await UserRepository.readAllUserByRole(roleId);
+            const users = await PenggunaRepository.readAllUserByRole(roleId);
             return users.map((user) => user.UserID); // Assuming UserID is the identifier
           })
         );
@@ -104,14 +104,14 @@ class DataFiturController {
     let linkFiles = ""; //berupa string
     // // JIKA post terdapat files
     if (files && files.FileFolder) {
-      // Fetch user emails from UserRepository
+      // Fetch user emails from PenggunaRepository
       let userIds = dataFitur.UserTujuan;
       userIds.push(dataFitur.UserID_dibuat); //menambah juga userID untuk yg buat data
       let arrEmailUser = [];
       try {
         arrEmailUser = await Promise.all(
           userIds.map(async (id) => {
-            const user = await UserRepository.readOne(id);
+            const user = await PenggunaRepository.readOne(id);
             return user ? user.email : null; // Assuming user has an 'email' field
           })
         );
@@ -119,7 +119,7 @@ class DataFiturController {
         return res.status(500).json({ error: "Error fetching user emails." });
       }
       // console.log(arrEmailUser);
-      // END Fetch user emails from UserRepository
+      // END Fetch user emails from PenggunaRepository
 
       // membuat folder berdasarkan nama fitur_judul
       const namaFolder = `${readFitur.nama}_${judul}`;

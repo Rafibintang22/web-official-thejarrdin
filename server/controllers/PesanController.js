@@ -1,12 +1,12 @@
 const {
-  MessageRepository,
-  UserRoleRepository,
-  UserRepository,
+  PesanRepository,
+  PenggunaRoleRepository,
+  PenggunaRepository,
 } = require("../database/repositories");
 const { uploadFileGdrive, createFolder } = require("../utils/uploadFileGdrive");
 const { Validator } = require("../utils/validator");
 
-class MessageController {
+class PesanController {
   static async getAll(req, res) {
     const Tipe = req.params.Tipe;
     const StartDate = req.params.StartDate;
@@ -15,20 +15,12 @@ class MessageController {
 
     try {
       if (Tipe === "untukUser") {
-        const readAspirasi = await MessageRepository.readAllByPenerimaID(
-          UserID,
-          StartDate,
-          EndDate
-        );
+        const readAspirasi = await PesanRepository.readAllByPenerimaID(UserID, StartDate, EndDate);
         return res.status(200).json(readAspirasi);
       }
 
       if (Tipe === "dibuatUser") {
-        const readAspirasi = await MessageRepository.readAllByPengirimID(
-          UserID,
-          StartDate,
-          EndDate
-        );
+        const readAspirasi = await PesanRepository.readAllByPengirimID(UserID, StartDate, EndDate);
         return res.status(200).json(readAspirasi);
       }
     } catch (error) {
@@ -45,7 +37,7 @@ class MessageController {
     console.log("Fetching message with ID:", PesanID, "for user:", UserID);
 
     try {
-      const readOneMessage = await MessageRepository.readOne(UserID, PesanID, Tipe);
+      const readOneMessage = await PesanRepository.readOne(UserID, PesanID, Tipe);
       // console.log("Fetched message:", readOneMessage);
 
       return res.status(200).json(readOneMessage);
@@ -69,33 +61,34 @@ class MessageController {
       UserID_dibuat: req.dataSession.UserID,
     };
 
-    console.log(dataMessage, isReply);
+    // console.log(body, dataMessage, isReply);
 
     let userIds = [];
     // KALAU BUKAN REPLY, maka ambil semua idPengurus
     if (!isReply) {
-      userIds = await UserRoleRepository.readAllPengurusID();
+      userIds = await PenggunaRoleRepository.readAllPengurusID();
+      // console.log(userIds);
     } else {
       // KALAU REPLY, maka yg di push adalah id user tujuan saja
-      userIds.push({ userID: dataMessage.UserTujuanID });
+      userIds.push({ pengguna_id: dataMessage.UserTujuanID });
     }
-    userIds.push({ userID: dataMessage.UserID_dibuat }); //menambah juga userID untuk user yg membuat data
+    userIds.push({ pengguna_id: dataMessage.UserID_dibuat }); //menambah juga pengguna_id untuk user yg membuat data
     const judul = dataMessage.Judul;
     let linkFiles = ""; //berupa string
-    console.log(files);
+    // console.log(files);
 
-    console.log(userIds);
+    // console.log(userIds);
 
     // // JIKA post terdapat files
     if (files && files.PesanFile) {
-      // Fetch user emails from UserRepository
+      // Fetch user emails from PenggunaRepository
       let arrEmailUser = [];
       try {
         arrEmailUser = await Promise.all(
           userIds.map(async (user) => {
             console.log(user);
 
-            const readUser = await UserRepository.readOne(user.userID);
+            const readUser = await PenggunaRepository.readOne(user.pengguna_id);
             return readUser ? readUser.email : null; // Assuming user has an 'email' field
           })
         );
@@ -103,7 +96,7 @@ class MessageController {
         return res.status(500).json({ error: "Error fetching user emails." });
       }
       // console.log(arrEmailUser);
-      // END Fetch user emails from UserRepository
+      // END Fetch user emails from PenggunaRepository
 
       // membuat folder berdasarkan nama fitur_judul
       const namaFolder = `Masukan&Aspirasi_${judul}`;
@@ -146,7 +139,7 @@ class MessageController {
     }
 
     try {
-      const createMessage = await MessageRepository.create(dataMessage);
+      const createMessage = await PesanRepository.create(dataMessage);
       return res.status(201).json({ success: true, data: createMessage });
     } catch (error) {
       console.error(error);
@@ -159,7 +152,7 @@ class MessageController {
     const UserID = req.dataSession.UserID;
 
     try {
-      const updateMessage = await MessageRepository.updateRead(MessageID, UserID);
+      const updateMessage = await PesanRepository.updateRead(MessageID, UserID);
       return res.status(201).json(updateMessage);
     } catch (error) {
       console.error(error);
@@ -168,4 +161,4 @@ class MessageController {
   }
 }
 
-module.exports = { MessageController };
+module.exports = { PesanController };

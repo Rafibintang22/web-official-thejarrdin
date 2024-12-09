@@ -1,11 +1,11 @@
-const { LoginSessionModel } = require("../models");
+const { SesiMasukModel } = require("../models");
 const { DatabaseManager } = require("../../config/DatabaseManager");
 const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
 
-class LoginSessionRepository {
+class SesiMasukRepository {
   static async readAll() {
     try {
-      const findLoginSession = await LoginSessionModel.findAll();
+      const findLoginSession = await SesiMasukModel.findAll();
 
       return findLoginSession;
     } catch (error) {
@@ -13,14 +13,16 @@ class LoginSessionRepository {
     }
   }
 
-  static async readOne(otp, email, noTelp) {
+  static async readOne(otp, email, no_telp) {
     try {
-      const findLoginSession = await LoginSessionModel.findOne({
-        where: { otp: otp, email: email, noTelp: noTelp },
+      let findLoginSession;
+
+      findLoginSession = await SesiMasukModel.findOne({
+        where: { otp: otp, email: email, no_telp: no_telp },
       });
 
       if (!findLoginSession) {
-        const newError = new Error("otp tidak ditemukan.");
+        const newError = new Error("sesi tidak ditemukan");
         newError.status = 404;
         throw newError;
       }
@@ -34,19 +36,19 @@ class LoginSessionRepository {
   static async create(dataInsert) {
     const transaction = await jarrdinDB.transaction();
     try {
-      const { userID, email, noTelp, otp } = dataInsert;
-      //   console.log(email, noTelp, otp);
+      const { pengguna_id, email, no_telp, otp } = dataInsert;
+      //   console.log(email, no_telp, otp);
 
       //   EMAIL ATAU NOTELP YANG DIISI
-      if ((!email && !noTelp) || !otp) {
+      if ((!email && !no_telp) || !otp) {
         throw new Error("Data yang diperlukan tidak lengkap.");
       }
 
-      const newDataLoginSession = await LoginSessionModel.create(
+      const newDataLoginSession = await SesiMasukModel.create(
         {
-          userID,
+          pengguna_id,
           email,
-          noTelp,
+          no_telp,
           otp,
         },
         { transaction }
@@ -62,12 +64,9 @@ class LoginSessionRepository {
     }
   }
 
-  static async updateToken(loginSessionID, token) {
+  static async updateToken(sesi_id, token) {
     try {
-      return await LoginSessionModel.update(
-        { token: token },
-        { where: { loginSessionID: loginSessionID } }
-      );
+      return await SesiMasukModel.update({ token: token }, { where: { sesi_id: sesi_id } });
     } catch (error) {
       throw error;
     }
@@ -75,19 +74,19 @@ class LoginSessionRepository {
 
   static async delete(id) {
     try {
-      const findLoginSession = await LoginSessionModel.findOne({
-        where: { loginSessionID: id },
+      const findLoginSession = await SesiMasukModel.findOne({
+        where: { sesi_id: id },
       });
 
       if (!findLoginSession) {
-        const newError = new Error("loginSessionID tidak ditemukan.");
+        const newError = new Error("sesi_id tidak ditemukan.");
         newError.status = 404;
         throw newError;
       }
       // console.log(findLoginSession);
 
-      const deleteLoginSession = await LoginSessionModel.destroy({
-        where: { loginSessionID: findLoginSession.loginSessionID },
+      const deleteLoginSession = await SesiMasukModel.destroy({
+        where: { sesi_id: findLoginSession.sesi_id },
       });
 
       return deleteLoginSession;
@@ -97,4 +96,4 @@ class LoginSessionRepository {
   }
 }
 
-module.exports = { LoginSessionRepository };
+module.exports = { SesiMasukRepository };

@@ -1,24 +1,24 @@
-const { UserModel, RoleModel, UserRoleModel } = require("../models");
+const { PenggunaModel, RoleModel, PenggunaRoleModel } = require("../models");
 
-class UserRepository {
+class PenggunaRepository {
   static async readAll() {
     try {
-      const findUser = await UserModel.findAll({
+      const findUser = await PenggunaModel.findAll({
         include: {
-          model: UserRoleModel,
+          model: PenggunaRoleModel,
           required: true,
           include: { model: RoleModel, required: true },
         },
       });
 
       const transformedData = findUser.map((user) => ({
-        UserID: user.userID,
+        UserID: user.pengguna_id,
         Nama: user.nama,
         Email: user.email,
-        NoTelp: user.noTelp,
-        Role: user.user_roles.map((role) => ({
+        NoTelp: user.no_telp,
+        Role: user.pengguna_roles.map((role) => ({
           Nama: role.Role.nama,
-          RoleID: role.Role.roleID,
+          RoleID: role.Role.role_id,
         })),
       }));
 
@@ -28,14 +28,14 @@ class UserRepository {
     }
   }
 
-  static async readAllUserByRole(roleID) {
+  static async readAllUserByRole(role_id) {
     try {
-      const users = await UserModel.findAll({
+      const users = await PenggunaModel.findAll({
         include: [
           {
-            model: UserRoleModel,
+            model: PenggunaRoleModel,
             required: true,
-            where: { roleID: roleID }, // Filter by roleID
+            where: { role_id: role_id }, // Filter by role_id
             include: [
               {
                 model: RoleModel,
@@ -48,13 +48,13 @@ class UserRepository {
 
       // Transform the data into a simplified format
       const transformedData = users.map((user) => ({
-        UserID: user.userID,
+        UserID: user.pengguna_id,
         Nama: user.nama,
         Email: user.email,
-        NoTelp: user.noTelp,
-        Role: user.user_roles.map((userRole) => ({
-          Nama: userRole.Role.nama,
-          RoleID: userRole.Role.roleID,
+        NoTelp: user.no_telp,
+        Role: user.pengguna_roles.map((penggunaRole) => ({
+          Nama: penggunaRole.Role.nama,
+          RoleID: penggunaRole.Role.role_id,
         })),
       }));
 
@@ -64,10 +64,10 @@ class UserRepository {
     }
   }
 
-  static async readOne(userID) {
+  static async readOne(pengguna_id) {
     try {
-      const findUser = await UserModel.findOne({
-        where: { userID: userID },
+      const findUser = await PenggunaModel.findOne({
+        where: { pengguna_id: pengguna_id },
       });
 
       if (!findUser) {
@@ -84,11 +84,11 @@ class UserRepository {
 
   static async readExisting(identifier) {
     try {
-      const findUser = await UserModel.findOne({
-        where: identifier.includes("@") ? { email: identifier } : { noTelp: identifier },
+      const findUser = await PenggunaModel.findOne({
+        where: identifier.includes("@") ? { email: identifier } : { no_telp: identifier },
         include: [
           {
-            model: UserRoleModel,
+            model: PenggunaRoleModel,
             required: true,
             include: [
               {
@@ -110,13 +110,13 @@ class UserRepository {
       // console.log(findUser);
       // Transform the data
       const formattedData = {
-        UserID: findUser.userID,
-        NoTelp: findUser.noTelp,
+        UserID: findUser.pengguna_id,
+        NoTelp: findUser.no_telp,
         Nama: findUser.nama,
         Email: findUser.email,
-        Role: findUser.user_roles.map((userRole) => ({
-          Nama: userRole.Role.nama,
-          Deskripsi: userRole.Role.deskripsi,
+        Role: findUser.pengguna_roles.map((penggunaRole) => ({
+          Nama: penggunaRole.Role.nama,
+          Deskripsi: penggunaRole.Role.deskripsi,
         })),
       };
 
@@ -127,4 +127,4 @@ class UserRepository {
   }
 }
 
-module.exports = { UserRepository };
+module.exports = { PenggunaRepository };

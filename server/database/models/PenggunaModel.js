@@ -5,10 +5,10 @@ if (!jarrdinDB) {
   throw new Error("Failed to retrieve Sequelize instance from DatabaseManager");
 }
 
-const UserModel = jarrdinDB.define(
-  "User",
+const PenggunaModel = jarrdinDB.define(
+  "Pengguna",
   {
-    userID: {
+    pengguna_id: {
       type: DataTypes.INTEGER(11),
       primaryKey: true,
       allowNull: false,
@@ -30,7 +30,7 @@ const UserModel = jarrdinDB.define(
       type: DataTypes.STRING(255),
       allowNull: false,
     },
-    noTelp: {
+    no_telp: {
       type: DataTypes.STRING(20),
       allowNull: true,
       unique: true,
@@ -42,9 +42,9 @@ const UserModel = jarrdinDB.define(
     },
   },
   {
-    tableName: "User",
+    tableName: "Pengguna",
     timestamps: false,
   }
 );
 
-module.exports = { UserModel };
+module.exports = { PenggunaModel };

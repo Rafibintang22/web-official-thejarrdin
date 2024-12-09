@@ -1,4 +1,4 @@
-const { DataFiturRepository, MessageRepository } = require("../database/repositories");
+const { DataFiturRepository, PesanRepository } = require("../database/repositories");
 
 class NotifikasiController {
   static async getAll(req, res) {
@@ -8,7 +8,8 @@ class NotifikasiController {
     oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
     try {
       const readDataMasuk = await DataFiturRepository.readAllUntukUser(UserID);
-      const readMsgMasuk = await MessageRepository.readAllByPenerimaID(UserID);
+      const readMsgMasuk = await PesanRepository.readAllNotifPesan(UserID);
+      // console.log(readDataMasuk, readMsgMasuk);
 
       let unreadCount = 0;
 
@@ -63,7 +64,7 @@ class NotifikasiController {
       }
 
       if (Tipe === "Pesan") {
-        updateRespon = await MessageRepository.updateRead2(Id, UserID);
+        updateRespon = await PesanRepository.updateRead2(Id, UserID);
       }
       return res.status(201).json(updateRespon);
     } catch (error) {

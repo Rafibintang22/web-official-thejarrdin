@@ -1,17 +1,17 @@
 const { DataFiturController } = require("./DataFiturController");
 const { FiturController } = require("./FiturController");
-const { MessageController } = require("./MessageController");
+const { PesanController } = require("./PesanController");
 const { NotifikasiController } = require("./NotifikasiController");
 const { RoleController } = require("./RoleController");
-const { UserController } = require("./UserController");
-const { UserRoleController } = require("./UserRoleController");
+const { PenggunaController } = require("./PenggunaController");
+const { PenggunaRoleController } = require("./PenggunaRoleController");
 
 module.exports = {
   FiturController,
   DataFiturController,
-  UserRoleController,
-  UserController,
+  PenggunaRoleController,
+  PenggunaController,
   RoleController,
-  MessageController,
+  PesanController,
   NotifikasiController,
 };

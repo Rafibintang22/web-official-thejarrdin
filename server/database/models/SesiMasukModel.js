@@ -1,17 +1,17 @@
 const { DatabaseManager, DataTypes } = require("../../config/DatabaseManager");
-const { UserModel } = require("./UserModel");
+const { PenggunaModel } = require("./PenggunaModel");
 const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
 
-const LoginSessionModel = jarrdinDB.define(
-  "Login_session",
+const SesiMasukModel = jarrdinDB.define(
+  "SesiMasuk",
   {
-    loginSessionID: {
+    sesi_id: {
       type: DataTypes.INTEGER(11),
       primaryKey: true,
       allowNull: false,
       autoIncrement: true,
     },
-    userID: {
+    pengguna_id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
     },
@@ -19,7 +19,7 @@ const LoginSessionModel = jarrdinDB.define(
       type: DataTypes.STRING(200),
       allowNull: true,
     },
-    noTelp: {
+    no_telp: {
       type: DataTypes.STRING(20),
       allowNull: true,
     },
@@ -27,7 +27,7 @@ const LoginSessionModel = jarrdinDB.define(
       type: DataTypes.STRING(6),
       allowNull: false,
     },
-    entryTime: {
+    wkt_masuk: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
@@ -38,12 +38,12 @@ const LoginSessionModel = jarrdinDB.define(
     },
   },
   {
-    tableName: "Login_session",
+    tableName: "SesiMasuk",
     timestamps: false,
     indexes: [
       {
         unique: true,
-        fields: ["otp", "noTelp", "email"],
+        fields: ["otp", "no_telp", "email"],
         name: "Kombinasi unik otp_noTelp_email",
       },
     ],
@@ -51,19 +51,19 @@ const LoginSessionModel = jarrdinDB.define(
 );
 
 function associationLoginSession() {
-  LoginSessionModel.belongsTo(UserModel, {
-    foreignKey: "userID",
-    targetKey: "userID",
+  SesiMasukModel.belongsTo(PenggunaModel, {
+    foreignKey: "pengguna_id",
+    targetKey: "pengguna_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
 
-  UserModel.hasMany(LoginSessionModel, {
-    foreignKey: "userID",
-    sourceKey: "userID",
+  PenggunaModel.hasMany(SesiMasukModel, {
+    foreignKey: "pengguna_id",
+    sourceKey: "pengguna_id",
   });
 }
 
 associationLoginSession();
 
-module.exports = { LoginSessionModel };
+module.exports = { SesiMasukModel };

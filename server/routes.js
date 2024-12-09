@@ -2,9 +2,9 @@ const express = require("express");
 const {
   FiturController,
   DataFiturController,
-  UserRoleController,
-  UserController,
-  MessageController,
+  PenggunaRoleController,
+  PenggunaController,
+  PesanController,
   NotifikasiController,
 } = require("./controllers");
 const { Authorization } = require("./utils/Authorization");
@@ -21,15 +21,15 @@ router.get("/fitur", Authorization.decryption, FiturController.getAllByUserID);
 
 // ###############################################################################
 //                              USER
-router.get("/user", Authorization.decryption, UserController.getAll);
-router.get("/user/session", Authorization.decryption, UserController.getUserSession);
-router.post("/login", UserController.postLogin);
-router.post("/login/verify-otp", UserController.verifyOtp);
-router.get("/logout", Authorization.decryption, UserController.logout);
+router.get("/user", Authorization.decryption, PenggunaController.getAll);
+router.get("/user/session", Authorization.decryption, PenggunaController.getUserSession);
+router.post("/login", PenggunaController.postLogin);
+router.post("/login/verify-otp", PenggunaController.verifyOtp);
+router.get("/logout", Authorization.decryption, PenggunaController.logout);
 
 // ###############################################################################
 //                              ROLE
-router.get("/role", Authorization.decryption, UserRoleController.getAllByUserID);
+router.get("/role", Authorization.decryption, PenggunaRoleController.getAllByUserID);
 
 // ###############################################################################
 //                              DATA FITUR
@@ -51,19 +51,15 @@ router.delete("/data/:DataFiturID", Authorization.decryption, DataFiturControlle
 
 // ###############################################################################
 //                              MESSAGE ASPIRASI
-router.get(
-  "/aspirasi/:Tipe/:StartDate/:EndDate",
-  Authorization.decryption,
-  MessageController.getAll
-);
-router.get("/aspirasidetail/:PesanID/:Tipe", Authorization.decryption, MessageController.getOne);
+router.get("/aspirasi/:Tipe/:StartDate/:EndDate", Authorization.decryption, PesanController.getAll);
+router.get("/aspirasidetail/:PesanID/:Tipe", Authorization.decryption, PesanController.getOne);
 router.post(
   "/aspirasi",
   upload.fields([{ name: "PesanFile", maxCount: 10 }]),
   Authorization.decryption,
-  MessageController.post
+  PesanController.post
 );
-router.patch("/aspirasi", Authorization.decryption, MessageController.updateRead);
+router.patch("/aspirasi", Authorization.decryption, PesanController.updateRead);
 module.exports = { router };
 // ###############################################################################
 //                              NOTIFIKASI

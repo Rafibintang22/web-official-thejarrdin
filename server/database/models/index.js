@@ -1,23 +1,23 @@
-const { UserModel } = require("./UserModel");
+const { PenggunaModel } = require("./PenggunaModel");
 const { RoleModel } = require("./RoleModel");
 const { FiturModel } = require("./FiturModel");
 const { DataFiturModel } = require("./DataFiturModel");
-const { UserTujuanModel } = require("./UserTujuanModel");
-const { UserRoleModel } = require("./UserRoleModel");
+const { TujuanPenggunaModel } = require("./TujuanPenggunaModel");
+const { PenggunaRoleModel } = require("./PenggunaRoleModel");
 const { HakAksesModel } = require("./HakAksesModel");
-const { LoginSessionModel } = require("./LoginSessionModel");
-const { MessageModel } = require("./MessageModel");
-const { MessageTujuanModel } = require("./MessageTujuanModel");
+const { SesiMasukModel } = require("./SesiMasukModel");
+const { PesanModel } = require("./PesanModel");
+const { PesanTujuanModel } = require("./PesanTujuanModel");
 
 module.exports = {
-  UserModel,
+  PenggunaModel,
   RoleModel,
   FiturModel,
   DataFiturModel,
-  UserTujuanModel,
-  UserRoleModel,
+  TujuanPenggunaModel,
+  PenggunaRoleModel,
   HakAksesModel,
-  LoginSessionModel,
-  MessageModel,
-  MessageTujuanModel,
+  SesiMasukModel,
+  PesanModel,
+  PesanTujuanModel,
 };

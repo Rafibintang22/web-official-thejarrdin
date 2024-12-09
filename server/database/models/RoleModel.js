@@ -4,7 +4,7 @@ const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
 const RoleModel = jarrdinDB.define(
   "Role",
   {
-    roleID: {
+    role_id: {
       type: DataTypes.INTEGER(11),
       primaryKey: true,
       allowNull: false,

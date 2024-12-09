@@ -1,18 +1,18 @@
 const { DatabaseManager, DataTypes } = require("../../config/DatabaseManager");
 const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
 const { FiturModel } = require("./FiturModel");
-const { UserModel } = require("./UserModel");
+const { PenggunaModel } = require("./PenggunaModel");
 
 const DataFiturModel = jarrdinDB.define(
   "DataFitur",
   {
-    dataFiturID: {
+    datafitur_id: {
       type: DataTypes.INTEGER(11),
       primaryKey: true,
       allowNull: false,
       autoIncrement: true,
     },
-    fiturID: {
+    fitur_id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
     },
@@ -20,15 +20,15 @@ const DataFiturModel = jarrdinDB.define(
       type: DataTypes.STRING(255),
       allowNull: false,
     },
-    tglDibuat: {
+    tgl_dibuat: {
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
-    userID_dibuat: {
+    pengguna_id_dibuat: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
     },
-    fileFolder: {
+    file_folder: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
@@ -42,28 +42,28 @@ const DataFiturModel = jarrdinDB.define(
 function associationDataFitur() {
   // Association antara DataFitur dan Fitur
   DataFiturModel.belongsTo(FiturModel, {
-    foreignKey: "fiturID",
-    targetKey: "fiturID",
+    foreignKey: "fitur_id",
+    targetKey: "fitur_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
 
   FiturModel.hasMany(DataFiturModel, {
-    foreignKey: "fiturID",
-    sourceKey: "fiturID",
+    foreignKey: "fitur_id",
+    sourceKey: "fitur_id",
   });
 
   // Association antara DataFitur dan User
-  DataFiturModel.belongsTo(UserModel, {
-    foreignKey: "userID_dibuat",
-    targetKey: "userID",
+  DataFiturModel.belongsTo(PenggunaModel, {
+    foreignKey: "pengguna_id_dibuat",
+    targetKey: "pengguna_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
 
-  UserModel.hasMany(DataFiturModel, {
-    foreignKey: "userID_dibuat",
-    sourceKey: "userID",
+  PenggunaModel.hasMany(DataFiturModel, {
+    foreignKey: "pengguna_id_dibuat",
+    sourceKey: "pengguna_id",
   });
 }
 

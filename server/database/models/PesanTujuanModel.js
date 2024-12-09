@@ -1,65 +1,65 @@
 const { DatabaseManager, DataTypes } = require("../../config/DatabaseManager");
-const { MessageModel } = require("./MessageModel");
-const { UserModel } = require("./UserModel");
+const { PenggunaModel } = require("./PenggunaModel");
+const { PesanModel } = require("./PesanModel");
 const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
 
-const MessageTujuanModel = jarrdinDB.define(
-  "message_tujuan",
+const PesanTujuanModel = jarrdinDB.define(
+  "pesan_tujuan",
   {
-    messageID: {
+    pesan_id: {
       type: DataTypes.INTEGER(11),
       primaryKey: true,
       allowNull: false,
     },
-    penerimaID: {
+    penerima_id: {
       type: DataTypes.INTEGER(11),
       primaryKey: true,
       allowNull: false,
     },
-    isRead: {
+    is_dibaca: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false, // By default, the message is unread
     },
-    tglDibaca: {
+    tgl_dibaca: {
       type: DataTypes.DATE,
       allowNull: true, // Null means the message hasn't been read
     },
   },
   {
-    tableName: "message_tujuan",
+    tableName: "pesan_tujuan",
     timestamps: false,
   }
 );
 
 function associationMessageTujuan() {
   // Association between MessageTujuan and Message
-  MessageTujuanModel.belongsTo(MessageModel, {
-    foreignKey: "messageID",
-    targetKey: "messageID",
+  PesanTujuanModel.belongsTo(PesanModel, {
+    foreignKey: "pesan_id",
+    targetKey: "pesan_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
 
-  MessageModel.hasMany(MessageTujuanModel, {
-    foreignKey: "messageID",
-    sourceKey: "messageID",
+  PesanModel.hasMany(PesanTujuanModel, {
+    foreignKey: "pesan_id",
+    sourceKey: "pesan_id",
   });
 }
 
 // Association between MessageTujuan and User
-MessageTujuanModel.belongsTo(UserModel, {
-  foreignKey: "penerimaID",
-  targetKey: "userID",
+PesanTujuanModel.belongsTo(PenggunaModel, {
+  foreignKey: "penerima_id",
+  targetKey: "pengguna_id",
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
 
-UserModel.hasMany(MessageTujuanModel, {
-  foreignKey: "penerimaID",
-  sourceKey: "userID",
+PenggunaModel.hasMany(PesanTujuanModel, {
+  foreignKey: "penerima_id",
+  sourceKey: "pengguna_id",
 });
 
 associationMessageTujuan();
 
-module.exports = { MessageTujuanModel };
+module.exports = { PesanTujuanModel };

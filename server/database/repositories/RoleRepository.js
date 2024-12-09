@@ -11,10 +11,10 @@ class RoleRepository {
     }
   }
 
-  static async readOne(roleID) {
+  static async readOne(role_id) {
     try {
       const findRole = await RoleModel.findOne({
-        where: { roleID: roleID },
+        where: { role_id: role_id },
       });
 
       if (!findRole) {
@@ -25,6 +25,28 @@ class RoleRepository {
 
       return findRole;
     } catch (error) {
+      throw error;
+    }
+  }
+
+  static async seedRoles() {
+    const roles = [
+      { nama: "Pengurus", deskripsi: "" },
+      { nama: "Pengelola", deskripsi: "" },
+      { nama: "Pemilik Unit", deskripsi: "" },
+      { nama: "Pelaku Komersil", deskripsi: "" },
+      { nama: "Admin", deskripsi: "Mengelola seluruh sistem" },
+    ];
+    try {
+      for (const role of roles) {
+        await RoleModel.findOrCreate({
+          where: { nama: role.nama },
+          defaults: role,
+        });
+      }
+      console.log(">> Roles seeded successfully.");
+    } catch (error) {
+      console.error(">> Error seeding roles:", error);
       throw error;
     }
   }

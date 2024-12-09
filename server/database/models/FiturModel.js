@@ -4,7 +4,7 @@ const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
 const FiturModel = jarrdinDB.define(
   "Fitur",
   {
-    fiturID: {
+    fitur_id: {
       type: DataTypes.INTEGER(11),
       primaryKey: true,
       allowNull: false,

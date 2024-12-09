@@ -19,6 +19,8 @@ import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons/faArr
 function Home() {
   const navigate = useNavigate();
   const userSession = JSON.parse(localStorage.getItem("userSession"));
+  console.log(userSession);
+
   const dataUser = userSession?.dataUser;
   const [rolesUser, setRolesUser] = useState([]);
   const [isNotifOpen, setNotif] = useState(false);

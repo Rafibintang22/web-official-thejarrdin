@@ -1,56 +1,56 @@
 const { DatabaseManager, DataTypes } = require("../../config/DatabaseManager");
+const { PenggunaModel } = require("./PenggunaModel");
 const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
-const { UserModel } = require("./UserModel");
 const { RoleModel } = require("./RoleModel");
 
-const UserRoleModel = jarrdinDB.define(
-  "user_role",
+const PenggunaRoleModel = jarrdinDB.define(
+  "pengguna_role",
   {
-    userID: {
+    pengguna_id: {
       type: DataTypes.INTEGER(11),
       primaryKey: true,
       allowNull: false,
     },
-    roleID: {
+    role_id: {
       type: DataTypes.INTEGER(11),
       primaryKey: true,
       allowNull: false,
     },
   },
   {
-    tableName: "user_role",
+    tableName: "pengguna_role",
     timestamps: false,
   }
 );
 
 function associationUserRole() {
   // Association between UserRole and User
-  UserRoleModel.belongsTo(UserModel, {
-    foreignKey: "userID",
-    targetKey: "userID",
+  PenggunaRoleModel.belongsTo(PenggunaModel, {
+    foreignKey: "pengguna_id",
+    targetKey: "pengguna_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
 
-  UserModel.hasMany(UserRoleModel, {
-    foreignKey: "userID",
-    sourceKey: "userID",
+  PenggunaModel.hasMany(PenggunaRoleModel, {
+    foreignKey: "pengguna_id",
+    sourceKey: "pengguna_id",
   });
 
   // Association between UserRole and Role
-  UserRoleModel.belongsTo(RoleModel, {
-    foreignKey: "roleID",
-    targetKey: "roleID",
+  PenggunaRoleModel.belongsTo(RoleModel, {
+    foreignKey: "role_id",
+    targetKey: "role_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
 
-  RoleModel.hasMany(UserRoleModel, {
-    foreignKey: "roleID",
-    sourceKey: "roleID",
+  RoleModel.hasMany(PenggunaRoleModel, {
+    foreignKey: "role_id",
+    sourceKey: "role_id",
   });
 }
 
 associationUserRole();
 
-module.exports = { UserRoleModel };
+module.exports = { PenggunaRoleModel };

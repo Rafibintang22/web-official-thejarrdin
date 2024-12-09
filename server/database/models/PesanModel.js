@@ -1,22 +1,22 @@
 const { DatabaseManager, DataTypes } = require("../../config/DatabaseManager");
 const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
-const { UserModel } = require("./UserModel");
 const { FiturModel } = require("./FiturModel");
+const { PenggunaModel } = require("./PenggunaModel");
 
-const MessageModel = jarrdinDB.define(
-  "Message",
+const PesanModel = jarrdinDB.define(
+  "Pesan",
   {
-    messageID: {
+    pesan_id: {
       type: DataTypes.INTEGER(11),
       primaryKey: true,
       allowNull: false,
       autoIncrement: true,
     },
-    fiturID: {
+    fitur_id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
     },
-    pengirimID: {
+    pengirim_id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
     },
@@ -24,53 +24,53 @@ const MessageModel = jarrdinDB.define(
       type: DataTypes.STRING(255),
       allowNull: false,
     },
-    messageText: {
+    pesan_text: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    messageFile: {
+    pesan_file: {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    tglDibuat: {
+    tgl_dibuat: {
       type: DataTypes.DATEONLY,
       defaultValue: DataTypes.NOW,
     },
   },
   {
-    tableName: "Message",
+    tableName: "Pesan",
     timestamps: false,
   }
 );
 
 function associationMessage() {
   // Association antara Message dan Fitur
-  MessageModel.belongsTo(FiturModel, {
-    foreignKey: "fiturID",
-    targetKey: "fiturID",
+  PesanModel.belongsTo(FiturModel, {
+    foreignKey: "fitur_id",
+    targetKey: "fitur_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
 
-  FiturModel.hasMany(MessageModel, {
-    foreignKey: "fiturID",
-    sourceKey: "fiturID",
+  FiturModel.hasMany(PesanModel, {
+    foreignKey: "fitur_id",
+    sourceKey: "fitur_id",
   });
 
   // Association antara Message dan User
-  MessageModel.belongsTo(UserModel, {
-    foreignKey: "pengirimID",
-    targetKey: "userID",
+  PesanModel.belongsTo(PenggunaModel, {
+    foreignKey: "pengirim_id",
+    targetKey: "pengguna_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
 
-  UserModel.hasMany(MessageModel, {
-    foreignKey: "pengirimID",
-    sourceKey: "userID",
+  PenggunaModel.hasMany(PesanModel, {
+    foreignKey: "pengirim_id",
+    sourceKey: "pengguna_id",
   });
 }
 
 associationMessage();
 
-module.exports = { MessageModel };
+module.exports = { PesanModel };

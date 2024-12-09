@@ -6,12 +6,12 @@ const { RoleModel } = require("./RoleModel");
 const HakAksesModel = jarrdinDB.define(
   "hak_akses",
   {
-    fiturID: {
+    fitur_id: {
       type: DataTypes.INTEGER(11),
       primaryKey: true,
       allowNull: false,
     },
-    roleID: {
+    role_id: {
       type: DataTypes.INTEGER(11),
       primaryKey: true,
       allowNull: false,
@@ -26,28 +26,28 @@ const HakAksesModel = jarrdinDB.define(
 function associationHakAkses() {
   // Association antara HakAkses dan Fitur
   HakAksesModel.belongsTo(FiturModel, {
-    foreignKey: "fiturID",
-    targetKey: "fiturID",
+    foreignKey: "fitur_id",
+    targetKey: "fitur_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
 
   FiturModel.hasMany(HakAksesModel, {
-    foreignKey: "fiturID",
-    sourceKey: "fiturID",
+    foreignKey: "fitur_id",
+    sourceKey: "fitur_id",
   });
 
   // Association antara HakAkses dan Role
   HakAksesModel.belongsTo(RoleModel, {
-    foreignKey: "roleID",
-    targetKey: "roleID",
+    foreignKey: "role_id",
+    targetKey: "role_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
 
   RoleModel.hasMany(HakAksesModel, {
-    foreignKey: "roleID",
-    sourceKey: "roleID",
+    foreignKey: "role_id",
+    sourceKey: "role_id",
   });
 }
 

@@ -1,16 +1,16 @@
-const { DataFiturModel, UserTujuanModel, UserModel } = require("../models");
+const { DataFiturModel, TujuanPenggunaModel, PenggunaModel } = require("../models");
 const { DatabaseManager } = require("../../config/DatabaseManager");
 const jarrdinDB = DatabaseManager.getDatabase(process.env.DB_NAME);
 
 class DataFiturRepository {
-  static async readAllUntukUser(userID) {
+  static async readAllUntukUser(pengguna_id) {
     try {
       let findDataFitur;
-      findDataFitur = await UserModel.findAll({
-        where: { userID: userID },
+      findDataFitur = await PenggunaModel.findAll({
+        where: { pengguna_id: pengguna_id },
         include: [
           {
-            model: UserTujuanModel,
+            model: TujuanPenggunaModel,
             required: true,
             include: [
               {
@@ -18,7 +18,7 @@ class DataFiturRepository {
                 required: true,
                 include: [
                   {
-                    model: UserModel,
+                    model: PenggunaModel,
                     required: true,
                   },
                 ],
@@ -28,27 +28,27 @@ class DataFiturRepository {
         ],
       });
 
-      if (!findDataFitur || !findDataFitur.length === 0 || !findDataFitur[0]?.user_tujuans) {
+      if (!findDataFitur || !findDataFitur.length === 0 || !findDataFitur[0]?.tujuan_penggunas) {
         return [];
       }
 
-      const transformedData = findDataFitur[0]?.user_tujuans.map((data) => ({
-        Id: data.DataFitur.dataFiturID,
-        FiturID: data.DataFitur.fiturID,
+      const transformedData = findDataFitur[0]?.tujuan_penggunas.map((data) => ({
+        Id: data.DataFitur.datafitur_id,
+        FiturID: data.DataFitur.fitur_id,
         Judul: data.DataFitur.judul,
-        DibuatOleh: data.DataFitur.User.nama,
-        TglDibuat: data.DataFitur.tglDibuat,
-        IsRead: data.isRead,
+        DibuatOleh: data.DataFitur.Pengguna.nama,
+        TglDibuat: data.DataFitur.tgl_dibuat,
+        IsRead: data.is_dibaca,
       }));
 
-      // Mengurutkan berdasarkan isRead dan TglDibuat
+      // Mengurutkan berdasarkan is_dibaca dan TglDibuat
       transformedData.sort((a, b) => {
-        // Urutkan berdasarkan isRead, 1 (dibaca) akan muncul sebelum 0 (belum dibaca)
+        // Urutkan berdasarkan is_dibaca, 1 (dibaca) akan muncul sebelum 0 (belum dibaca)
         if (a.IsRead === b.IsRead) {
-          // Jika isRead sama, urutkan berdasarkan TglDibuat terbaru
+          // Jika is_dibaca sama, urutkan berdasarkan TglDibuat terbaru
           return new Date(b.TglDibuat) - new Date(a.TglDibuat);
         }
-        return a.IsRead - b.IsRead; // Mengurutkan berdasarkan isRead, 1 lebih besar dari 0
+        return a.IsRead - b.IsRead; // Mengurutkan berdasarkan is_dibaca, 1 lebih besar dari 0
       });
 
       return transformedData;
@@ -58,23 +58,23 @@ class DataFiturRepository {
       throw error;
     }
   }
-  static async readAllByFiturIdUntukUser(userID, fiturID, startDate, endDate) {
+  static async readAllByFiturIdUntukUser(pengguna_id, fitur_id, startDate, endDate) {
     try {
       let findDataFitur;
-      findDataFitur = await UserModel.findAll({
-        where: { userID: userID },
+      findDataFitur = await PenggunaModel.findAll({
+        where: { pengguna_id: pengguna_id },
         include: [
           {
-            model: UserTujuanModel,
+            model: TujuanPenggunaModel,
             required: true,
             include: [
               {
                 model: DataFiturModel,
                 required: true,
-                where: { fiturID: fiturID },
+                where: { fitur_id: fitur_id },
                 include: [
                   {
-                    model: UserModel,
+                    model: PenggunaModel,
                     required: true,
                   },
                 ],
@@ -84,15 +84,15 @@ class DataFiturRepository {
         ],
       });
 
-      if (!findDataFitur || !findDataFitur.length === 0 || !findDataFitur[0]?.user_tujuans) {
+      if (!findDataFitur || !findDataFitur.length === 0 || !findDataFitur[0]?.tujuan_penggunas) {
         return [];
       }
 
-      const transformedData = findDataFitur[0]?.user_tujuans.map((data) => ({
-        Id: data.DataFitur.dataFiturID,
+      const transformedData = findDataFitur[0]?.tujuan_penggunas.map((data) => ({
+        Id: data.DataFitur.datafitur_id,
         Judul: data.DataFitur.judul,
-        DibuatOleh: data.DataFitur.User.nama,
-        TglDibuat: data.DataFitur.tglDibuat,
+        DibuatOleh: data.DataFitur.Pengguna.nama,
+        TglDibuat: data.DataFitur.tgl_dibuat,
       }));
 
       // Filter transformedData berdasarkan startDate dan endDate
@@ -111,19 +111,19 @@ class DataFiturRepository {
       throw error;
     }
   }
-  static async readAllByFiturIdDibuatUser(userID, fiturID, startDate, endDate) {
+  static async readAllByFiturIdDibuatUser(pengguna_id, fitur_id, startDate, endDate) {
     try {
       let findDataFitur;
-      findDataFitur = await UserModel.findAll({
-        where: { userID: userID },
+      findDataFitur = await PenggunaModel.findAll({
+        where: { pengguna_id: pengguna_id },
         include: [
           {
             model: DataFiturModel,
             required: true,
-            where: { fiturID: fiturID },
+            where: { fitur_id: fitur_id },
             include: [
               {
-                model: UserModel,
+                model: PenggunaModel,
                 required: true,
               },
             ],
@@ -136,10 +136,10 @@ class DataFiturRepository {
       }
 
       const transformedData = findDataFitur[0]?.DataFiturs.map((data) => ({
-        Id: data.dataFiturID,
+        Id: data.datafitur_id,
         Judul: data.judul,
-        DibuatOleh: data.User.nama,
-        TglDibuat: data.tglDibuat,
+        DibuatOleh: data.Pengguna.nama,
+        TglDibuat: data.tgl_dibuat,
       }));
 
       // Filter transformedData berdasarkan startDate dan endDate
@@ -157,8 +157,8 @@ class DataFiturRepository {
       // // Dapatkan DataFiturs dari hasil query
       // const dataFiturs = findDataFitur[0]?.DataFiturs || [];
 
-      // // Sorting berdasarkan tglDibuat (dari terbaru ke terlama)
-      // const sortedData = dataFiturs.sort((a, b) => new Date(b.tglDibuat) - new Date(a.tglDibuat));
+      // // Sorting berdasarkan tgl_dibuat (dari terbaru ke terlama)
+      // const sortedData = dataFiturs.sort((a, b) => new Date(b.tgl_dibuat) - new Date(a.tgl_dibuat));
 
       // const lengthData = sortedData.length;
       // // Manual pagination di sini
@@ -167,10 +167,10 @@ class DataFiturRepository {
       // const transformedData = {
       //   total: lengthData,
       //   row: paginatedData.map((data) => ({
-      //     Id: data.dataFiturID,
+      //     Id: data.datafitur_id,
       //     Judul: data.judul,
-      //     DibuatOleh: data.User.nama,
-      //     TglDibuat: data.tglDibuat,
+      //     DibuatOleh: data.Pengguna.nama,
+      //     TglDibuat: data.tgl_dibuat,
       //   })),
       // };
 
@@ -183,23 +183,23 @@ class DataFiturRepository {
     }
   }
 
-  static async readOne(dataFiturID) {
+  static async readOne(datafitur_id) {
     try {
       let findDataFitur;
 
       findDataFitur = await DataFiturModel.findOne({
-        where: { dataFiturID: dataFiturID },
+        where: { datafitur_id: datafitur_id },
         include: [
           {
-            model: UserModel, // Include untuk user pembuat data
-            attributes: ["nama", "userID"], // Ambil hanya nama, dan userID pembuat
+            model: PenggunaModel, // Include untuk user pembuat data
+            attributes: ["nama", "pengguna_id"], // Ambil hanya nama, dan pengguna_id pembuat
           },
           {
-            model: UserTujuanModel, // Include untuk user tujuan
+            model: TujuanPenggunaModel, // Include untuk user tujuan
             required: false, // Jika ada, ambil data UserTujuan
             include: [
               {
-                model: UserModel, // Include data dari UserModel di dalam UserTujuan
+                model: PenggunaModel, // Include data dari PenggunaModel di dalam UserTujuan
                 attributes: ["nama"], // Ambil nama user tujuan
               },
             ],
@@ -215,10 +215,13 @@ class DataFiturRepository {
       // Transform the data to the desired format
       const transformedData = {
         Judul: findDataFitur.judul,
-        TglDibuat: findDataFitur.tglDibuat,
-        DibuatOleh: { UserID: findDataFitur.User.userID, Nama: findDataFitur.User.nama },
-        UserTujuan: findDataFitur.user_tujuans.map((tujuan) => tujuan.User.nama),
-        File: findDataFitur.fileFolder,
+        TglDibuat: findDataFitur.tgl_dibuat,
+        DibuatOleh: {
+          UserID: findDataFitur.Pengguna.pengguna_id,
+          Nama: findDataFitur.Pengguna.nama,
+        },
+        UserTujuan: findDataFitur.tujuan_penggunas.map((tujuan) => tujuan.Pengguna.nama),
+        File: findDataFitur.file_folder,
       };
 
       return transformedData;
@@ -247,24 +250,24 @@ class DataFiturRepository {
 
       const newDataFitur = await DataFiturModel.create(
         {
-          fiturID: FiturID,
+          fitur_id: FiturID,
           judul: Judul,
-          tglDibuat: new Date(TglDibuat),
-          userID_dibuat: UserID_dibuat,
-          fileFolder: FileFolder,
+          tgl_dibuat: new Date(TglDibuat),
+          pengguna_id_dibuat: UserID_dibuat,
+          file_folder: FileFolder,
         },
         { transaction }
       );
 
       // Filter to hapus UserID_dibuat dari UserTujuan if ada
-      const filteredUserTujuan = UserTujuan.filter((userID) => userID !== UserID_dibuat);
+      const filteredUserTujuan = UserTujuan.filter((pengguna_id) => pengguna_id !== UserID_dibuat);
 
-      const userTujuanRecords = filteredUserTujuan.map((userID) => ({
-        dataFiturID: newDataFitur.dataFiturID,
-        userID,
+      const userTujuanRecords = filteredUserTujuan.map((pengguna_id) => ({
+        datafitur_id: newDataFitur.datafitur_id,
+        pengguna_id,
       }));
 
-      await UserTujuanModel.bulkCreate(userTujuanRecords, { transaction });
+      await TujuanPenggunaModel.bulkCreate(userTujuanRecords, { transaction });
 
       await transaction.commit();
 
@@ -276,29 +279,29 @@ class DataFiturRepository {
     }
   }
 
-  // Fungsi delete untuk menghapus dataFitur beserta relasi di UserTujuanModel
-  static async delete(dataFiturID) {
+  // Fungsi delete untuk menghapus dataFitur beserta relasi di TujuanPenggunaModel
+  static async delete(datafitur_id) {
     const transaction = await jarrdinDB.transaction();
     try {
-      // Cari apakah dataFiturID ada
+      // Cari apakah datafitur_id ada
       const dataFitur = await DataFiturModel.findOne({
-        where: { dataFiturID },
-        include: [UserTujuanModel],
+        where: { datafitur_id },
+        include: [TujuanPenggunaModel],
       });
 
       if (!dataFitur) {
         throw new Error("DataFitur not found.");
       }
 
-      // Hapus relasi dari UserTujuanModel terlebih dahulu
-      await UserTujuanModel.destroy({
-        where: { dataFiturID },
+      // Hapus relasi dari TujuanPenggunaModel terlebih dahulu
+      await TujuanPenggunaModel.destroy({
+        where: { datafitur_id },
         transaction,
       });
 
       // Hapus data dari DataFiturModel
       await DataFiturModel.destroy({
-        where: { dataFiturID },
+        where: { datafitur_id },
         transaction,
       });
 
@@ -313,13 +316,13 @@ class DataFiturRepository {
     }
   }
 
-  static async updateIsRead(userID, dataFiturID) {
+  static async updateIsRead(pengguna_id, datafitur_id) {
     try {
-      await UserTujuanModel.update(
+      await TujuanPenggunaModel.update(
         {
-          isRead: true,
+          is_dibaca: true,
         },
-        { where: { userID: userID, dataFiturID: dataFiturID } }
+        { where: { pengguna_id: pengguna_id, datafitur_id: datafitur_id } }
       );
       return { IsRead: true };
     } catch (error) {

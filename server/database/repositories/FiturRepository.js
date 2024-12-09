@@ -1,4 +1,10 @@
-const { FiturModel, UserModel, UserRoleModel, HakAksesModel, RoleModel } = require("../models");
+const {
+  FiturModel,
+  PenggunaModel,
+  PenggunaRoleModel,
+  HakAksesModel,
+  RoleModel,
+} = require("../models");
 
 // const { DatabaseManager, Sequelize, Op } = require("../../config/DatabaseManager");
 
@@ -13,10 +19,10 @@ class FiturRepository {
     }
   }
 
-  static async readOne(fiturID) {
+  static async readOne(fitur_id) {
     try {
       const findFitur = await FiturModel.findOne({
-        where: { fiturID: fiturID },
+        where: { fitur_id: fitur_id },
       });
 
       if (!findFitur) {
@@ -31,14 +37,14 @@ class FiturRepository {
     }
   }
 
-  static async readFiturByUserID(userID) {
+  static async readFiturByUserID(pengguna_id) {
     try {
-      // Temukan fitur berdasarkan userID
-      const userWithFitur = await UserModel.findOne({
-        where: { userID: userID },
+      // Temukan fitur berdasarkan pengguna_id
+      const userWithFitur = await PenggunaModel.findOne({
+        where: { pengguna_id: pengguna_id },
         include: [
           {
-            model: UserRoleModel,
+            model: PenggunaRoleModel,
             // required: true, untuk inner join ()
             include: [
               {
@@ -63,12 +69,12 @@ class FiturRepository {
       // Log untuk memeriksa data yang diterima
       // console.log("userWithFitur:", JSON.stringify(userWithFitur, null, 2));
 
-      if (!userWithFitur || !userWithFitur.user_roles) {
+      if (!userWithFitur || !userWithFitur.pengguna_roles) {
         return []; // Mengembalikan array kosong jika tidak ada relasi
       }
 
       // Mapping fitur yang ditemukan, validasi tiap tingkatan relasi
-      const fiturList = userWithFitur.user_roles.flatMap((userRole) => {
+      const fiturList = userWithFitur.pengguna_roles.flatMap((userRole) => {
         if (!userRole.Role || !userRole.Role.hak_akses) {
           return [];
         }

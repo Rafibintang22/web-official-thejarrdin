@@ -14,8 +14,12 @@ import axios from "axios";
 import { urlServer } from "../../utils/endpoint";
 import { Fitur } from "../../models/FiturModel";
 import { formatDate } from "../../utils/formatDate";
+import ModalInsertAspirasi from "../../components/ModalInsertAspirasi";
+import ModalDetailAspirasi from "../../components/ModalDetailAspirasi";
 
 function DataFitur({ active }) {
+  console.log(active);
+
   const userSession = JSON.parse(localStorage.getItem("userSession"));
   // Date state for one year range
   const [range, setRange] = useState([
@@ -27,8 +31,38 @@ function DataFitur({ active }) {
   ]);
   const [loading, setLoading] = useState(false);
   const { isDetailOpen, setDetailOpen } = DetailDataController();
-  const { hasPengurus } = HakAkses();
+  const { hasPengurus, hasPengelola, hasPemilikUnit, hasPelakuKomersil } = HakAkses();
   const { isSidebarMobileOpen } = toogleSidebarMobile();
+
+  const hakAksesInsert = () => {
+    if (
+      hasPengurus &&
+      (active === "Laporan" || active === "Pengumuman" || active === "Masukan & Aspirasi")
+    ) {
+      return true;
+    }
+
+    if (
+      hasPengelola &&
+      (active === "Tagihan Bulanan" ||
+        active === "Pengumuman Pengelola" ||
+        active === "Informasi Paket" ||
+        active === "Buletin Kegiatan")
+    ) {
+      return true;
+    }
+
+    if (hasPemilikUnit && active === "Masukan & Aspirasi") {
+      return true;
+    }
+
+    if (hasPelakuKomersil && active === "Pengumuman") {
+      return true;
+    }
+
+    return false;
+  };
+
   const menuInsert = [
     {
       label: "Untuk saya",
@@ -36,7 +70,7 @@ function DataFitur({ active }) {
     },
   ];
   // Jika hasPengurus true, tambahkan "Data diunggah" ke dalam menu
-  if (hasPengurus) {
+  if (hakAksesInsert()) {
     menuInsert.push({
       label: "Data diunggah",
       key: "dataDiunggah",
@@ -83,12 +117,17 @@ function DataFitur({ active }) {
         },
       };
       try {
-        console.log(Fitur[active], "TEST");
+        // console.log(Fitur[active], "TEST");
+        const urlAspirasi = `${urlServer}/aspirasi/${
+          currTipeData === "untukSaya" ? "untukUser" : "dibuatUser"
+        }/${range[0].startDate.getTime()}/${range[0].endDate.getTime()}`;
+
+        const url = `${urlServer}/data/${Fitur[active]}/${
+          currTipeData === "untukSaya" ? "untukUser" : "dibuatUser"
+        }/${range[0].startDate.getTime()}/${range[0].endDate.getTime()}`;
 
         const response = await axios.get(
-          `${urlServer}/data/${Fitur[active]}/${
-            currTipeData === "untukSaya" ? "untukUser" : "dibuatUser"
-          }/${range[0].startDate.getTime()}/${range[0].endDate.getTime()}`,
+          active === "Masukan & Aspirasi" ? urlAspirasi : url,
           headers
         );
         // console.log(response);
@@ -129,7 +168,7 @@ function DataFitur({ active }) {
               header={
                 <HeaderKonten
                   judul={`Data ${active}`}
-                  isInsert={hasPengurus ? true : false}
+                  isInsert={hakAksesInsert()}
                   nameInsert={`Tambah Data ${active}`}
                   setInsertBtn={setModalInsert}
                   searchValue={searchValue}
@@ -138,7 +177,7 @@ function DataFitur({ active }) {
               }
               content={
                 <DataFiturLayout
-                  hasPengurus={hasPengurus}
+                  hakAksesInsert={hakAksesInsert()}
                   setModalInsert={setModalInsert}
                   range={range}
                   setRange={setRange}
@@ -158,16 +197,26 @@ function DataFitur({ active }) {
                 />
               }
             />
-
-            {modalInsert && (
+            {modalInsert && active !== "Masukan & Aspirasi" && (
               <ModalInsert
                 currState={modalInsert}
                 setState={setModalInsert}
                 judulInsert={`Tambah Data ${active}`}
               />
             )}
-
-            {isDetailOpen && <ModalDetail judulDetail={`Detail ${active}`} />}
+            {modalInsert && active === "Masukan & Aspirasi" && (
+              <ModalInsertAspirasi
+                currState={modalInsert}
+                setState={setModalInsert}
+                judulInsert={`Tambah Data ${active}`}
+              />
+            )}
+            {isDetailOpen && active !== "Masukan & Aspirasi" && (
+              <ModalDetail judulDetail={`Detail ${active}`} />
+            )}
+            {isDetailOpen && active === "Masukan & Aspirasi" && (
+              <ModalDetailAspirasi judulDetail={`Detail ${active}`} tipeDetail={currTipeData} />
+            )}
           </>
         )}
         {isSidebarMobileOpen && <SidebarMobile />}

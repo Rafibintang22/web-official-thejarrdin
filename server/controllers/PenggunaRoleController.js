@@ -1,12 +1,12 @@
-const { UserRoleRepository, UserRepository } = require("../database/repositories");
+const { PenggunaRoleRepository } = require("../database/repositories");
 
-class UserRoleController {
+class PenggunaRoleController {
   static async getAllByUserID(req, res) {
     const dataSesssion = req.dataSession;
     // console.log(dataSesssion);
 
     try {
-      let readFitur = await UserRoleRepository.readRoleByUserID(dataSesssion.UserID);
+      let readFitur = await PenggunaRoleRepository.readRoleByUserID(dataSesssion.UserID);
       res.status(200).json({ Role: readFitur });
     } catch (error) {
       console.error(error);
@@ -15,4 +15,4 @@ class UserRoleController {
   }
 }
 
-module.exports = { UserRoleController };
+module.exports = { PenggunaRoleController };

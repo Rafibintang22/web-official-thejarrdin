@@ -90,6 +90,30 @@ class DatabaseManager {
       console.error(`Error closing connection to ${dbName} database:`, error);
     }
   }
+
+  static async seedData(dbName, seeders) {
+    const db = DatabaseManager.DATABASES[dbName];
+
+    if (!db) {
+      console.error(`>> ${dbName} database is not configured.`);
+      return;
+    }
+
+    if (!Array.isArray(seeders)) {
+      console.error(">> Seeders must be an array of functions.");
+      return;
+    }
+
+    try {
+      console.log(`>> Starting data seeding for ${dbName}...`);
+      for (const seeder of seeders) {
+        await seeder();
+      }
+      console.log(`>> Seeding data for ${dbName} completed successfully.`);
+    } catch (error) {
+      console.error(`>> Error during data seeding for ${dbName}:`, error);
+    }
+  }
 }
 
 module.exports = {

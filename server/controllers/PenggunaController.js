@@ -1,5 +1,4 @@
-const { UserRepository } = require("../database/repositories");
-const { LoginSessionRepository } = require("../database/repositories/LoginSessionRepository");
+const { PenggunaRepository, SesiMasukRepository } = require("../database/repositories");
 const { Authorization } = require("../utils/Authorization");
 const { generateOtp } = require("../utils/generateOtp");
 const { sendOtpToEmail } = require("../utils/sendEmail");
@@ -7,10 +6,10 @@ const { sendOtpToWa } = require("../utils/sendWa");
 const { Validator } = require("../utils/validator");
 const OTP_EXPIRATION_TIME = 300000; // 5 menit (300.000 ms)
 
-class UserController {
+class PenggunaController {
   static async getAll(req, res) {
     try {
-      let readUser = await UserRepository.readAll();
+      let readUser = await PenggunaRepository.readAll();
       res.status(200).json(readUser);
     } catch (error) {
       console.error(error);
@@ -20,7 +19,7 @@ class UserController {
 
   static async getOne(req, res) {
     try {
-      let readUser = await UserRepository.readOne(req.params.id);
+      let readUser = await PenggunaRepository.readOne(req.params.id);
       res.status(200).json(readUser);
     } catch (error) {
       console.error(error);
@@ -39,7 +38,7 @@ class UserController {
         throw newError;
       }
 
-      const readUser = await UserRepository.readExisting(User.Email || User.NoTelp);
+      const readUser = await PenggunaRepository.readExisting(User.Email || User.NoTelp);
       if (!readUser) {
         //JIka user tidak ditemukan
         return res.status(401).json({ error: "email atau no telepon yang dimasukan salah" });
@@ -51,10 +50,10 @@ class UserController {
 
       // console.log(readUser, "READUSER");
 
-      const loginSession = await LoginSessionRepository.create({
-        userID: readUser.UserID,
+      const loginSession = await SesiMasukRepository.create({
+        pengguna_id: readUser.UserID,
         email: readUser.Email,
-        noTelp: readUser.NoTelp,
+        no_telp: readUser.NoTelp,
         otp: otp,
       });
       if (loginSession && readUser.Email && User.Email) {
@@ -67,7 +66,7 @@ class UserController {
 
       res.status(200).json({
         success: true,
-        // sebelum integrasi ke WA API (jika noTelp maka otp akan di kirim ke client)
+        // sebelum integrasi ke WA API (jika no_telp maka otp akan di kirim ke client)
         data: { User: readUser },
       });
     } catch (error) {
@@ -84,8 +83,8 @@ class UserController {
         return res.status(400).json({ error: "Isi OTP terlebih dahulu" });
       }
 
-      // Temukan session login berdasarkan otp,email,noTelp
-      const loginSession = await LoginSessionRepository.readOne(Otp, Email, NoTelp);
+      // Temukan session login berdasarkan otp,email,no_telp
+      const loginSession = await SesiMasukRepository.readOne(Otp, Email, NoTelp);
 
       if (!loginSession) {
         return res.status(401).json({ error: "Invalid login session ID" });
@@ -93,7 +92,7 @@ class UserController {
 
       // Cek apakah OTP masih aktif
       const currentTime = new Date().getTime();
-      const otpCreationTime = new Date(loginSession.entryTime).getTime();
+      const otpCreationTime = new Date(loginSession.wkt_masuk).getTime();
 
       // Periksa apakah waktu aktif sudah melewati batas yang diizinkan
       if (currentTime - otpCreationTime > OTP_EXPIRATION_TIME) {
@@ -105,14 +104,16 @@ class UserController {
         return res.status(401).json({ error: "Invalid OTP" });
       }
 
-      const readUser = await UserRepository.readExisting(loginSession.email || loginSession.noTelp);
+      const readUser = await PenggunaRepository.readExisting(
+        loginSession.email || loginSession.no_telp
+      );
 
       const payload = {
         UserID: readUser.UserID,
         Email: readUser.Email,
         NoTelp: readUser.NoTelp,
         Otp: loginSession.otp,
-        loginSessionID: loginSession.loginSessionID,
+        LoginSessionID: loginSession.sesi_id,
       };
 
       // Jika OTP valid dan masih aktif
@@ -120,7 +121,7 @@ class UserController {
       res.set("authorization", `Bearer ${token}`);
 
       // Memasukan token ke database
-      LoginSessionRepository.updateToken(loginSession.loginSessionID, token);
+      SesiMasukRepository.updateToken(loginSession.sesi_id, token);
 
       res.status(200).json({ success: true, message: "Login successful", data: readUser });
     } catch (error) {
@@ -149,9 +150,9 @@ class UserController {
   static async logout(req, res) {
     try {
       const dataSession = req.dataSession;
-      // console.log(dataSession);
+      console.log(dataSession, "dataSession");
       // delete loginSession
-      const loginSession = await LoginSessionRepository.delete(dataSession.loginSessionID);
+      const loginSession = await SesiMasukRepository.delete(dataSession.LoginSessionID);
 
       res.status(200).json({ success: true, message: "Logout successful" });
     } catch (error) {
@@ -161,4 +162,4 @@ class UserController {
   }
 }
 
-module.exports = { UserController };
+module.exports = { PenggunaController };

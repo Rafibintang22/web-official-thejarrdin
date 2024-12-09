@@ -1,14 +1,14 @@
-const { UserModel, UserRoleModel, RoleModel } = require("../models");
+const { PenggunaModel, PenggunaRoleModel, RoleModel } = require("../models");
 
-class UserRoleRepository {
-  static async readRoleByUserID(userID) {
+class PenggunaRoleRepository {
+  static async readRoleByUserID(pengguna_id) {
     try {
-      const findRole = await UserModel.findOne({
-        where: { userID: userID },
-        attributes: ["nama", "noTelp"],
+      const findRole = await PenggunaModel.findOne({
+        where: { pengguna_id: pengguna_id },
+        attributes: ["nama", "no_telp"],
         include: [
           {
-            model: UserRoleModel,
+            model: PenggunaRoleModel,
             required: true,
             include: [
               {
@@ -21,11 +21,11 @@ class UserRoleRepository {
         ],
       });
 
-      if (!findRole || !findRole.user_roles) {
+      if (!findRole || !findRole.pengguna_roles) {
         return []; // Mengembalikan array kosong jika tidak ada relasi
       }
 
-      const transformedData = findRole.user_roles.map((role) => ({
+      const transformedData = findRole.pengguna_roles.map((role) => ({
         Nama: role.Role.nama,
       }));
 
@@ -38,9 +38,9 @@ class UserRoleRepository {
 
   static async readAllPengurusID() {
     try {
-      const findUserID = await UserRoleModel.findAll({
-        where: { roleID: 1 }, //roleID 1 merupakan id pengurus
-        attributes: ["userID"], // mengambil kolom userID saja
+      const findUserID = await PenggunaRoleModel.findAll({
+        where: { role_id: 1 }, //role_id 1 merupakan id pengurus
+        attributes: ["pengguna_id"], // mengambil kolom pengguna_id saja
         raw: true,
       });
 
@@ -51,4 +51,4 @@ class UserRoleRepository {
   }
 }
 
-module.exports = { UserRoleRepository };
+module.exports = { PenggunaRoleRepository };

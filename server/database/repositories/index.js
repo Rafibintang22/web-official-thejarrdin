@@ -1,17 +1,17 @@
 const { DataFiturRepository } = require("./DataFiturRepository");
 const { FiturRepository } = require("./FiturRepository");
-const { LoginSessionRepository } = require("./LoginSessionRepository");
-const { MessageRepository } = require("./MessageRepository");
+const { SesiMasukRepository } = require("./SesiMasukRepository");
+const { PesanRepository } = require("./PesanRepository");
 const { RoleRepository } = require("./RoleRepository");
-const { UserRepository } = require("./UserRepository");
-const { UserRoleRepository } = require("./UserRoleRepository");
+const { PenggunaRepository } = require("./PenggunaRepository");
+const { PenggunaRoleRepository } = require("./PenggunaRoleRepository");
 
 module.exports = {
   FiturRepository,
   DataFiturRepository,
-  UserRoleRepository,
-  UserRepository,
+  PenggunaRoleRepository,
+  PenggunaRepository,
   RoleRepository,
-  MessageRepository,
-  LoginSessionRepository,
+  PesanRepository,
+  SesiMasukRepository,
 };

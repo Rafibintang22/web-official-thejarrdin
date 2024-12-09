@@ -4,7 +4,7 @@ import { Menu, Table } from "antd";
 import columns from "../../constaints/columnsTable";
 
 function DataFiturLayout({
-  hasPengurus,
+  hakAksesInsert,
   setModalInsert,
   range,
   setRange,
@@ -25,7 +25,7 @@ function DataFiturLayout({
   return (
     <>
       <FilterTable
-        isInsert={hasPengurus ? true : false}
+        isInsert={hakAksesInsert ? true : false}
         nameInsert={nameInsert}
         setInsertBtn={setModalInsert}
         range={range}
@@ -48,7 +48,7 @@ function DataFiturLayout({
           dataSource={searchValue === "" || null || undefined ? dataTable : filteredDataTable}
           onChange={handleTableChange}
           pagination={pagination}
-          columns={columns(fieldDetail, setDetailOpen)}
+          columns={columns(fieldDetail, setDetailOpen, currTipeData)}
         />
       </div>
     </>
