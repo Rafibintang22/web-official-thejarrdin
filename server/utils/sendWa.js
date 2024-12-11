@@ -35,7 +35,7 @@ async function sendNotifToWa(nama, noTelp, tipeInfo) {
         user_name: nama,
         number: noTelp,
         variabel: {
-          "{{1}}": `(tipeInfo)${tipeInfo}`,
+          "{{1}}": `${tipeInfo}`,
         },
       },
     ],
@@ -51,4 +51,10 @@ async function sendNotifToWa(nama, noTelp, tipeInfo) {
   }
 }
 
-module.exports = { sendOtpToWa, sendNotifToWa };
+async function sendNotificationsWa(arrDataUser, tipeInfo) {
+  for (const user of arrDataUser) {
+    await sendNotifToWa(user.nama, user.no_telp, tipeInfo);
+  }
+}
+
+module.exports = { sendOtpToWa, sendNotificationsWa };

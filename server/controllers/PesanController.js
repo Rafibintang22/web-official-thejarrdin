@@ -3,7 +3,7 @@ const {
   PenggunaRoleRepository,
   PenggunaRepository,
 } = require("../database/repositories");
-const { sendNotifToWa } = require("../utils/sendWa");
+const { sendNotificationsWa } = require("../utils/sendWa");
 const { uploadFileGdrive, createFolder } = require("../utils/uploadFileGdrive");
 const { Validator } = require("../utils/validator");
 
@@ -81,22 +81,26 @@ class PesanController {
     // console.log(userIds);
 
     // // JIKA post terdapat files
+    let arrDataUser = [];
     if (files && files.PesanFile) {
       // Fetch user emails from PenggunaRepository
-      let arrEmailUser = [];
       try {
-        arrEmailUser = await Promise.all(
+        arrDataUser = await Promise.all(
           userIds.map(async (user) => {
             console.log(user);
 
             const readUser = await PenggunaRepository.readOne(user.pengguna_id);
-            return readUser ? readUser.email : null; // Assuming user has an 'email' field
+            return {
+              nama: readUser ? readUser.nama : null,
+              no_telp: readUser ? readUser.no_telp : null,
+              email: readUser ? readUser.email : null,
+            };
           })
         );
       } catch (error) {
         return res.status(500).json({ error: "Error fetching user emails." });
       }
-      // console.log(arrEmailUser);
+      // console.log(arrDataUser);
       // END Fetch user emails from PenggunaRepository
 
       // membuat folder berdasarkan nama fitur_judul
@@ -105,7 +109,7 @@ class PesanController {
       try {
         for (let i = 0; i < files.PesanFile.length; i++) {
           console.log(`Uploading file: ${files.PesanFile[i].originalname}`);
-          const dataFile = await uploadFileGdrive(files.PesanFile[i], arrEmailUser, folderId);
+          const dataFile = await uploadFileGdrive(files.PesanFile[i], arrDataUser, folderId);
           const url = `https://drive.google.com/file/d/${dataFile.id}/view`; //link dari file pada gdrive
           if (i === files.PesanFile.length - 1) {
             linkFiles += url;
@@ -141,7 +145,7 @@ class PesanController {
 
     try {
       const createMessage = await PesanRepository.create(dataMessage);
-      // await sendNotifToWa(readUser.Nama, readUser.NoTelp, otp);
+      await sendNotificationsWa(arrDataUser, "Masukan & Aspirasi");
       return res.status(201).json({ success: true, data: createMessage });
     } catch (error) {
       console.error(error);

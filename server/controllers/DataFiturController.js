@@ -3,7 +3,7 @@ const {
   FiturRepository,
   PenggunaRepository,
 } = require("../database/repositories");
-const { sendNotifToWa } = require("../utils/sendWa");
+const { sendNotificationsWa } = require("../utils/sendWa");
 const { uploadFileGdrive, createFolder } = require("../utils/uploadFileGdrive");
 const { Validator } = require("../utils/validator");
 
@@ -97,29 +97,33 @@ class DataFiturController {
       UserTujuan: userTujuan, // Set UserTujuan based on TipeTujuan
       FileFolder: body.FileFolder || [],
     };
-    // console.log(dataFitur);
+    // console.log(dataFitur, "DATA FITUR");
 
     const readFitur = await FiturRepository.readOne(dataFitur.FiturID);
     const judul = dataFitur.Judul; // Get the title
 
     let linkFiles = ""; //berupa string
+    let arrDataUser = [];
     // // JIKA post terdapat files
     if (files && files.FileFolder) {
       // Fetch user emails from PenggunaRepository
       let userIds = dataFitur.UserTujuan;
       userIds.push(dataFitur.UserID_dibuat); //menambah juga userID untuk yg buat data
-      let arrEmailUser = [];
       try {
-        arrEmailUser = await Promise.all(
+        arrDataUser = await Promise.all(
           userIds.map(async (id) => {
             const user = await PenggunaRepository.readOne(id);
-            return user ? user.email : null; // Assuming user has an 'email' field
+            return {
+              nama: user ? user.nama : null,
+              no_telp: user ? user.no_telp : null,
+              email: user ? user.email : null,
+            };
           })
         );
       } catch (error) {
-        return res.status(500).json({ error: "Error fetching user emails." });
+        return res.status(500).json({ error: "Error fetching data user." });
       }
-      // console.log(arrEmailUser);
+      // console.log(arrDataUser);
       // END Fetch user emails from PenggunaRepository
 
       // membuat folder berdasarkan nama fitur_judul
@@ -128,7 +132,7 @@ class DataFiturController {
       try {
         for (let i = 0; i < files.FileFolder.length; i++) {
           console.log(`Uploading file: ${files.FileFolder[i].originalname}`);
-          const dataFile = await uploadFileGdrive(files.FileFolder[i], arrEmailUser, folderId);
+          const dataFile = await uploadFileGdrive(files.FileFolder[i], arrDataUser, folderId);
           const url = `https://drive.google.com/file/d/${dataFile.id}/view`; //link dari file pada gdrive
           if (i === files.FileFolder.length - 1) {
             linkFiles += url;
@@ -155,7 +159,7 @@ class DataFiturController {
 
     try {
       const createDataFitur = await DataFiturRepository.create(dataFitur);
-      // await sendNotifToWa(readUser.Nama, readUser.NoTelp, otp);
+      await sendNotificationsWa(arrDataUser, readFitur.nama);
       return res.status(201).json({ success: true, data: createDataFitur });
     } catch (error) {
       console.error(error);

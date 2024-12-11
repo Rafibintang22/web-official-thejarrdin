@@ -29,12 +29,12 @@ async function createFolder(name, parentFolderId) {
 }
 
 // Set permissions for a file
-async function setFilePermissions(fileId, emailUser) {
+async function setFilePermissions(fileId, dataUser) {
   const drive = google.drive({ version: "v3", auth });
-  const permissions = emailUser.map((email) => ({
-    type: email ? "user" : "anyone", //jika email tidak ada maka akses file pd Gdrive menjadi anyone
+  const permissions = dataUser.map((user) => ({
+    type: user.email ? "user" : "anyone", //jika email tidak ada maka akses file pd Gdrive menjadi anyone
     role: "reader",
-    ...(email && { emailAddress: email }), // Only add emailAddress if email is not null
+    ...(user.email && { emailAddress: user.email }), // Only add emailAddress if email is not null
   }));
 
   for (const permission of permissions) {
@@ -47,7 +47,7 @@ async function setFilePermissions(fileId, emailUser) {
   }
 }
 
-async function uploadFileGdrive(fileObject, emailUser, folderId) {
+async function uploadFileGdrive(fileObject, dataUser, folderId) {
   const bufferStream = new stream.PassThrough();
   bufferStream.end(fileObject.buffer);
 
@@ -67,7 +67,7 @@ async function uploadFileGdrive(fileObject, emailUser, folderId) {
     });
 
     // Set permissions for the uploaded file
-    await setFilePermissions(data.id, emailUser);
+    await setFilePermissions(data.id, dataUser);
 
     // console.log(`Uploaded file ${data.name} with ID ${data.id} to folder ${namaFolder}`);
     return data; // Return uploaded data
