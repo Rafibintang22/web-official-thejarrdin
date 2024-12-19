@@ -3,7 +3,7 @@ const {
   FiturRepository,
   PenggunaRepository,
 } = require("../database/repositories");
-const { sendNotificationsWa } = require("../utils/sendWa");
+const { sendNotifToWa } = require("../utils/sendWa");
 const { uploadFileGdrive, createFolder } = require("../utils/uploadFileGdrive");
 const { Validator } = require("../utils/validator");
 
@@ -114,6 +114,7 @@ class DataFiturController {
           userIds.map(async (id) => {
             const user = await PenggunaRepository.readOne(id);
             return {
+              pengguna_id: user ? user.pengguna_id : null,
               nama: user ? user.nama : null,
               no_telp: user ? user.no_telp : null,
               email: user ? user.email : null,
@@ -159,7 +160,9 @@ class DataFiturController {
 
     try {
       const createDataFitur = await DataFiturRepository.create(dataFitur);
-      await sendNotificationsWa(arrDataUser, readFitur.nama);
+      // Filter array untuk menghapus data pembuat data
+      arrDataUser = arrDataUser.filter((user) => user.pengguna_id !== dataFitur.UserID_dibuat);
+      await sendNotifToWa(arrDataUser, readFitur.nama);
       return res.status(201).json({ success: true, data: createDataFitur });
     } catch (error) {
       console.error(error);
