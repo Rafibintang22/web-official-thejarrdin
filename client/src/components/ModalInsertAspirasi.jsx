@@ -9,11 +9,13 @@ import { inputValidator } from "../utils/inputValidator";
 import Dragger from "antd/es/upload/Dragger";
 
 // eslint-disable-next-line react/prop-types
-function ModalInsertAspirasi({ currState, setState, judulInsert }) {
+function ModalInsertAspirasi({ currState, setState, judulInsert, dataOne = null }) {
     const userSession = JSON.parse(localStorage.getItem("userSession"));
 
     const { ValidationStatus, setValidationStatus, setCloseAlert } = useValidator();
-    const [formData, setFormData] = useState({ Judul: "", Pesan: "", PesanFile: [] });
+    const [formData, setFormData] = useState(
+        dataOne ? dataOne : { Judul: "", Pesan: "", PesanFile: [] }
+    );
     const [loading, setLoading] = useState(false); // Tambahkan state loading
     // console.log(formData, "FORMDATA");
 
@@ -63,6 +65,7 @@ function ModalInsertAspirasi({ currState, setState, judulInsert }) {
                         value={formData["Judul"]}
                         placeholder="Masukkan judul aspirasi"
                         onChange={(e) => handleFormDataChange("Judul", e.target.value)}
+                        disabled={dataOne ? true : false}
                     />
                 </div>
                 <div className="form-input text d-flex align-items-start">
