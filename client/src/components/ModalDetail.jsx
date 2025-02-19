@@ -18,7 +18,7 @@ function ModalDetail({ judulDetail, tipeDetail }) {
   const [formData, setFormData] = useState(null);
   const [modalInsert, setModalInsert] = useState(false);
   const [loading, setLoading] = useState(false); // Tambahkan state loading
-  console.log(dataOne);
+  // console.log(dataOne);
 
   axios.defaults.withCredentials = true;
   useEffect(() => {

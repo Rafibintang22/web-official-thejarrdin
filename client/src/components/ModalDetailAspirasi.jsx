@@ -33,7 +33,7 @@ function ModalDetailAspirasi({ judulDetail, tipeDetail }) {
           }`,
           headers
         );
-        console.log(response);
+        // console.log(response);
 
         const responseData = response?.data;
         // console.log(responseData);

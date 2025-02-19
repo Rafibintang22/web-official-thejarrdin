@@ -18,7 +18,7 @@ import ModalInsertAspirasi from "../../components/ModalInsertAspirasi";
 import ModalDetailAspirasi from "../../components/ModalDetailAspirasi";
 
 function DataFitur({ active }) {
-  console.log(active);
+  // console.log(active);
 
   const userSession = JSON.parse(localStorage.getItem("userSession"));
   // Date state for one year range
