@@ -68,10 +68,10 @@ function ModalInsert({ currState, setState, judulInsert }) {
 
     const handleCurrentMenu = (value) => {
         setFormData((prevFormData) => ({
+            ...prevFormData,
             Judul: "",
             UserTujuan: [],
-            FileFolder: "",
-            TipeTujuan: prevFormData.TipeTujuan,
+            FileFolder: [],
         }));
         setCurrent(value);
     };
