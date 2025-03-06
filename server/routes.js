@@ -1,16 +1,16 @@
 const express = require("express");
 const {
-  FiturController,
-  DataFiturController,
-  PenggunaRoleController,
-  PenggunaController,
-  PesanController,
-  NotifikasiController,
+    FiturController,
+    DataFiturController,
+    PenggunaRoleController,
+    PenggunaController,
+    PesanController,
+    NotifikasiController,
 } = require("./controllers");
 const { Authorization } = require("./utils/Authorization");
 const multer = require("multer");
 const upload = multer({
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB limit
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB limit
 }); // Atur multer sesuai kebutuhan
 
 const router = express.Router();
@@ -34,18 +34,17 @@ router.get("/role", Authorization.decryption, PenggunaRoleController.getAllByUse
 // ###############################################################################
 //                              DATA FITUR
 router.get(
-  // "/data/:FiturID/:Tipe/:CurrPage/:PageSize",
-  "/data/:FiturID/:Tipe/:StartDate/:EndDate",
-
-  Authorization.decryption,
-  DataFiturController.getAll
+    // "/data/:FiturID/:Tipe/:CurrPage/:PageSize",
+    "/data/:FiturID/:Tipe/:StartDate/:EndDate",
+    Authorization.decryption,
+    DataFiturController.getAll
 );
 router.get("/data/:DataFiturID", Authorization.decryption, DataFiturController.getOne);
 router.post(
-  "/data",
-  upload.fields([{ name: "FileFolder", maxCount: 10 }]),
-  Authorization.decryption,
-  DataFiturController.post
+    "/data",
+    upload.fields([{ name: "FileFolder", maxCount: 10 }]),
+    Authorization.decryption,
+    DataFiturController.post
 );
 router.delete("/data/:DataFiturID", Authorization.decryption, DataFiturController.delete);
 
@@ -54,10 +53,10 @@ router.delete("/data/:DataFiturID", Authorization.decryption, DataFiturControlle
 router.get("/aspirasi/:Tipe/:StartDate/:EndDate", Authorization.decryption, PesanController.getAll);
 router.get("/aspirasidetail/:PesanID/:Tipe", Authorization.decryption, PesanController.getOne);
 router.post(
-  "/aspirasi",
-  upload.fields([{ name: "PesanFile", maxCount: 10 }]),
-  Authorization.decryption,
-  PesanController.post
+    "/aspirasi",
+    upload.fields([{ name: "PesanFile", maxCount: 10 }]),
+    Authorization.decryption,
+    PesanController.post
 );
 router.patch("/aspirasi", Authorization.decryption, PesanController.updateRead);
 module.exports = { router };

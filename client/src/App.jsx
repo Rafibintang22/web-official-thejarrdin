@@ -1,57 +1,102 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ConfigProvider } from "antd";
 import { Home, DataFitur, Login, Logout } from "./pages/index";
+import ProtectedRoute from "./utils/ProtectedRoute";
 
 function App() {
-  return (
-    <>
-      <ConfigProvider
-        theme={{
-          token: {
-            colorPrimary: "#399051",
-            colorBorder: "#E0E0E0",
-          },
+    const userSession = JSON.parse(localStorage.getItem("userSession"));
+    const dataUser = userSession?.dataUser;
+    console.log(dataUser);
 
-          components: {
-            Select: {
-              colorText: "#000000",
-            },
-          },
-        }}
-      >
-        <Router>
-          <Routes>
-            <Route path="/" element={<Home />}></Route>
-            <Route path="/login" element={<Login />}></Route>
-            <Route path="/logout" element={<Logout />}></Route>
-            <Route path="/laporan" element={<DataFitur active={"Laporan"} />}></Route>
-            {/* <Route path="/laporantest" element={<DataFitur />}></Route> */}
-            <Route
-              path="/masukan&aspirasi"
-              element={<DataFitur active={"Masukan & Aspirasi"} />}
-            ></Route>
-            <Route path="/pengumuman" element={<DataFitur active={"Pengumuman"} />}></Route>
-            <Route
-              path="/tagihanbulanan"
-              element={<DataFitur active={"Tagihan Bulanan"} />}
-            ></Route>
-            <Route
-              path="/pengumumanpengelola"
-              element={<DataFitur active={"Pengumuman Pengelola"} />}
-            ></Route>
-            <Route
-              path="/informasipaket"
-              element={<DataFitur active={"Informasi Paket"} />}
-            ></Route>
-            <Route
-              path="/buletinkegiatan"
-              element={<DataFitur active={"Buletin Kegiatan"} />}
-            ></Route>
-          </Routes>
-        </Router>
-      </ConfigProvider>
-    </>
-  );
+    return (
+        <>
+            <ConfigProvider
+                theme={{
+                    token: {
+                        colorPrimary: "#399051",
+                        colorBorder: "#E0E0E0",
+                    },
+
+                    components: {
+                        Select: {
+                            colorText: "#000000",
+                        },
+                    },
+                }}
+            >
+                <Router>
+                    <Routes>
+                        <Route path="/" element={<Home />}></Route>
+                        <Route path="/login" element={<Login />}></Route>
+                        <Route path="/logout" element={<Logout />}></Route>
+                        <Route
+                            path="/laporan"
+                            element={
+                                <ProtectedRoute
+                                    element={<DataFitur active={"Laporan"} />}
+                                    allowedRoles={["Pengurus", "Pemilik Unit", "Pelaku Komersil"]}
+                                />
+                            }
+                        ></Route>
+                        <Route
+                            path="/masukan&aspirasi"
+                            element={
+                                <ProtectedRoute
+                                    element={<DataFitur active={"Masukan & Aspirasi"} />}
+                                    allowedRoles={["Pengurus", "Pemilik Unit", "Pelaku Komersil"]}
+                                />
+                            }
+                        ></Route>
+                        <Route
+                            path="/pengumuman"
+                            element={
+                                <ProtectedRoute
+                                    element={<DataFitur active={"Pengumuman"} />}
+                                    allowedRoles={["Pengurus", "Pemilik Unit", "Pelaku Komersil"]}
+                                />
+                            }
+                        ></Route>
+                        <Route
+                            path="/tagihanbulanan"
+                            element={
+                                <ProtectedRoute
+                                    element={<DataFitur active={"Tagihan Bulanan"} />}
+                                    allowedRoles={["Pengelola", "Pemilik Unit", "Pelaku Komersil"]}
+                                />
+                            }
+                        ></Route>
+                        <Route
+                            path="/pengumumanpengelola"
+                            element={
+                                <ProtectedRoute
+                                    element={<DataFitur active={"Pengumuman Pengelola"} />}
+                                    allowedRoles={["Pengelola", "Pemilik Unit", "Pelaku Komersil"]}
+                                />
+                            }
+                        ></Route>
+                        <Route
+                            path="/informasipaket"
+                            element={
+                                <ProtectedRoute
+                                    element={<DataFitur active={"Informasi Paket"} />}
+                                    allowedRoles={["Pengelola", "Pemilik Unit"]}
+                                />
+                            }
+                        ></Route>
+                        <Route
+                            path="/buletinkegiatan"
+                            element={
+                                <ProtectedRoute
+                                    element={<DataFitur active={"Buletin Kegiatan"} />}
+                                    allowedRoles={["Pengelola", "Pemilik Unit", "Pelaku Komersil"]}
+                                />
+                            }
+                        ></Route>
+                    </Routes>
+                </Router>
+            </ConfigProvider>
+        </>
+    );
 }
 
 export default App;
