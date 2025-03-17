@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { ConfigProvider } from "antd";
 import { Home, DataFitur, Login, Logout } from "./pages/index";
 import ProtectedRoute from "./utils/ProtectedRoute";
@@ -26,6 +26,7 @@ function App() {
             >
                 <Router>
                     <Routes>
+                        <Route path="*" element={<Navigate to="/" replace />} />
                         <Route path="/" element={<Home />}></Route>
                         <Route path="/login" element={<Login />}></Route>
                         <Route path="/logout" element={<Logout />}></Route>
@@ -89,6 +90,15 @@ function App() {
                                 <ProtectedRoute
                                     element={<DataFitur active={"Buletin Kegiatan"} />}
                                     allowedRoles={["Pengelola", "Pemilik Unit", "Pelaku Komersil"]}
+                                />
+                            }
+                        ></Route>
+                        <Route
+                            path="/daftarpengguna"
+                            element={
+                                <ProtectedRoute
+                                    element={<DataFitur active={"Pengguna"} />}
+                                    allowedRoles={["Admin"]}
                                 />
                             }
                         ></Route>

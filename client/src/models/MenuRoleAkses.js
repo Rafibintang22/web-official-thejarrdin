@@ -136,6 +136,15 @@ export const PelakuKomersilAkses = [
     // },
 ];
 
+export const AdminAkses = [
+    {
+        label: "Daftar Pengguna",
+        key: "/daftarpengguna",
+        icon: "https://img.icons8.com/ios/100/conference-call--v1.png",
+        iconColor: "https://img.icons8.com/fluency/100/groups--v2.png",
+    },
+];
+
 // Fungsi untuk menggabungkan akses berdasarkan role
 // prameter roles bertipe array
 export function multiRoleAkses(roles) {
@@ -144,6 +153,7 @@ export function multiRoleAkses(roles) {
         Pengelola: PengelolaAkses,
         PemilikUnit: PemilikUnitAkses,
         PelakuKomersil: PelakuKomersilAkses,
+        Admin: AdminAkses,
     };
 
     // Gabungkan akses dari semua role yang diberikan

@@ -8,70 +8,98 @@ import { revertDate } from "../utils/formatDate";
 const userSession = JSON.parse(localStorage.getItem("userSession"));
 axios.defaults.withCredentials = true;
 const updateIsRead = async (Id) => {
-  const body = {
-    MessageID: Id,
-  };
-  const headers = {
-    headers: {
-      authorization: userSession?.AuthKey,
-    },
-  };
-  try {
-    await axios.patch(`${urlServer}/aspirasi`, body, headers);
-    window.location.reload();
-  } catch (error) {
-    console.log(error);
-  }
+    const body = {
+        MessageID: Id,
+    };
+    const headers = {
+        headers: {
+            authorization: userSession?.AuthKey,
+        },
+    };
+    try {
+        await axios.patch(`${urlServer}/aspirasi`, body, headers);
+        window.location.reload();
+    } catch (error) {
+        console.log(error);
+    }
 };
-const columns = (isDetailOpen, setDetailOpen, tipeAspirasi = "") => [
-  {
-    title: "Judul",
-    dataIndex: "Judul",
-    key: "Judul",
-    sorter: (a, b) => a.Judul.localeCompare(b.Judul),
-  },
-  {
-    title: "Diunggah oleh",
-    dataIndex: "DibuatOleh",
-    key: "DibuatOleh",
-    sorter: (a, b) => a.DibuatOleh.localeCompare(b.DibuatOleh),
-  },
-  {
-    title: "Tanggal dibuat",
-    dataIndex: "TglDibuat",
-    key: "TglDibuat",
-    sorter: (a, b) => {
-      const dateA = new Date(revertDate(a.TglDibuat));
-      const dateB = new Date(revertDate(b.TglDibuat));
-
-      return dateA - dateB;
+const columnsDataFitur = (isDetailOpen, setDetailOpen, tipeAspirasi = "") => [
+    {
+        title: "Judul",
+        dataIndex: "Judul",
+        key: "Judul",
+        sorter: (a, b) => a.Judul.localeCompare(b.Judul),
     },
-  },
-  isDetailOpen === "Masukan & Aspirasi" && tipeAspirasi === "untukSaya"
-    ? {
-        title: "Status",
-        dataIndex: "IsRead",
-        key: "IsRead",
+    {
+        title: "Diunggah oleh",
+        dataIndex: "DibuatOleh",
+        key: "DibuatOleh",
+        sorter: (a, b) => a.DibuatOleh.localeCompare(b.DibuatOleh),
+    },
+    {
+        title: "Tanggal dibuat",
+        dataIndex: "TglDibuat",
+        key: "TglDibuat",
+        sorter: (a, b) => {
+            const dateA = new Date(revertDate(a.TglDibuat));
+            const dateB = new Date(revertDate(b.TglDibuat));
+
+            return dateA - dateB;
+        },
+    },
+    isDetailOpen === "Masukan & Aspirasi" && tipeAspirasi === "untukSaya"
+        ? {
+              title: "Status",
+              dataIndex: "IsRead",
+              key: "IsRead",
+              render: (text, record) => (
+                  <Button
+                      key="isRead"
+                      type={record.IsRead ? "primary" : ""}
+                      icon={record.IsRead ? <CheckOutlined /> : false}
+                      onClick={() => updateIsRead(record.Id)}
+                  >
+                      {record.IsRead ? "Dibaca" : "Tandai untuk dibaca"}
+                  </Button>
+              ),
+          }
+        : {},
+    {
+        title: "Aksi",
+        dataIndex: "Id",
+        key: "Id",
         render: (text, record) => (
-          <Button
-            key="isRead"
-            type={record.IsRead ? "primary" : ""}
-            icon={record.IsRead ? <CheckOutlined /> : false}
-            onClick={() => updateIsRead(record.Id)}
-          >
-            {record.IsRead ? "Dibaca" : "Tandai untuk dibaca"}
-          </Button>
+            <Button onClick={() => setDetailOpen(isDetailOpen, record.Id)}>Lihat detail</Button>
         ),
-      }
-    : {},
-  {
-    title: "Aksi",
-    dataIndex: "Id",
-    key: "Id",
-    render: (text, record) => (
-      <Button onClick={() => setDetailOpen(isDetailOpen, record.Id)}>Lihat detail</Button>
-    ),
-  },
+    },
 ];
 
-export default columns;
+const columnsDaftarPengguna = (isDetailOpen, setDetailOpen) => [
+    {
+        title: "Nama",
+        dataIndex: "Nama",
+        key: "Nama",
+        sorter: (a, b) => a.Nama.localeCompare(b.Nama),
+    },
+    {
+        title: "Email",
+        dataIndex: "Email",
+        key: "Email",
+        sorter: (a, b) => a.Email.localeCompare(b.Email),
+    },
+    {
+        title: "No Telepon",
+        dataIndex: "NoTelp",
+        key: "NoTelp",
+    },
+    {
+        title: "Aksi",
+        dataIndex: "UserID",
+        key: "UserID",
+        render: (text, record) => (
+            <Button onClick={() => setDetailOpen(isDetailOpen, record.UserID)}>Lihat detail</Button>
+        ),
+    },
+];
+
+export { columnsDataFitur, columnsDaftarPengguna };
