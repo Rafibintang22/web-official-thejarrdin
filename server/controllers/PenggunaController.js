@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const { PenggunaRepository, SesiMasukRepository } = require("../database/repositories");
 const { Authorization } = require("../utils/Authorization");
 const { generateOtp } = require("../utils/generateOtp");
@@ -18,9 +19,52 @@ class PenggunaController {
     }
 
     static async getOne(req, res) {
+        const UserID = req.params.UserID;
+        console.log(UserID);
+
+        console.log("GET /user/:UserID dipanggil dengan UserID:", UserID);
+        console.log("Headers:", req.headers);
+        console.log("Body:", req.body);
         try {
-            let readUser = await PenggunaRepository.readOne(req.params.id);
+            let readUser = await PenggunaRepository.readOne(UserID);
             res.status(200).json(readUser);
+        } catch (error) {
+            console.error(error);
+            res.status(error.status || 500).json({ error: error.message });
+        }
+    }
+
+    static async patch(req, res) {
+        try {
+            const { User } = req.body;
+
+            const { error } = Validator.updateUser(User);
+            if (error) {
+                const newError = new Error(error.details[0].message);
+                newError.status = 400;
+                throw newError;
+            }
+
+            const patchUser = await PenggunaRepository.update(User);
+            res.status(200).json({
+                success: true,
+                data: { User: patchUser },
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(error.status || 500).json({ error: error.message });
+        }
+    }
+
+    static async delete(req, res) {
+        try {
+            const UserID = require.params.UserID;
+
+            const deletedUser = await PenggunaRepository.delete(UserID);
+            res.status(200).json({
+                success: true,
+                data: { User: deletedUser },
+            });
         } catch (error) {
             console.error(error);
             res.status(error.status || 500).json({ error: error.message });
@@ -114,6 +158,7 @@ class PenggunaController {
                 UserID: readUser.UserID,
                 Email: readUser.Email,
                 NoTelp: readUser.NoTelp,
+                Role: readUser.Role,
                 Otp: loginSession.otp,
                 LoginSessionID: loginSession.sesi_id,
             };
@@ -133,20 +178,22 @@ class PenggunaController {
     }
 
     static async getUserSession(req, res) {
+        const token = req.headers["authorization"];
         try {
-            if (!req.dataSession) {
-                const newError = new Error("Access denied.");
-                newError.status = 403;
-                throw newError;
+            let readSession = await SesiMasukRepository.readToken(token);
+            if (!readSession) {
+                return res.status(401).json({ message: "Sesi anda telah berakhir" });
             }
 
-            const { iat, exp, ...rest } = req.dataSession;
+            //cek apakah expired menggunakan jwt.verify
+            const secretKey = process.env.SECRET_KEY;
+            const decoded = jwt.verify(token, secretKey);
 
-            let sessionData = {
+            const { iat, exp, Otp, LoginSessionID, ...rest } = decoded;
+            const sessionData = {
                 ...rest,
             };
-
-            console.log(sessionData);
+            // console.log(sessionData);
 
             res.status(200).json({ status: "authorized", dataLogin: sessionData });
         } catch (error) {

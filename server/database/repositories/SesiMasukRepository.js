@@ -33,6 +33,26 @@ class SesiMasukRepository {
         }
     }
 
+    static async readToken(token) {
+        try {
+            let findLoginSession;
+
+            findLoginSession = await SesiMasukModel.findOne({
+                where: { token: token },
+            });
+
+            if (!findLoginSession) {
+                const newError = new Error("Sesi anda telah berakhir");
+                newError.status = 404;
+                throw newError;
+            }
+
+            return findLoginSession;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     static async create(dataInsert) {
         const transaction = await jarrdinDB.transaction();
         try {

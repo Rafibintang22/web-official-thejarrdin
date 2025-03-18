@@ -46,6 +46,21 @@ class Authorization {
         }
     }
 
+    static checkRole(allowedRoles) {
+        return (req, res, next) => {
+            const userRoles = req.dataSession.Role.map((role) => role.Nama); // Ambil hanya nama role
+
+            // Cek apakah ada salah satu role yang diizinkan
+            const hasAccess = userRoles.some((role) => allowedRoles.includes(role));
+
+            if (!hasAccess) {
+                return res.status(403).json({ message: "Forbidden: You do not have access" });
+            }
+
+            next();
+        };
+    }
+
     // static async checkAccess(featureName) {
     //     return async (req, res, next) => {
     //         try {

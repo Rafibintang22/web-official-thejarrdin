@@ -21,8 +21,31 @@ router.get("/fitur", Authorization.decryption, FiturController.getAllByUserID);
 
 // ###############################################################################
 //                              USER
-router.get("/user", Authorization.decryption, PenggunaController.getAll);
+router.get(
+    "/user",
+    Authorization.decryption,
+    Authorization.checkRole(["Admin"]),
+    PenggunaController.getAll
+);
 router.get("/user/session", Authorization.decryption, PenggunaController.getUserSession);
+router.get(
+    "/user/:UserID",
+    Authorization.decryption,
+    Authorization.checkRole(["Admin"]),
+    PenggunaController.getOne
+);
+router.patch(
+    "/user",
+    Authorization.decryption,
+    Authorization.checkRole(["Admin"]),
+    PenggunaController.patch
+);
+router.delete(
+    "/user",
+    Authorization.decryption,
+    Authorization.checkRole(["Admin"]),
+    PenggunaController.delete
+);
 router.post("/login", PenggunaController.postLogin);
 router.post("/login/verify-otp", PenggunaController.verifyOtp);
 router.get("/logout", Authorization.decryption, PenggunaController.logout);
