@@ -20,13 +20,15 @@ class PenggunaController {
 
     static async getOne(req, res) {
         const UserID = req.params.UserID;
-        console.log(UserID);
+        // console.log(UserID);
 
-        console.log("GET /user/:UserID dipanggil dengan UserID:", UserID);
-        console.log("Headers:", req.headers);
-        console.log("Body:", req.body);
+        // console.log("GET /user/:UserID dipanggil dengan UserID:", UserID);
+        // console.log("Headers:", req.headers);
+        // console.log("Body:", req.body);
         try {
             let readUser = await PenggunaRepository.readOne(UserID);
+            console.log(readUser);
+
             res.status(200).json(readUser);
         } catch (error) {
             console.error(error);
@@ -115,6 +117,22 @@ class PenggunaController {
                 // sebelum integrasi ke WA API (jika no_telp maka otp akan di kirim ke client)
                 data: { User: readUser },
             });
+        } catch (error) {
+            console.error(error);
+            res.status(error.status || 500).json({ error: error.message });
+        }
+    }
+
+    static async postRegister(req, res) {
+        try {
+            const { User } = req.body;
+
+            const { error } = Validator.registerUser(User);
+            if (error) {
+                const newError = new Error(error.details[0].message);
+                newError.status = 400;
+                throw newError;
+            }
         } catch (error) {
             console.error(error);
             res.status(error.status || 500).json({ error: error.message });

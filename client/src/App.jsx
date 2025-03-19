@@ -6,7 +6,7 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 function App() {
     const userSession = JSON.parse(localStorage.getItem("userSession"));
     const dataUser = userSession?.dataUser;
-    console.log(dataUser);
+    // console.log(dataUser);
 
     return (
         <>

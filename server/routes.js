@@ -6,6 +6,7 @@ const {
     PenggunaController,
     PesanController,
     NotifikasiController,
+    RoleController,
 } = require("./controllers");
 const { Authorization } = require("./utils/Authorization");
 const multer = require("multer");
@@ -52,7 +53,8 @@ router.get("/logout", Authorization.decryption, PenggunaController.logout);
 
 // ###############################################################################
 //                              ROLE
-router.get("/role", Authorization.decryption, PenggunaRoleController.getAllByUserID);
+router.get("/role", Authorization.decryption, RoleController.getAll);
+router.get("/role/:UserID", Authorization.decryption, PenggunaRoleController.getAllByUserID);
 
 // ###############################################################################
 //                              DATA FITUR

@@ -1,20 +1,21 @@
-import { Button, Input, Modal, Popconfirm, Popover, Result, Select } from "antd";
 import React, { useEffect, useState } from "react";
-import DetailDataController from "../utils/detailDataController";
-import { DeleteTwoTone } from "@ant-design/icons";
+import useValidator from "../constaints/FormValidation";
+import { Button, Input, Modal, Result, Select } from "antd";
 import axios from "axios";
 import { urlServer } from "../utils/endpoint";
-import { mapMultiRoleSelect } from "../utils/RequestFormatter";
-import useValidator from "../constaints/FormValidation";
-import { inputValidator } from "../utils/inputValidator";
 
-function ModalDetailPengguna({ judulDetail }) {
+function ModalInsertPengguna({ currState, setState, judulInsert }) {
     const userSession = JSON.parse(localStorage.getItem("userSession"));
-    const { isDetailOpen, oneDataID, setDetailOpen } = DetailDataController();
     const { ValidationStatus, setValidationStatus, setCloseAlert } = useValidator();
+    const [formData, setFormData] = useState({
+        Nama: "",
+        Email: "",
+        NoTelp: "",
+        Alamat: "",
+        NoUnit: "",
+        Role: [],
+    });
     const [loading, setLoading] = useState(false); // Tambahkan state loading
-    const [formData, setFormData] = useState(null);
-    const [dataOne, setDataOne] = useState(null);
     const [opsiRole, setOpsiRole] = useState([]);
 
     axios.defaults.withCredentials = true;
@@ -42,33 +43,8 @@ function ModalDetailPengguna({ judulDetail }) {
             }
         };
 
-        const fetchOneData = async () => {
-            setLoading(true);
-            try {
-                const response = await axios.get(`${urlServer}/user/${oneDataID}`, headers);
-                const responseData = response?.data;
-                // console.log(responseData);
-
-                const transformedData = {
-                    ...responseData,
-                    Role: responseData.Role.map((role) => role.RoleID),
-                };
-
-                setFormData(transformedData);
-                setDataOne({
-                    ...responseData,
-                    Role: responseData.Role.map((role) => ({ RoleID: role.RoleID })),
-                });
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchOpsiRole();
-        fetchOneData();
-    }, [isDetailOpen]);
+    }, [currState]);
 
     const handleFormDataChange = (tipe, value) => {
         setFormData((prevData) => {
@@ -83,99 +59,29 @@ function ModalDetailPengguna({ judulDetail }) {
             return { ...prevData, [tipe]: value };
         });
     };
-
-    const formatFormData = (formData) => {
-        const formatRole = formData.Role.map((value) => ({
-            RoleID: value,
-        }));
-        const newRole = mapMultiRoleSelect(formatRole, dataOne?.Role, "RoleID");
-
-        const transformedData = {
-            User: {
-                ...formData,
-                Email: formData.Email === "" ? null : formData.Email,
-                NoTelp: formData.NoTelp === "" ? null : formData.NoTelp,
-                Role: newRole,
-            },
-        };
-        return transformedData;
-    };
-
-    const updateFormData = async () => {
-        setLoading(true);
-        try {
-            const headers = {
-                headers: {
-                    authorization: userSession?.AuthKey,
-                },
-            };
-
-            const formattedFormData = formatFormData(formData);
-
-            // Lakukan validasi menggunakan Joi
-            const validateFunction = inputValidator["UpdateDataUser"];
-            validateFunction(formattedFormData.User);
-
-            await axios.patch(`${urlServer}/user`, formattedFormData, headers);
-            setLoading(false);
-            setValidationStatus("Berhasil", "Data berhasil diubah");
-        } catch (error) {
-            setLoading(false);
-            if (error?.response?.data?.error) {
-                setValidationStatus(error.path, error.response.data.error);
-            } else {
-                setValidationStatus(error.path, error.message);
-            }
-        }
-    };
-
     return (
         <Modal
-            title={judulDetail}
-            loading={loading}
-            closable={loading ? true : false}
+            title={judulInsert}
             centered
             width={1000}
-            open={isDetailOpen}
-            onCancel={() => {
-                loading ? false : setDetailOpen(null, null);
-            }}
+            open={currState}
+            onOk={() => setState(false)}
+            onCancel={() => (loading ? false : setState(false))}
+            closable={loading ? true : false}
+            loading={loading}
             footer={[
                 <>
-                    <div className="d-flex w-100 justify-content-between gap-3">
-                        <div>
-                            <Popover content={<p>Hapus akun pengguna</p>} trigger={"hover"}>
-                                <Button
-                                    key="delete"
-                                    variant="outlined"
-                                    icon={<DeleteTwoTone twoToneColor="#f5222d" />}
-                                    danger
-                                ></Button>
-                            </Popover>
-                        </div>
-                        <div className="d-flex gap-3">
-                            <Button
-                                key="tutup"
-                                className="text-light bg-secondary"
-                                onClick={() => {
-                                    setDetailOpen(null, null);
-                                }}
-                            >
-                                Tutup
-                            </Button>
-                            <Popconfirm
-                                icon={false}
-                                title="Apakah anda yakin mengubah data pengguna?"
-                                description="Data pengguna akan diperbarui setelah konfirmasi. Pastikan informasi yang diubah sudah benar."
-                                onConfirm={updateFormData}
-                                okText="Iya"
-                                cancelText="Tidak"
-                            >
-                                <Button key="simpan" type="primary">
-                                    Simpan
-                                </Button>
-                            </Popconfirm>
-                        </div>
+                    <div className="d-flex w-100 justify-content-end gap-3">
+                        <Button
+                            key="tutup"
+                            className="text-light bg-secondary"
+                            onClick={() => setState(false)}
+                        >
+                            Tutup
+                        </Button>
+                        <Button key="tambah" type="primary">
+                            Tambah
+                        </Button>
                     </div>
                 </>,
             ]}
@@ -186,8 +92,6 @@ function ModalDetailPengguna({ judulDetail }) {
                     onCancel={() => {
                         //jika gagal maka modal aler saja yg ditutup
                         if (ValidationStatus.Path !== "Berhasil") {
-                            setCloseAlert();
-                        } else if (ValidationStatus.Path === "error file") {
                             setCloseAlert();
                         } else {
                             //jika berhasil maka modal alert & modal form  yg ditutup
@@ -290,4 +194,4 @@ function ModalDetailPengguna({ judulDetail }) {
     );
 }
 
-export default ModalDetailPengguna;
+export default ModalInsertPengguna;

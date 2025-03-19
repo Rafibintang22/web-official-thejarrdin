@@ -109,6 +109,60 @@ const DataAspirasi = Joi.object({
     UserTujuanID: Joi.number(),
 });
 
+const UpdateDataUser = Joi.object({
+    UserID: Joi.number().max(11).required().messages({
+        "number.max": "UserID tidak boleh lebih dari 11 digit",
+        "any.required": "UserID wajib diisi",
+    }),
+    Nama: Joi.string().max(255).required().messages({
+        "string.max": "Nama tidak boleh lebih dari 255 karakter",
+        "any.required": "Nama wajib diisi",
+        "string.empty": "Nama tidak boleh kosong",
+    }),
+    Email: Joi.string()
+        .email({ tlds: { allow: false } })
+        .max(200)
+        .allow(null)
+        .optional()
+        .messages({
+            "string.email": "Format email tidak valid",
+            "string.max": "Email tidak boleh lebih dari 200 karakter",
+        }),
+    NoTelp: Joi.string().min(10).max(20).allow(null).optional().messages({
+        "string.min": "Nomor telepon minimal harus 10 digit",
+        "string.max": "Nomor telepon tidak boleh lebih dari 20 digit",
+    }),
+    Alamat: Joi.string().max(255).required().messages({
+        "string.max": "Alamat tidak boleh lebih dari 255 karakter",
+        "any.required": "Alamat wajib diisi",
+        "string.empty": "Alamat tidak boleh kosong",
+    }),
+    NoUnit: Joi.string().max(255).required().messages({
+        "string.max": "Nomor unit tidak boleh lebih dari 255 karakter",
+        "any.required": "Nomor unit wajib diisi",
+        "string.empty": "Nomor unit tidak boleh kosong",
+    }),
+    Role: Joi.array()
+        .items(
+            Joi.object({
+                Action: Joi.string().optional(),
+                RoleID: Joi.number().required().messages({
+                    "any.required": "RoleID wajib diisi",
+                }),
+            })
+        )
+        .required()
+        .messages({
+            "any.required": "Role wajib diisi",
+            "array.base": "Role harus berupa array",
+        }),
+}).custom((value, helpers) => {
+    if (!value.Email && !value.NoTelp) {
+        return helpers.message("Salah satu dari Email atau NoTelp harus diisi.");
+    }
+    return value;
+});
+
 const validateData = (data, schema) => {
     const { error } = schema.validate(data, { abortEarly: false });
     if (error) {
@@ -126,4 +180,5 @@ export const inputValidator = {
     VerifyOtp: (formData) => validateData(formData, VerifyOtp),
     DataFitur: (formData) => validateData(formData, DataFitur),
     DataAspirasi: (formData) => validateData(formData, DataAspirasi),
+    UpdateDataUser: (formData) => validateData(formData, UpdateDataUser),
 };

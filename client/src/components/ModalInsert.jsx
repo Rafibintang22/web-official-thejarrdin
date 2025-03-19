@@ -22,7 +22,7 @@ function ModalInsert({ currState, setState, judulInsert }) {
         TipeTujuan: "individu",
     });
     const [loading, setLoading] = useState(false); // Tambahkan state loading
-    console.log(formData);
+    // console.log(formData);
 
     const menuInsert = [
         {

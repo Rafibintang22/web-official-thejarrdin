@@ -18,6 +18,7 @@ import ModalInsertAspirasi from "../../components/ModalInsertAspirasi";
 import ModalDetailAspirasi from "../../components/ModalDetailAspirasi";
 import { columnsDaftarPengguna, columnsDataFitur } from "../../constaints/columnsTable";
 import ModalDetailPengguna from "../../components/ModalDetailPengguna";
+import ModalInsertPengguna from "../../components/ModalInsertPengguna";
 
 function DataFitur({ active }) {
     // console.log(active);
@@ -222,15 +223,24 @@ function DataFitur({ active }) {
                                 />
                             }
                         />
-                        {modalInsert && active !== "Masukan & Aspirasi" && (
-                            <ModalInsert
+                        {modalInsert &&
+                            active !== "Masukan & Aspirasi" &&
+                            active !== "Pengguna" && (
+                                <ModalInsert
+                                    currState={modalInsert}
+                                    setState={setModalInsert}
+                                    judulInsert={`Tambah Data ${active}`}
+                                />
+                            )}
+                        {modalInsert && active === "Masukan & Aspirasi" && (
+                            <ModalInsertAspirasi
                                 currState={modalInsert}
                                 setState={setModalInsert}
                                 judulInsert={`Tambah Data ${active}`}
                             />
                         )}
-                        {modalInsert && active === "Masukan & Aspirasi" && (
-                            <ModalInsertAspirasi
+                        {modalInsert && active === "Pengguna" && (
+                            <ModalInsertPengguna
                                 currState={modalInsert}
                                 setState={setModalInsert}
                                 judulInsert={`Tambah Data ${active}`}
