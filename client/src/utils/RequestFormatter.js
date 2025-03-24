@@ -24,5 +24,11 @@ export const mapMultiRoleSelect = (currentUnits, previousUnits, idField) => {
         return [];
     }
 
+    // Jika semua role sebelumnya ada tapi sekarang kosong, berarti semua role dihapus
+    const allDeleted = currentUnits.length === 0 && previousUnits.length > 0;
+    if (allDeleted) {
+        return null;
+    }
+
     return [...unitsWithActions, ...deletedUnits];
 };

@@ -63,9 +63,9 @@ function DataFitur({ active }) {
             return true;
         }
 
-        if (hasAdmin && active === "Pengguna") {
-            return true;
-        }
+        // if (hasAdmin && active === "Pengguna") {
+        //     return true;
+        // }
 
         return false;
     };
@@ -108,8 +108,11 @@ function DataFitur({ active }) {
         const searchTerm = value.toLowerCase();
         const filtered = dataTable.filter(
             (item) =>
-                item.Judul.toLowerCase().includes(searchTerm) ||
-                item.DibuatOleh.toLowerCase().includes(searchTerm)
+                (item.Judul && item.Judul.toLowerCase().includes(searchTerm)) ||
+                (item.DibuatOleh && item?.DibuatOleh.toLowerCase().includes(searchTerm)) ||
+                (item.Nama && item?.Nama.toLowerCase().includes(searchTerm)) ||
+                (item.Email && item?.Email.toLowerCase().includes(searchTerm)) ||
+                (item.NoTelp && item?.NoTelp.toLowerCase().includes(searchTerm))
         );
         setFilteredDataTable(filtered);
     };
@@ -178,6 +181,7 @@ function DataFitur({ active }) {
                 key: "selection",
             },
         ]);
+        setSearchValue("");
         setCurrTipeData(active === "Pengguna" ? "daftarPengguna" : "untukSaya");
     }, [active]);
 

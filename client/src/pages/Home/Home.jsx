@@ -135,7 +135,10 @@ function Home() {
         return (
             <div className="header bg-theme shadow p-3 ps-5 pe-5 d-flex w-100 justify-content-between align-items-center">
                 <h5 className="text-light fw-medium" style={{ fontSize: "15px" }}>
-                    Selamat Datang, {dataUser?.Nama}
+                    Selamat Datang,{" "}
+                    {dataUser?.Nama?.length > 33
+                        ? dataUser.Nama.slice(0, 30) + "..."
+                        : dataUser?.Nama}
                 </h5>
                 <Badge count={totalUnread}>
                     <Avatar

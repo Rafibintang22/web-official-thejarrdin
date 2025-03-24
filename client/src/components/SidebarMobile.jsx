@@ -60,7 +60,11 @@ function SidebarMobile() {
                     <div className="d-flex justify-content-between align-items-center">
                         <div className="d-flex flex-column text-dark">
                             <p>Selamat datang,</p>
-                            <p className="fw-semibold">{dataUser?.Nama}</p>
+                            <p className="fw-semibold">
+                                {dataUser?.Nama?.length > 23
+                                    ? dataUser.Nama.slice(0, 20) + "..."
+                                    : dataUser?.Nama}
+                            </p>
                         </div>
                         <Button type="primary" onClick={toggleisSidebarMobileOpen}>
                             {isSidebarMobileOpen ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}

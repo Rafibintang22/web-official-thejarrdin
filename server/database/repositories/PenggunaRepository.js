@@ -6,6 +6,9 @@ class PenggunaRepository {
     static async readAll() {
         try {
             const findUser = await PenggunaModel.findAll({
+                where: {
+                    status: [0, 1], // Hanya ambil pengguna dengan status 0 atau 1
+                },
                 include: {
                     model: PenggunaRoleModel,
                     required: true,
@@ -22,6 +25,14 @@ class PenggunaRepository {
                     Nama: role.Role.nama,
                     RoleID: role.Role.role_id,
                 })),
+                Status:
+                    user.status === 0
+                        ? "Requested"
+                        : user.status === 1
+                        ? "Active"
+                        : user.status === 2
+                        ? "Unactive"
+                        : "Udentified",
             }));
 
             return transformedData;
@@ -33,6 +44,9 @@ class PenggunaRepository {
     static async readAllUserByRole(role_id) {
         try {
             const users = await PenggunaModel.findAll({
+                where: {
+                    status: [0, 1], // Hanya ambil pengguna dengan status 0 atau 1
+                },
                 include: [
                     {
                         model: PenggunaRoleModel,
@@ -221,6 +235,7 @@ class PenggunaRepository {
     }
 
     static async delete(UserID) {
+        console.log(UserID);
         const transaction = await jarrdinDB.transaction();
         try {
             const findUser = await PenggunaModel.findOne({

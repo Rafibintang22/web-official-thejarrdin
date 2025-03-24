@@ -20,11 +20,7 @@ class PenggunaController {
 
     static async getOne(req, res) {
         const UserID = req.params.UserID;
-        // console.log(UserID);
 
-        // console.log("GET /user/:UserID dipanggil dengan UserID:", UserID);
-        // console.log("Headers:", req.headers);
-        // console.log("Body:", req.body);
         try {
             let readUser = await PenggunaRepository.readOne(UserID);
             console.log(readUser);
@@ -60,7 +56,8 @@ class PenggunaController {
 
     static async delete(req, res) {
         try {
-            const UserID = require.params.UserID;
+            const UserID = req.params.UserID;
+            console.log(UserID);
 
             const deletedUser = await PenggunaRepository.delete(UserID);
             res.status(200).json({

@@ -42,7 +42,7 @@ router.patch(
     PenggunaController.patch
 );
 router.delete(
-    "/user",
+    "/user/:UserID",
     Authorization.decryption,
     Authorization.checkRole(["Admin"]),
     PenggunaController.delete

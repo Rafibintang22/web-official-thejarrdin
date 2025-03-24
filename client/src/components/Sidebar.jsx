@@ -65,7 +65,11 @@ function Sidebar() {
                         {!isSidebarOpen && (
                             <div className="d-flex flex-column">
                                 <p>Selamat datang,</p>
-                                <p className="fw-semibold">{dataUser?.Nama}</p>
+                                <p className="fw-semibold">
+                                    {dataUser?.Nama?.length > 23
+                                        ? dataUser.Nama.slice(0, 20) + "..."
+                                        : dataUser?.Nama}
+                                </p>
                             </div>
                         )}
                         <Button type="primary" onClick={toggleisSidebarOpen}>

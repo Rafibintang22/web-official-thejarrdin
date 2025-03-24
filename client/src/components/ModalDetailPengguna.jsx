@@ -47,7 +47,6 @@ function ModalDetailPengguna({ judulDetail }) {
             try {
                 const response = await axios.get(`${urlServer}/user/${oneDataID}`, headers);
                 const responseData = response?.data;
-                // console.log(responseData);
 
                 const transformedData = {
                     ...responseData,
@@ -129,6 +128,28 @@ function ModalDetailPengguna({ judulDetail }) {
         }
     };
 
+    const deleteFormData = async () => {
+        setLoading(true);
+        try {
+            const headers = {
+                headers: {
+                    authorization: userSession?.AuthKey,
+                },
+            };
+
+            await axios.delete(`${urlServer}/user/${oneDataID}`, headers);
+            setLoading(false);
+            setValidationStatus("Berhasil", "Data berhasil dihapus");
+        } catch (error) {
+            setLoading(false);
+            if (error?.response?.data?.error) {
+                setValidationStatus(error.path, error.response.data.error);
+            } else {
+                setValidationStatus(error.path, error.message);
+            }
+        }
+    };
+
     return (
         <Modal
             title={judulDetail}
@@ -145,12 +166,22 @@ function ModalDetailPengguna({ judulDetail }) {
                     <div className="d-flex w-100 justify-content-between gap-3">
                         <div>
                             <Popover content={<p>Hapus akun pengguna</p>} trigger={"hover"}>
-                                <Button
-                                    key="delete"
-                                    variant="outlined"
-                                    icon={<DeleteTwoTone twoToneColor="#f5222d" />}
-                                    danger
-                                ></Button>
+                                <Popconfirm
+                                    icon={false}
+                                    title="Apakah anda yakin menghapus data pengguna?"
+                                    description="Data pengguna akan dihapus sepenuhnya, dan tidak dapat dikembalikan."
+                                    onConfirm={deleteFormData}
+                                    okText="Iya"
+                                    cancelText="Tidak"
+                                    placement="top"
+                                >
+                                    <Button
+                                        key="delete"
+                                        variant="outlined"
+                                        icon={<DeleteTwoTone twoToneColor="#f5222d" />}
+                                        danger
+                                    ></Button>
+                                </Popconfirm>
                             </Popover>
                         </div>
                         <div className="d-flex gap-3">

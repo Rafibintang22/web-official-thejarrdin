@@ -154,7 +154,7 @@ const UpdateDataUser = Joi.object({
         .required()
         .messages({
             "any.required": "Role wajib diisi",
-            "array.base": "Role harus berupa array",
+            "array.base": "Peran tidak boleh kosong",
         }),
 }).custom((value, helpers) => {
     if (!value.Email && !value.NoTelp) {

@@ -1,6 +1,6 @@
 // columns.jsx
 import { CheckOutlined } from "@ant-design/icons";
-import { Button } from "antd";
+import { Button, Tag } from "antd";
 import { urlServer } from "../utils/endpoint";
 import axios from "axios";
 import { revertDate } from "../utils/formatDate";
@@ -91,6 +91,33 @@ const columnsDaftarPengguna = (isDetailOpen, setDetailOpen) => [
         title: "No Telepon",
         dataIndex: "NoTelp",
         key: "NoTelp",
+    },
+    {
+        title: "Status",
+        dataIndex: "Status",
+        key: "Status",
+        sorter: (a, b) => a.Status.localeCompare(b.Status),
+        render: (text, record) => (
+            <Tag
+                color={
+                    record.Status === "Active"
+                        ? "success"
+                        : record.Status === "Requested"
+                        ? "warning"
+                        : record.Status === "Unactive"
+                        ? "error"
+                        : "default"
+                }
+            >
+                {record.Status === "Active"
+                    ? "Aktif"
+                    : record.Status === "Requested"
+                    ? "Izin dinonaktifkan"
+                    : record.Status === "Unactive"
+                    ? "Tidak aktif"
+                    : "Tidak terdefinisi"}
+            </Tag>
+        ),
     },
     {
         title: "Aksi",
